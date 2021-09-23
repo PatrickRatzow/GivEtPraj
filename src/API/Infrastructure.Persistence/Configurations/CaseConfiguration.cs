@@ -17,7 +17,8 @@ namespace Infrastructure.Persistence.Configurations
                 .IsRequired();
 
             builder.HasMany(c => c.Pictures)
-                .WithOne();
+                .WithOne(cp => cp.Case)
+                .HasForeignKey(cp => cp.CaseId);
         }
     }
 }
