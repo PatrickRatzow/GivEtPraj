@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -13,21 +15,20 @@ namespace Commentor.GivEtPraj.WebApi
         {
             var host = CreateHostBuilder(args).Build();
 
-            /*
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 
                 try
                 {
-                    var context = services.GetRequiredService<ApplicationDbContext>();
+                    var context = services.GetRequiredService<AppDbContext>();
 
-                    if (context.Database.IsMySql())
+                    if (context.Database.IsSqlServer())
                     { 
                         await context.Database.MigrateAsync();
                     }
 
-                    await ApplicationDbContextSeed.SeedSampleData(context);
+                    //await ApplicationDbContextSeed.SeedSampleData(context);
                 }
                 catch (Exception ex)
                 {
@@ -38,7 +39,6 @@ namespace Commentor.GivEtPraj.WebApi
                     throw;
                 }
             }
-            */
 
             await host.RunAsync();
         }

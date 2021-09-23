@@ -20,7 +20,7 @@ namespace Commentor.GivEtPraj.Infrastructure
         {
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer();
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
                 options.UseLoggerFactory(EfLoggerFactory);
             });
             services.AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>()!);

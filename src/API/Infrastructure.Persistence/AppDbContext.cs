@@ -10,10 +10,9 @@ namespace Infrastructure.Persistence
     public class AppDbContext : DbContext, IAppDbContext
     {
         public DbSet<Case> Cases { get; set; }
-        
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
+
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            return await base.SaveChangesAsync(cancellationToken);
         }
         
         protected override void OnModelCreating(ModelBuilder builder)
