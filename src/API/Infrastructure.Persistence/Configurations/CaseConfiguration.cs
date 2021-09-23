@@ -15,6 +15,9 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(c => c.Description)
                 .HasMaxLength(4096)
                 .IsRequired();
+
+            builder.HasMany(c => c.Pictures)
+                .WithOne();
         }
     }
 }
