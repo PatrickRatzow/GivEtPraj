@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Text.Json.Serialization;
+using Commentor.GivEtPraj.Application;
+using Commentor.GivEtPraj.Infrastructure;
+using Commentor.GivEtPraj.WebApi.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -29,8 +31,8 @@ namespace Commentor.GivEtPraj.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddApplication();
-            //services.AddInfrastructure(_configuration, _env);
+            services.AddApplication();
+            services.AddInfrastructure(_configuration, _env);
 
             services.AddCors();
             services.AddControllers();
@@ -90,7 +92,7 @@ namespace Commentor.GivEtPraj.WebApi
                 // Handle CORS for prod
             }
 
-            //app.UseFluentValidationExceptionHandler();
+            app.UseFluentValidationExceptionHandler();
 
             app.UseHttpsRedirection();
 
@@ -103,8 +105,6 @@ namespace Commentor.GivEtPraj.WebApi
             {
                 endpoints.MapControllers();
             });
-
-            //app.UseApplication();
         }
     }
 }
