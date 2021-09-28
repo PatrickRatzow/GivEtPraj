@@ -52,20 +52,19 @@ namespace Commentor.GivEtPraj.Application.Cases.Commands
             return summaryDto;
         }
 
-        private async Task UploadImages(CreateCaseCommand request, List<CasePicture>? images)
+        private async Task UploadImages(CreateCaseCommand request, IEnumerable<CasePicture> images)
         {
             await Task.WhenAll(images.Select((cp, index) =>
-            {
-                using (var stream = new MemoryStream())
-                using (var writer = new StreamWriter(stream))
-                {
-                    writer.Write(request.Images[index]);
-                    writer.Flush();
+            { 
+                var stream = new MemoryStream();
+                var writer = new StreamWriter(stream);
+                
+                writer.Write(request.Images[index]);
+                writer.Flush();
 
-                    stream.Position = 0;
+                stream.Position = 0;
 
-                    return _fileStorage.UploadFile($"cases/images/{cp.Id}-{index}.jpg", stream);
-                }
+                return _fileStorage.UploadFile($"cases/{cp.Id}-{index}.jpg", stream);
             }));
         }
     }
