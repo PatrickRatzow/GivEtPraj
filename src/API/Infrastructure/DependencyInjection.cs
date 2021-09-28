@@ -1,4 +1,5 @@
 ﻿using Commentor.GivEtPraj.Application.Common.Interfaces;
+using Commentor.GivEtPraj.Infrastructure.Storage;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ namespace Commentor.GivEtPraj.Infrastructure
                 options.UseLoggerFactory(EfLoggerFactory);
             });
             services.AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>()!);
+            services.AddSingleton<IFileStorage, AzureBlobFileStorage>();
 
             return services;
         }
