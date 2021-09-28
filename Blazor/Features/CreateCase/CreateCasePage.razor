@@ -20,21 +20,33 @@
             <label>Beskrivelse</label>
             <input type="text" @bind="@Description"/>
         </div>
+        <div>
+            <label>Billeder</label>
+            <input type="file" @ref="_input" @onchange="UpdateImages" accept=".jpg, .jpeg, png" />
+        </div>
 
         <button @onclick="@SubmitCase">Giv Prajet</button>   
     }
 </div>
 
 @code {
+    private ElementReference _input;
     [Inject] private ICaseService CaseService { get; set; }
+    [Inject] private ImageUpload ImageUpload { get; set; }
     private string Title { get; set; }
     private string Description { get; set; }
     private bool HasSentCase { get; set; }
+    private MultipartFormDataContent? ImagesData;
 
     private async Task SubmitCase()
     {
-        await CaseService.CreateCase(Title, Description);
+        await CaseService.CreateCase(Title, Description, ImagesData);
 
         HasSentCase = true;
+    }
+
+    private async Task UpdateImages()
+    {
+        ImagesData = await ImageUpload.GetFilesUploaded(_input);
     }
 }

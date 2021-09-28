@@ -7,7 +7,7 @@ namespace Blazor.Services
 {
     public interface ICaseService
     {
-        Task CreateCase(string title, string description);
+        Task CreateCase(string title, string description, MultipartFormDataContent? images = null);
     }
 
     public class CaseService : ICaseService
@@ -19,9 +19,9 @@ namespace Blazor.Services
             _httpClient = httpClient;
         }
 
-        public async Task CreateCase(string title, string description)
+        public async Task CreateCase(string title, string description, MultipartFormDataContent? images = null)
         {
-            var request = new CreateCaseRequest(title, description);
+            var request = new CreateCaseRequest(title, description, images);
             var response = await _httpClient.PostAsJsonAsync("cases", request);
             response.EnsureSuccessStatusCode();
         }
