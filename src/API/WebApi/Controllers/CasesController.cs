@@ -1,7 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using Commentor.GivEtPraj.Application.Cases.Commands;
 using Commentor.GivEtPraj.Application.Cases.Queries;
+using Commentor.GivEtPraj.WebApi.Contracts.Requests;
 using Commentor.GivEtPraj.WebApi.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,18 +15,21 @@ namespace Commentor.GivEtPraj.WebApi.Controllers
     public class CasesController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public CasesController(IMediator mediator)
+        public CasesController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateCase(CreateCaseCommand command, CancellationToken cancellationToken)
+        public async Task<ActionResult> CreateCase([FromBody]CreateCaseRequest request, CancellationToken cancellationToken)
         {
+            var command = _mapper.Map<CreateCaseRequest, CreateCaseCommand>(request);
             var result = await _mediator.Send(command, cancellationToken);
 
-            return Ok(result);
+            return CreatedAtAction(nameof(FindCase), new { Id = result.Id }, result);
         }
 
         [HttpGet]

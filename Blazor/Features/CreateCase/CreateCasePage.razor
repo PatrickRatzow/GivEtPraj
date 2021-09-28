@@ -1,0 +1,40 @@
+﻿@page "/create-page"
+@using Blazor.Services
+
+<PageTitle>Opret Praj</PageTitle>
+
+<div>
+    @if (HasSentCase)
+    {
+        <h1 style="color:limegreen;text-align:center;">Tak for prajet!</h1>
+    }
+    else
+    {
+        <h1>Giv Et Praj!</h1>
+        
+        <div>
+            <label>Titel</label>
+            <input type="text" @bind="@Title"/>
+        </div>
+        <div>
+            <label>Beskrivelse</label>
+            <input type="text" @bind="@Description"/>
+        </div>
+
+        <button @onclick="@SubmitCase">Giv Prajet</button>   
+    }
+</div>
+
+@code {
+    [Inject] private ICaseService CaseService { get; set; }
+    private string Title { get; set; }
+    private string Description { get; set; }
+    private bool HasSentCase { get; set; }
+
+    private async Task SubmitCase()
+    {
+        await CaseService.CreateCase(Title, Description);
+
+        HasSentCase = true;
+    }
+}

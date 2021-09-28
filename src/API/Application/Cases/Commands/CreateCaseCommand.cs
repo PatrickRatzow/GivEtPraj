@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands
 {
-    public record CreateCaseCommand(string Name, string Description) : IRequest<CaseSummaryDto>;
+    public record CreateCaseCommand(string Title, string Description) : IRequest<CaseSummaryDto>;
 
     public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, CaseSummaryDto>
     {
@@ -26,7 +26,7 @@ namespace Commentor.GivEtPraj.Application.Cases.Commands
         {
             var newCase = new Case
             {
-                Title = request.Name,
+                Title = request.Title,
                 Description = request.Description
             };
             
@@ -42,7 +42,7 @@ namespace Commentor.GivEtPraj.Application.Cases.Commands
     {
         public CreateCaseCommandValidator()
         {
-            RuleFor(x => x.Name)
+            RuleFor(x => x.Title)
                 .MinimumLength(4)
                 .MaximumLength(64);
 

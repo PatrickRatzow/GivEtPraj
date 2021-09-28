@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Commentor.GivEtPraj.Application;
 using Commentor.GivEtPraj.Infrastructure;
 using Commentor.GivEtPraj.WebApi.Filters;
@@ -68,6 +69,8 @@ namespace Commentor.GivEtPraj.WebApi
                     }
                 });
             });
+            
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
