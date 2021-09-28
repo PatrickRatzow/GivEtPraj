@@ -8,8 +8,7 @@ namespace Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<CasePicture> builder)
         {
-            builder.Property(cp => cp.ImageData)
-                .IsRequired();
+            builder.HasKey(cp => cp.Id);
         }
     }
 }

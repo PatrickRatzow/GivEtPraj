@@ -36,7 +36,7 @@
     private string Title { get; set; }
     private string Description { get; set; }
     private bool HasSentCase { get; set; }
-    private MultipartFormDataContent? ImagesData;
+    private IList<string> ImagesData = new List<string>();
 
     private async Task SubmitCase()
     {

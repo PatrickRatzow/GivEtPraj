@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -16,9 +17,9 @@ namespace Blazor.Shared
             _fileReaderService = fileReaderService;
         }
 
-        public async Task<MultipartFormDataContent> GetFilesUploaded(ElementReference input)
+        public async Task<IList<string>> GetFilesUploaded(ElementReference input)
         {
-            var content = new MultipartFormDataContent();
+            var content = new List<string>();
 
             foreach (var file in await _fileReaderService.CreateReference(input).EnumerateFilesAsync())
             {
@@ -26,8 +27,7 @@ namespace Blazor.Shared
                 
                 var fileInfo = await file.ReadFileInfoAsync();
                 var ms = await file.CreateMemoryStreamAsync(4 * 1024);
-                content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
-                content.Add(new StreamContent(ms, Convert.ToInt32(ms.Length)), "image", fileInfo.Name);
+                content.Add(Convert.ToBase64String(ms.ToArray()));
             }
 
             return content;

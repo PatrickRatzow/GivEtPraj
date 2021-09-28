@@ -34,7 +34,7 @@ namespace Commentor.GivEtPraj.Infrastructure.Storage
             var blobClient = GetBlobClient(path);
 
             var fileExists = await blobClient.ExistsAsync();
-            if (!fileExists) return false;
+            if (fileExists) return false;
 
             var headers = new BlobHttpHeaders();
             if (contentType is not null)

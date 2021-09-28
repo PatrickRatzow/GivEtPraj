@@ -1,10 +1,11 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 
 namespace Commentor.GivEtPraj.WebApi.Contracts.Requests
 {
     public record CreateCaseRequest(
         string Title, 
         string Description,
-        MultipartFormDataContent? Images
+        IList<string> Images
     );
 }
