@@ -3,7 +3,7 @@
 <h3>Geolocation</h3>
   <h3>Getting Focused</h3>
      
-    <button @onclick="OnButtonClicked">Focus Me</button> 
+    <button @onclick="OnButtonClicked">Click me for a message</button> 
 
     <input @ref="_inputRef" />
 
@@ -12,21 +12,24 @@
     <h1>Your location: @CurrentLocation</h1>
 
 @code {
-    [Inject] private IJSRuntime JsRuntime { get; set; }
+    [Inject] private IJSRuntime? JsRuntime { get; set; }
     [Inject] private IGeoLocationService GeoLocationService { get; set; }
     private ElementReference _inputRef;
-    public Task<string> CurrentLocation;
+
+    public string CurrentLocation;
+
+    public async Task GetLocation()
+    {
+        GeoLocationService.GetCurrentLocation();
+    }
 
     public async Task OnButtonClicked()
     {
-        await JsRuntime.InvokeVoidAsync("setFocus", _inputRef);
+       var geoLocationResponse = await GeoLocationService.GetCoords();
+        geoLocationResponse.OnSuccess += (o, args) => CurrentLocation = args.Longtitude;
+        geoLocationResponse.OnFailure += (o, args) => throw new Exception("Rip");
+
     }
 
-    public async Task ShowAlertWindow(){
-        await JsRuntime.InvokeVoidAsync("showAlert", "JS function called!");
-    }
-    public async Task GetLocation()
-    {
-        CurrentLocation = GeoLocationService.GetCurrentLocation();;
-    }
+
 }
