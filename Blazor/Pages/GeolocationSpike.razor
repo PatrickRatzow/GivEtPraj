@@ -1,8 +1,30 @@
 ﻿@page "/geolocation"
-@inject HttpClient Http
 
 <h3>Geolocation</h3>
+  <h3>Getting Focused</h3>
+     
+    <button @onclick="OnButtonClicked">Focus Me</button> 
+
+    <input @ref="_inputRef" />
+
+    <button @onclick="ShowAlertWindow">Show Alert Window</button>
+
+    <h1>Your location: @CurrentLocation</h1>
 
 @code {
+    [Inject] private IJSRuntime JsRuntime { get; set; }
+    [Inject] private IGeoLocationService GeoLocationService { get; set; }
+    private ElementReference _inputRef;
+    
+    public async Task OnButtonClicked()
+    {
+        await JsRuntime.InvokeVoidAsync("setFocus", _inputRef);
+    }
+
+    public async Task ShowAlertWindow(){
+        await JsRuntime.InvokeVoidAsync("showAlert", "JS function called!");
+    }
+
+    public string CurrentLocation => GeoLocationService.GetCurrentLocation();
 
 }
