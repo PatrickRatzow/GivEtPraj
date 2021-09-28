@@ -1,10 +1,11 @@
 using Microsoft.JSInterop;
+using System.Diagnostics;
 
 namespace Blazor
 {
     public interface IGeoLocationService
     {
-        string GetCurrentLocation();
+        Task<string> GetCurrentLocation();
     }
 
     public class GeoLocationService : IGeoLocationService
@@ -16,10 +17,13 @@ namespace Blazor
             _jsRuntime = jsRuntime;
         }
 
-        public string GetCurrentLocation()
+        public async Task<string> GetCurrentLocation()
         {
-            throw new NotImplementedException();
+            var tempLocation = await _jsRuntime.InvokeAsync<string>("geoLocation");
+            return tempLocation ;
+
         }
+
     }
 
 }
