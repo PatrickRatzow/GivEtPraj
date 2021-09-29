@@ -4,5 +4,5 @@ public record CreateCaseRequest(
     string Title, 
     string Description,
     IList<string> Images,
-    IList<string> Categories
+    string Category
 );
