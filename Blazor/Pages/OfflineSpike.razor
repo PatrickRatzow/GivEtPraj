@@ -1,0 +1,17 @@
+﻿@page "/offlinespike"
+@using Services
+
+
+<h3>OfflineSpike</h3>
+<button @onclick="StartServiceWorker"></button>
+
+<p id="paragraph"></p>
+@code{
+    [Inject] private IServiceWorkerService ServiceWorkerService { get; set; }
+
+    public void StartServiceWorker()
+    {
+        ServiceWorkerService.StartWorker();
+    }
+}
+

@@ -10,19 +10,11 @@
     <h1>Your location: Longitude is @Longitude and Latitude is @Latitude</h1>
 
 @code {
-    [Inject] private IJSRuntime JsRuntime { get; set; }
     [Inject] private IGeoLocationService GeoLocationService { get; set; }
 
     public string CurrentLocation;
     public double Longitude;
     public double Latitude;
-
-        protected override async void OnInitialized()
-    {
-        var window = await JsRuntime.Window();
-        await window.Console.Log("this is a {0}","Log message");
-      
-    }
 
     public async Task GetLocation()
     {

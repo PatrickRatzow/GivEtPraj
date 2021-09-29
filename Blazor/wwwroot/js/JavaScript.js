@@ -26,3 +26,8 @@ function takePhoto() {
     // data url of the image
     return image_data_url
 }
+
+function pingWorker() {
+
+
+}
