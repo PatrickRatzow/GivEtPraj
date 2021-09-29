@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Threading;
+using Microsoft.EntityFrameworkCore;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
@@ -47,20 +48,21 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         return summaryDto;
     }
 
-    private async Task<List<CasePicture>> CreateImages(CreateCaseCommand request)
+    private async Task<List<Picture>> CreateImages(CreateCaseCommand request)
     {
         var images = request.Images
-            .Select(i => new CasePicture
-        {
-            Id = Guid.NewGuid()
-        }).ToList();
+            .Select(i => new Picture
+            {
+                Id = Guid.NewGuid()
+            })
+            .ToList();
 
         await UploadImages(images);
         
         return images;
     }
 
-    private async ValueTask UploadImages(IReadOnlyList<CasePicture> images)
+    private async ValueTask UploadImages(IReadOnlyList<Picture> images)
     {
         if (!images.Any()) return;
 
