@@ -8,29 +8,25 @@ public record FindCaseQuery(int Id) : IRequest<OneOf<CaseSummaryDto, CaseNotFoun
 public class FindCaseQueryHandler : IRequestHandler<FindCaseQuery, OneOf<CaseSummaryDto, CaseNotFound>>
 {
     private readonly IAppDbContext _db;
+    private readonly IMapper _mapper;
 
-    public FindCaseQueryHandler(IAppDbContext db)
+    public FindCaseQueryHandler(IAppDbContext db, IMapper mapper)
     {
         _db = db;
+        _mapper = mapper;
     }
 
     public async Task<OneOf<CaseSummaryDto, CaseNotFound>> Handle(FindCaseQuery request, 
         CancellationToken cancellationToken)
     {
         var @case = await _db.Cases
+            .Include(c => c.Pictures)
             .Where(c => c.Id == request.Id)
-            .Select(c => new CaseSummaryDto
-            {
-                Id = c.Id,
-                Title = c.Title,
-                Description = c.Description,
-                AmountOfPictures = c.Pictures.Count
-            })
             .FirstOrDefaultAsync(cancellationToken);
             
         if (@case is null) return new CaseNotFound(request.Id);
-            
-        return @case;
+
+        return _mapper.Map<Case, CaseSummaryDto>(@case);
     }
 }
 
