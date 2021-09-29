@@ -6,4 +6,5 @@ public class Case
     public string Title { get; set; }
     public string Description { get; set; }
     public List<CasePicture> Pictures { get; set; } = new();
+    public List<CaseCategory> Categories { get; set; } = new();
 }
