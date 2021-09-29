@@ -1,6 +1,6 @@
 ﻿namespace Commentor.GivEtPraj.Domain.Entities;
 
-public class CasePicture
+public class Picture
 {
     public Guid Id { get; set; } 
     public int CaseId { get; set; }

@@ -40,7 +40,7 @@
 
     private async Task SubmitCase()
     {
-        await CaseService.CreateCase(Title, Description, ImagesData);
+        await CaseService.CreateCase(Title, Description, ImagesData, string.Empty);
 
         HasSentCase = true;
     }

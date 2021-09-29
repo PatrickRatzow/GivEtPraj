@@ -1,4 +1,6 @@
-﻿namespace Commentor.GivEtPraj.Application.Contracts;
+﻿using System.Collections.Generic;
+
+namespace Commentor.GivEtPraj.Application.Contracts;
 
 public class CaseSummaryDto
 {
@@ -6,4 +8,5 @@ public class CaseSummaryDto
     public string Title { get; set; }
     public string Description { get; set; }
     public int AmountOfPictures { get; set; }
+    public CaseCategoryDto Category { get; set; }
 }

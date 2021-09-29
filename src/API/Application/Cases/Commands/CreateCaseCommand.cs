@@ -3,9 +3,14 @@ using System.Threading;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
-public record CreateCaseCommand(string Title, string Description, IList<string> Images) : IRequest<CaseSummaryDto>;
+public record CreateCaseCommand(
+    string Title,
+    string Description,
+    IList<string> Images,
+    string Category
+) : IRequest<OneOf<CaseSummaryDto, InvalidCategory>>;
 
-public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, CaseSummaryDto>
+public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<CaseSummaryDto, InvalidCategory>>
 {
     private readonly IAppDbContext _db;
     private readonly IMapper _mapper;
@@ -18,15 +23,21 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, CaseS
         _imageStorage = imageStorage;
     }
 
-    public async Task<CaseSummaryDto> Handle(CreateCaseCommand request, CancellationToken cancellationToken)
+    public async Task<OneOf<CaseSummaryDto, InvalidCategory>> 
+        Handle(CreateCaseCommand request, CancellationToken cancellationToken)
     {
+        var category = await _db.Categories
+            .FirstOrDefaultAsync(c => request.Category == c.Name, cancellationToken);
+        if (category is null) return new InvalidCategory(request.Category);
+        
         var images = await CreateImages(request);
 
         var newCase = new Case
         {
             Title = request.Title,
             Description = request.Description,
-            Pictures = images
+            Pictures = images,
+            Category = category
         };
             
         _db.Cases.Add(newCase);
