@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210929094641_AddCaseCategoryToDBContext")]
+    partial class AddCaseCategoryToDBContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,6 +24,21 @@ namespace Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("CaseCaseCategory", b =>
+                {
+                    b.Property<int>("CasesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoriesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CasesId", "CategoriesId");
+
+                    b.HasIndex("CategoriesId");
+
+                    b.ToTable("CaseCaseCategory");
+                });
+
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Case", b =>
                 {
                     b.Property<int>("Id")
@@ -29,9 +46,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -45,12 +59,10 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.ToTable("Cases");
                 });
 
-            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Category", b =>
+            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.CaseCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,10 +77,10 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("CaseCategories");
                 });
 
-            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Picture", b =>
+            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.CasePicture", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -81,21 +93,25 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CaseId");
 
-                    b.ToTable("Pictures");
+                    b.ToTable("CasePictures");
                 });
 
-            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Case", b =>
+            modelBuilder.Entity("CaseCaseCategory", b =>
                 {
-                    b.HasOne("Commentor.GivEtPraj.Domain.Entities.Category", "Category")
-                        .WithMany("Cases")
-                        .HasForeignKey("CategoryId")
+                    b.HasOne("Commentor.GivEtPraj.Domain.Entities.Case", null)
+                        .WithMany()
+                        .HasForeignKey("CasesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.HasOne("Commentor.GivEtPraj.Domain.Entities.CaseCategory", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Picture", b =>
+            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.CasePicture", b =>
                 {
                     b.HasOne("Commentor.GivEtPraj.Domain.Entities.Case", "Case")
                         .WithMany("Pictures")
@@ -109,11 +125,6 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Case", b =>
                 {
                     b.Navigation("Pictures");
-                });
-
-            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Category", b =>
-                {
-                    b.Navigation("Cases");
                 });
 #pragma warning restore 612, 618
         }

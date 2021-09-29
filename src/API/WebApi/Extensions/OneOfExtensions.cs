@@ -7,9 +7,9 @@ public static partial class OneOfExtensions
         {
             INotFoundError notFound =>
                 GetResult(typeof(NotFoundResult), typeof(NotFoundObjectResult), notFound),
-            /*
             IValidationError validationError =>
                 GetResult(typeof(BadRequestResult), typeof(BadRequestObjectResult), validationError),
+            /*
             IAlreadyExistsError alreadyExists =>
                 GetResult(typeof(ConflictResult), typeof(ConflictObjectResult), alreadyExists),
             IPermissionsError permissionsError =>

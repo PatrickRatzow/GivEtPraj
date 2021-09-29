@@ -25,10 +25,10 @@ public class FindCaseQueryHandler : IRequestHandler<FindCaseQuery, OneOf<CaseSum
                 Title = c.Title,
                 Description = c.Description,
                 AmountOfPictures = c.Pictures.Count,
-                Categories = c.Categories.Select(cat => new CaseCategoryDto
+                Category = new CaseCategoryDto
                 {
-                    Name = cat.Name
-                }).ToList()
+                    Name = c.Category.Name
+                }
             })
             .FirstOrDefaultAsync(cancellationToken);
             

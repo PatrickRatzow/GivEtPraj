@@ -1,14 +1,14 @@
 ﻿namespace Infrastructure.Persistence.Configurations;
 
-public class CaseCatergoryConfiguration : IEntityTypeConfiguration<CaseCategory>
+public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
-    public void Configure(EntityTypeBuilder<CaseCategory> builder)
+    public void Configure(EntityTypeBuilder<Category> builder)
     {
         builder.Property(category => category.Name)
             .IsRequired()
             .HasMaxLength(128);
 
         builder.HasMany(category => category.Cases)
-            .WithMany(@case => @case.Categories);
+            .WithOne(@case => @case.Category);
     }
 }

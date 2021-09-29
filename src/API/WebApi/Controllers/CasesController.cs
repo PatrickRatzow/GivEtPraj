@@ -18,12 +18,15 @@ public class CasesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateCase([FromBody]CreateCaseRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateCase([FromBody]CreateCaseRequest request, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<CreateCaseRequest, CreateCaseCommand>(request);
         var result = await _mediator.Send(command, cancellationToken);
-
-        return CreatedAtAction(nameof(FindCase), new { Id = result.Id }, result);
+        
+        return result.MatchResponse(
+            caseSummaryDto => CreatedAtAction(nameof(FindCase), 
+                new { Id = caseSummaryDto.Id }, caseSummaryDto)
+        );
     }
 
     [HttpGet]
