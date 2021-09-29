@@ -1,85 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using Commentor.GivEtPraj.Application.Common.Interfaces;
-using Commentor.GivEtPraj.Application.Contracts;
-using Commentor.GivEtPraj.Domain.Entities;
-using FluentValidation;
-using MediatR;
 
-namespace Commentor.GivEtPraj.Application.Cases.Commands
+namespace Commentor.GivEtPraj.Application.Cases.Commands;
+
+public record CreateCaseCommand(string Title, string Description, IList<string> Images) : IRequest<CaseSummaryDto>;
+
+public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, CaseSummaryDto>
 {
-    public record CreateCaseCommand(string Title, string Description, IList<string> Images) : IRequest<CaseSummaryDto>;
+    private readonly IAppDbContext _db;
+    private readonly IMapper _mapper;
+    private readonly IFileStorage _fileStorage;
 
-    public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, CaseSummaryDto>
+    public CreateCaseCommandHandler(IAppDbContext db, IMapper mapper, IFileStorage fileStorage)
     {
-        private readonly IAppDbContext _db;
-        private readonly IMapper _mapper;
-        private readonly IFileStorage _fileStorage;
-
-        public CreateCaseCommandHandler(IAppDbContext db, IMapper mapper, IFileStorage fileStorage)
-        {
-            _db = db;
-            _mapper = mapper;
-            _fileStorage = fileStorage;
-        }
-
-        public async Task<CaseSummaryDto> Handle(CreateCaseCommand request, CancellationToken cancellationToken)
-        {
-            var images = request.Images.Select(i => new CasePicture
-            {
-                Id = Guid.NewGuid()
-            }).ToList();
-
-            if (images.Count > 0)
-                await UploadImages(request, images);
-            
-            var newCase = new Case
-            {
-                Title = request.Title,
-                Description = request.Description,
-                Pictures = images
-            };
-            
-            _db.Cases.Add(newCase);
-            await _db.SaveChangesAsync(cancellationToken);
-
-            var summaryDto = _mapper.Map<Case, CaseSummaryDto>(newCase);
-            return summaryDto;
-        }
-
-        private async Task UploadImages(CreateCaseCommand request, IEnumerable<CasePicture> images)
-        {
-            await Task.WhenAll(images.Select((cp, index) =>
-            { 
-                var stream = new MemoryStream();
-                var writer = new StreamWriter(stream);
-                
-                writer.Write(request.Images[index]);
-                writer.Flush();
-
-                stream.Position = 0;
-
-                return _fileStorage.UploadFile($"cases/{cp.Id}-{index}.jpg", stream);
-            }));
-        }
+        _db = db;
+        _mapper = mapper;
+        _fileStorage = fileStorage;
     }
 
-    public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
+    public async Task<CaseSummaryDto> Handle(CreateCaseCommand request, CancellationToken cancellationToken)
     {
-        public CreateCaseCommandValidator()
+        var images = request.Images.Select(i => new CasePicture
         {
-            RuleFor(x => x.Title)
-                .MinimumLength(4)
-                .MaximumLength(64);
+            Id = Guid.NewGuid()
+        }).ToList();
 
-            RuleFor(x => x.Description)
-                .NotEmpty()
-                .MaximumLength(4096);
-        }
+        if (images.Count > 0)
+            await UploadImages(request, images);
+            
+        var newCase = new Case
+        {
+            Title = request.Title,
+            Description = request.Description,
+            Pictures = images
+        };
+            
+        _db.Cases.Add(newCase);
+        await _db.SaveChangesAsync(cancellationToken);
+
+        var summaryDto = _mapper.Map<Case, CaseSummaryDto>(newCase);
+        return summaryDto;
+    }
+
+    private async Task UploadImages(CreateCaseCommand request, IEnumerable<CasePicture> images)
+    {
+        await Task.WhenAll(images.Select((cp, index) =>
+        { 
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+                
+            writer.Write(request.Images[index]);
+            writer.Flush();
+
+            stream.Position = 0;
+
+            return _fileStorage.UploadFile($"cases/{cp.Id}-{index}.jpg", stream);
+        }));
+    }
+}
+
+public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
+{
+    public CreateCaseCommandValidator()
+    {
+        RuleFor(x => x.Title)
+            .MinimumLength(4)
+            .MaximumLength(64);
+
+        RuleFor(x => x.Description)
+            .NotEmpty()
+            .MaximumLength(4096);
     }
 }

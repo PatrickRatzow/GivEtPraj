@@ -1,14 +1,11 @@
 ﻿using System.Threading;
-using System.Threading.Tasks;
-using Commentor.GivEtPraj.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Commentor.GivEtPraj.Application.Common.Interfaces
+namespace Commentor.GivEtPraj.Application.Common.Interfaces;
+
+public interface IAppDbContext
 {
-    public interface IAppDbContext
-    {
-        DbSet<Case> Cases { get; set; }
-        DbSet<CasePicture> CasePictures { get; set; }
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = new());
-    }
+    DbSet<Case> Cases { get; set; }
+    DbSet<CasePicture> CasePictures { get; set; }
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = new());
 }

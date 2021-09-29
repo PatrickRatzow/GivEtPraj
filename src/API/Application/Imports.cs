@@ -1,1 +1,12 @@
-﻿
+﻿global using System;
+global using System.Threading.Tasks;
+global using System.Collections.Generic;
+global using System.Linq;
+global using OneOf;
+global using FluentValidation;
+global using MediatR;
+global using AutoMapper;
+global using Commentor.GivEtPraj.Application.Contracts;
+global using Commentor.GivEtPraj.Application.Common.Interfaces;
+global using Commentor.GivEtPraj.Domain.Errors;
+global using Commentor.GivEtPraj.Domain.Entities;
