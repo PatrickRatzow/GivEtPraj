@@ -9,13 +9,13 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, CaseS
 {
     private readonly IAppDbContext _db;
     private readonly IMapper _mapper;
-    private readonly IFileStorage _fileStorage;
+    private readonly IImageStorage _imageStorage;
 
-    public CreateCaseCommandHandler(IAppDbContext db, IMapper mapper, IFileStorage fileStorage)
+    public CreateCaseCommandHandler(IAppDbContext db, IMapper mapper, IImageStorage imageStorage)
     {
         _db = db;
         _mapper = mapper;
-        _fileStorage = fileStorage;
+        _imageStorage = imageStorage;
     }
 
     public async Task<CaseSummaryDto> Handle(CreateCaseCommand request, CancellationToken cancellationToken)
@@ -54,7 +54,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, CaseS
 
             stream.Position = 0;
 
-            return _fileStorage.UploadFile($"cases/{cp.Id}-{index}.jpg", stream);
+            return _imageStorage.UploadImage($"{cp.Id}.jpg", stream);
         }));
     }
 }
