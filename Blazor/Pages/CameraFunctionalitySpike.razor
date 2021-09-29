@@ -10,7 +10,8 @@
 
 
 <button type="button" class="btn btn-primary" @onclick="StartVideo">Click Me</button>
-
+<button id="click-photo" @onclick="TakePhoto">Click Photo</button>
+<canvas id="canvas" width="320" height="240"></canvas>
 
 
 @code {
@@ -20,5 +21,10 @@
     async Task StartVideo()
     {
         await CameraService.GetCameraFeed();
+    }
+
+    async Task TakePhoto()
+    {
+        await CameraService.TakePhoto();
     }
 }

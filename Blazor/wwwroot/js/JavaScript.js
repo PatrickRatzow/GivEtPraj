@@ -2,6 +2,7 @@
 var latitude;
 var longitude;
 
+
 function startVideo() {
     alert("Test Alert!");
 
@@ -17,4 +18,13 @@ function startVideo() {
             video.play();
         });
     }
+}
+
+function takePhoto() {
+    let canvas = document.getElementById('canvas');
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    let image_data_url = canvas.toDataURL('image/jpeg');
+
+    // data url of the image
+    console.log(image_data_url)
 }
