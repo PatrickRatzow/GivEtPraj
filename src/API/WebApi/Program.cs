@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -7,47 +5,46 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Commentor.GivEtPraj.WebApi
+namespace Commentor.GivEtPraj.WebApi;
+
+public class Program
 {
-    public class Program
+    public static async Task Main(string[] args)
     {
-        public static async Task Main(string[] args)
+        var host = CreateHostBuilder(args).Build();
+
+        using (var scope = host.Services.CreateScope())
         {
-            var host = CreateHostBuilder(args).Build();
-
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
+            var services = scope.ServiceProvider;
                 
-                try
-                {
-                    var context = services.GetRequiredService<AppDbContext>();
+            try
+            {
+                var context = services.GetRequiredService<AppDbContext>();
 
-                    if (context.Database.IsSqlServer())
-                    { 
-                        await context.Database.MigrateAsync();
-                    }
-
-                    //await ApplicationDbContextSeed.SeedSampleData(context);
+                if (context.Database.IsSqlServer())
+                { 
+                    await context.Database.MigrateAsync();
                 }
-                catch (Exception ex)
-                {
-                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
-                    logger.LogError(ex, "An error occurred while migrating or seeding the database");
-
-                    throw;
-                }
+                //await ApplicationDbContextSeed.SeedSampleData(context);
             }
+            catch (Exception ex)
+            {
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
-            await host.RunAsync();
+                logger.LogError(ex, "An error occurred while migrating or seeding the database");
+
+                throw;
+            }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+        await host.RunAsync();
     }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
 }

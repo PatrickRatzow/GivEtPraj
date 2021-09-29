@@ -7,40 +7,39 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using FluentValidation;
 
-namespace Commentor.GivEtPraj.WebApi.Filters
+namespace Commentor.GivEtPraj.WebApi.Filters;
+
+public static class ValidationFilter
 {
-    public static class ValidationFilter
+    public static void UseFluentValidationExceptionHandler(this IApplicationBuilder app)
     {
-        public static void UseFluentValidationExceptionHandler(this IApplicationBuilder app)
+        app.UseExceptionHandler(x =>
         {
-            app.UseExceptionHandler(x =>
+            x.Run(async context =>
             {
-                x.Run(async context =>
+                var errorFeature = context.Features.Get<IExceptionHandlerFeature>();
+                var exception = errorFeature?.Error;
+                if (exception is null) return;
+
+                if (exception is not ValidationException validationException)
                 {
-                    var errorFeature = context.Features.Get<IExceptionHandlerFeature>();
-                    var exception = errorFeature?.Error;
-                    if (exception is null) return;
+                    throw exception;
+                }
 
-                    if (exception is not ValidationException validationException)
-                    {
-                        throw exception;
-                    }
-
-                    var errors = validationException.Errors.Select(err => new
-                    {
-                        err.PropertyName,
-                        err.ErrorMessage
-                    });
-
-                    var errorText = JsonSerializer.Serialize(new
-                    {
-                        Errors = errors
-                    });
-                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.ContentType = "application/json";
-                    await context.Response.WriteAsync(errorText, Encoding.UTF8);
+                var errors = validationException.Errors.Select(err => new
+                {
+                    err.PropertyName,
+                    err.ErrorMessage
                 });
+
+                var errorText = JsonSerializer.Serialize(new
+                {
+                    Errors = errors
+                });
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(errorText, Encoding.UTF8);
             });
-        }
+        });
     }
 }

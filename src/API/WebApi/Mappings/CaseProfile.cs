@@ -1,14 +1,11 @@
-﻿using AutoMapper;
-using Commentor.GivEtPraj.Application.Cases.Commands;
-using Commentor.GivEtPraj.WebApi.Contracts.Requests;
+﻿using Commentor.GivEtPraj.Application.Cases.Commands;
 
-namespace Commentor.GivEtPraj.WebApi.Mappings
+namespace Commentor.GivEtPraj.WebApi.Mappings;
+
+public class CaseProfile : Profile
 {
-    public class CaseProfile : Profile
+    public CaseProfile()
     {
-        public CaseProfile()
-        {
-            CreateMap<CreateCaseRequest, CreateCaseCommand>();
-        }
+        CreateMap<CreateCaseRequest, CreateCaseCommand>();
     }
 }
