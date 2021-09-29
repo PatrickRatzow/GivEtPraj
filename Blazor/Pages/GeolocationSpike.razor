@@ -7,21 +7,30 @@
     <input @ref="_inputRef" />
 
     <button @onclick="GetLocation">Get location</button>
-
+    <!--<button @onclick="OnButtonClicked">Get Coords</button> -->
     <h1>Your location: Longitude is @Longitude and Latitude is @Latitude</h1>
 
 @code {
-    [Inject] private IJSRuntime? JsRuntime { get; set; }
+    [Inject] private IJSRuntime JsRuntime { get; set; }
     [Inject] private IGeoLocationService GeoLocationService { get; set; }
     private ElementReference _inputRef;
 
     public string CurrentLocation;
-    public decimal Longitude;
-    public decimal Latitude;
+    public double Longitude;
+    public double Latitude;
+
+        protected override async void OnInitialized()
+    {
+        var window = await JsRuntime.Window();
+        await window.Console.Log("this is a {0}","Log message");
+      
+    }
 
     public async Task GetLocation()
     {
-        await GeoLocationService.GetCoords();
+        var location = await GeoLocationService.GetCoords();
+        Longitude = location.Location.Coords.Longitude;
+        Latitude = location.Location.Coords.Latitude;
     }
 
     public async Task OnButtonClicked()
