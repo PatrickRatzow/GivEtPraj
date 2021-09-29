@@ -8,5 +8,5 @@ public class CaseSummaryDto
     public string Title { get; set; }
     public string Description { get; set; }
     public int AmountOfPictures { get; set; }
-    public CaseCategoryDto Category { get; set; }
+    public CategoryDto Category { get; set; }
 }
