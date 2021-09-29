@@ -24,13 +24,13 @@
         </div>
         <div>
             <label>Categori</label>
+            <InputRadioGroup @bind-Value="SelectedCategory">
             @foreach (var category in Categories)
             {
-                <label>
-                    <InputRadio name="rate" SelectedValue="@category.Name" @bind-Value="model.SelectedCategory" />
-                    @category.Name
-                </label>
+                <InputRadio Value="category.Name" />
+                @category.Name
             }
+            </InputRadioGroup>
             
         </div>
         <div>
@@ -38,7 +38,8 @@
             <input type="file" @ref="_input" @onchange="UpdateImages" accept=".jpg, .jpeg, png" />
         </div>
 
-        <button @onclick="@SubmitCase">Giv Prajet</button>   
+            selected category: @SelectedCategory
+            <button @onclick="@SubmitCase">Giv Prajet</button>   
             </EditForm>
     }
 </div>
