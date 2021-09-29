@@ -3,7 +3,8 @@
 
 
 <h3>OfflineSpike</h3>
-<button @onclick="StartServiceWorker"></button>
+<button @onclick="Notify">notify</button>
+<!--<button @onclick="StartServiceWorker"></button> -->
 
 <p id="paragraph"></p>
 @code{
@@ -12,6 +13,11 @@
     public void StartServiceWorker()
     {
         ServiceWorkerService.StartWorker();
+    }
+
+    public void Notify()
+    {
+        ServiceWorkerService.Notify();
     }
 }
 

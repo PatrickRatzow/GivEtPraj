@@ -5,6 +5,7 @@ namespace Blazor.Services
     public interface IServiceWorkerService
     {
         void StartWorker();
+        void Notify();
     }
 
     public class ServiceWorkerService : IServiceWorkerService
@@ -19,6 +20,11 @@ namespace Blazor.Services
         public async void StartWorker()
         {
             await _jsRuntime.InvokeVoidAsync("pingWorker");
+        }
+
+        public async void Notify()
+        {
+            await _jsRuntime.InvokeVoidAsync("notify");
         }
     }
 }
