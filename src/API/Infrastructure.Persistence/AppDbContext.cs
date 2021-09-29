@@ -1,9 +1,4 @@
 ﻿using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using Commentor.GivEtPraj.Application.Common.Interfaces;
-using Commentor.GivEtPraj.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence
 {
