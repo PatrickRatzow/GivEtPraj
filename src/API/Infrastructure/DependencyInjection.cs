@@ -26,6 +26,7 @@ public static class DependencyInjection
         });
         services.AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>()!);
         services.AddSingleton<IFileStorage, AzureBlobFileStorage>();
+        services.AddSingleton<IImageStorage, ImageStorage>();
 
         return services;
     }
