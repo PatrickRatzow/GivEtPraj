@@ -8,5 +8,5 @@ global using MediatR;
 global using AutoMapper;
 global using Commentor.GivEtPraj.Application.Contracts;
 global using Commentor.GivEtPraj.Application.Common.Interfaces;
-global using Commentor.GivEtPraj.Domain.Errors;
+global using Commentor.GivEtPraj.Application.Errors;
 global using Commentor.GivEtPraj.Domain.Entities;
