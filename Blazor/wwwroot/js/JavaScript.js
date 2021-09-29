@@ -28,6 +28,13 @@ function takePhoto() {
 }
 
 function pingWorker() {
-
-
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            console.log('App is loader');
+            navigator.serviceWorker.register('../service-worker.js')
+                .then(() => {
+                    console.log("Service Worker registerd");
+                })
+        })
+    }
 }
