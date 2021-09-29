@@ -1,10 +1,9 @@
 ﻿@page "/geolocation"
 @using BrowserInterop.Extensions
+@using Services
 
 <h3>Geolocation</h3>
   <h3>Getting Focused</h3>
-
-    <input @ref="_inputRef" />
 
     <button @onclick="GetLocation">Get location</button>
     <!--<button @onclick="OnButtonClicked">Get Coords</button> -->
@@ -13,7 +12,6 @@
 @code {
     [Inject] private IJSRuntime JsRuntime { get; set; }
     [Inject] private IGeoLocationService GeoLocationService { get; set; }
-    private ElementReference _inputRef;
 
     public string CurrentLocation;
     public double Longitude;

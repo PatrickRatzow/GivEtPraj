@@ -2,33 +2,19 @@
 var latitude;
 var longitude;
 
-function getLocation(successCallback, failureCallback) {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(successCallback, failureCallback);
-    } else {
-        alert("Geolocation is not supported by this browser.");
-    }
-}
+function startVideo() {
+    alert("Test Alert!");
 
-function showPosition(position) {
-    longitude = position.coords.latitude;
-    latitude = position.coords.latitude;
-    alert("Latitude: " + longitude +
-        "<br>Longitude: " + latitude);
-}
+    var video = document.getElementById('video');
 
-function alertLocation() {
-    alert(showPosition);
-}
-
-function getCoords(successCallback, failureCallback) {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-            successCallback(pos.coords.longitude + "/" + pos.coords.latitude)
-        }, dsed => {
-            failureCallback("f")
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
+            try {
+                video.srcObject = stream;
+            } catch (error) {
+                video.src = window.URL.createObjectURL(stream);
+            }
+            video.play();
         });
-    } else {
-        alert("Geolocation is not supported by this browser.");
     }
 }

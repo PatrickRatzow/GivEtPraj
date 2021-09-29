@@ -1,0 +1,24 @@
+﻿@page "/camerafunctionalityspike"
+@inject IJSRuntime JSRuntime;
+@using Services
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Camera Func</h1>
+
+<video id="video" width="640" height="480" autoplay></video>
+
+
+<button type="button" class="btn btn-primary" @onclick="StartVideo">Click Me</button>
+
+
+
+@code {
+    [Inject] private IJSRuntime JsRuntime { get; set; }
+    [Inject] private ICameraService CameraService { get; set; }
+
+    async Task StartVideo()
+    {
+        await CameraService.GetCameraFeed();
+    }
+}
