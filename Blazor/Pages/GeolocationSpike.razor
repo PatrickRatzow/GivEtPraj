@@ -1,15 +1,14 @@
 ﻿@page "/geolocation"
+@using BrowserInterop.Extensions
 
 <h3>Geolocation</h3>
   <h3>Getting Focused</h3>
-     
-    <button @onclick="OnButtonClicked">Click me for a message</button> 
 
     <input @ref="_inputRef" />
 
     <button @onclick="GetLocation">Get location</button>
 
-    <h1>Your location: @CurrentLocation</h1>
+    <h1>Your location: Longitude is @Longitude and Latitude is @Latitude</h1>
 
 @code {
     [Inject] private IJSRuntime? JsRuntime { get; set; }
@@ -17,17 +16,20 @@
     private ElementReference _inputRef;
 
     public string CurrentLocation;
+    public decimal Longitude;
+    public decimal Latitude;
 
     public async Task GetLocation()
     {
-        GeoLocationService.GetCurrentLocation();
+        await GeoLocationService.GetCoords();
     }
 
     public async Task OnButtonClicked()
     {
        var geoLocationResponse = await GeoLocationService.GetCoords();
-        geoLocationResponse.OnSuccess += (o, args) => CurrentLocation = args.Longtitude;
-        geoLocationResponse.OnFailure += (o, args) => throw new Exception("Rip");
+
+        Longitude = geoLocationResponse.Location.Coords.Longitude;
+        Latitude = geoLocationResponse.Location.Coords.Latitude;
 
     }
 
