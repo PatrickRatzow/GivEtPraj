@@ -4,8 +4,6 @@ var longitude;
 
 
 function startVideo() {
-    alert("Test Alert!");
-
     var video = document.getElementById('video');
 
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -26,5 +24,5 @@ function takePhoto() {
     let image_data_url = canvas.toDataURL('image/jpeg');
 
     // data url of the image
-    console.log(image_data_url)
+    return image_data_url
 }

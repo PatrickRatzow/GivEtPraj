@@ -13,10 +13,10 @@
 <button id="click-photo" @onclick="TakePhoto">Click Photo</button>
 <canvas id="canvas" width="320" height="240"></canvas>
 
-
 @code {
     [Inject] private IJSRuntime JsRuntime { get; set; }
     [Inject] private ICameraService CameraService { get; set; }
+    string base64string = "";
 
     async Task StartVideo()
     {
@@ -25,6 +25,6 @@
 
     async Task TakePhoto()
     {
-        await CameraService.TakePhoto();
+        base64string = await CameraService.TakePhoto();
     }
 }

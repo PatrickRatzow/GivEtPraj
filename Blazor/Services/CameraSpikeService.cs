@@ -5,7 +5,7 @@ namespace Blazor.Services
     public interface ICameraService
     {
         Task GetCameraFeed();
-        Task TakePhoto();
+        Task<string> TakePhoto();
     }
 
     public class CameraService : ICameraService
@@ -22,9 +22,9 @@ namespace Blazor.Services
             await _jsRuntime.InvokeVoidAsync("startVideo");
         }
 
-        public async Task TakePhoto()
+        public async Task<string> TakePhoto()
         {
-            await _jsRuntime.InvokeVoidAsync("takePhoto");
+            return await _jsRuntime.InvokeAsync<string>("takePhoto");
         }
     }
 }
