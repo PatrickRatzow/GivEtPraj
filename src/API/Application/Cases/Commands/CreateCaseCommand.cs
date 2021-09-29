@@ -20,14 +20,8 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, CaseS
 
     public async Task<CaseSummaryDto> Handle(CreateCaseCommand request, CancellationToken cancellationToken)
     {
-        var images = request.Images.Select(i => new CasePicture
-        {
-            Id = Guid.NewGuid()
-        }).ToList();
+        var images = await CreateImages(request);
 
-        if (images.Count > 0)
-            await UploadImages(request, images);
-            
         var newCase = new Case
         {
             Title = request.Title,
@@ -42,20 +36,43 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, CaseS
         return summaryDto;
     }
 
-    private async Task UploadImages(CreateCaseCommand request, IEnumerable<CasePicture> images)
+    private async Task<List<CasePicture>> CreateImages(CreateCaseCommand request)
     {
+        var images = request.Images
+            .Select(i => new CasePicture
+        {
+            Id = Guid.NewGuid()
+        }).ToList();
+
+        await UploadImages(images);
+        
+        return images;
+    }
+
+    private async ValueTask UploadImages(IReadOnlyList<CasePicture> images)
+    {
+        if (!images.Any()) return;
+
+        var disposables = new List<IAsyncDisposable>();
         await Task.WhenAll(images.Select((cp, index) =>
         { 
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
-                
-            writer.Write(request.Images[index]);
+            disposables.Add(stream);
+            disposables.Add(writer);
+            
+            writer.Write(images[index]);
             writer.Flush();
 
             stream.Position = 0;
 
             return _imageStorage.UploadImage($"{cp.Id}.jpg", stream);
         }));
+
+        foreach (var disposable in disposables)
+        {
+            await disposable.DisposeAsync();
+        }
     }
 }
 
