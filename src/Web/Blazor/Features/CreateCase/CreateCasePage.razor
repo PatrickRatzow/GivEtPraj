@@ -1,5 +1,6 @@
 ﻿@page "/create-page"
 @using Commentor.GivEtPraj.Blazor.Services
+@using Commentor.GivEtPraj.Application.Contracts
 
 <PageTitle>Opret Praj</PageTitle>
 
@@ -10,6 +11,7 @@
     }
     else
     {
+        <EditForm name="rate" Model="@model">
         <h1>Giv Et Praj!</h1>
         
         <div>
@@ -21,11 +23,24 @@
             <input type="text" @bind="@Description"/>
         </div>
         <div>
+            <label>Categori</label>
+            <InputRadioGroup @bind-Value="SelectedCategory">
+            @foreach (var category in Categories)
+            {
+                <InputRadio Value="category.Name" />
+                @category.Name
+            }
+            </InputRadioGroup>
+            
+        </div>
+        <div>
             <label>Billeder</label>
             <input type="file" @ref="_input" @onchange="UpdateImages" accept=".jpg, .jpeg, png" />
         </div>
 
-        <button @onclick="@SubmitCase">Giv Prajet</button>   
+            selected category: @SelectedCategory
+            <button @onclick="@SubmitCase">Giv Prajet</button>   
+            </EditForm>
     }
 </div>
 
@@ -33,14 +48,23 @@
     private ElementReference _input;
     [Inject] private ICaseService CaseService { get; set; }
     [Inject] private ImageUpload ImageUpload { get; set; }
+    [Inject] private ICategoryService CategoryService { get; set; }
     private string Title { get; set; }
     private string Description { get; set; }
     private bool HasSentCase { get; set; }
+    private string SelectedCategory { get; set; }
     private IList<string> ImagesData = new List<string>();
+    private IList<CategoryDto> Categories = new List<CategoryDto>();
+    private Model model = new Model();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categories = await CategoryService.GetAllCategories();
+    }
 
     private async Task SubmitCase()
     {
-        await CaseService.CreateCase(Title, Description, ImagesData, string.Empty);
+        await CaseService.CreateCase(Title, Description, ImagesData, SelectedCategory);
 
         HasSentCase = true;
     }
@@ -48,5 +72,10 @@
     private async Task UpdateImages()
     {
         ImagesData = await ImageUpload.GetFilesUploaded(_input);
+    }
+
+    private class Model
+    {
+      public string SelectedCategory { get; set;}
     }
 }

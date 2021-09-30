@@ -14,6 +14,7 @@ builder.Services.AddScoped(sp => new HttpClient
     BaseAddress = new Uri("https://localhost:5001/v1/")
 });
 builder.Services.AddScoped<ICaseService, CaseService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddFileReaderService(o => o.UseWasmSharedBuffer = true);
 builder.Services.AddScoped<ImageUpload>();
 
