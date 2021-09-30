@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\API\Domain\Do
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Persistence", "src\API\Infrastructure.Persistence\Infrastructure.Persistence.csproj", "{D7A56ACE-B018-4DBC-B220-422E16A52DF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor", "Blazor\Blazor.csproj", "{A14B3E36-9947-48FF-80B2-CF96511884A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor", "src\Web\Blazor\Blazor.csproj", "{A14B3E36-9947-48FF-80B2-CF96511884A7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Contracts", "src\API\Application.Contracts\Application.Contracts.csproj", "{7C453764-6F3E-4B0B-8BF5-6C393550213D}"
 EndProject
