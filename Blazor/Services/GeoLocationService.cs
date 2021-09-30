@@ -34,7 +34,5 @@ namespace Blazor.Services
         {
             await _jsRuntime.InvokeVoidAsync("showAlert", "JS function called!");
         }
-
     }
-
 }

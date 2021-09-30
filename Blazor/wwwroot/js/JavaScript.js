@@ -45,11 +45,11 @@ function notify() {
 
     if ('serviceWorker' in navigator) {
         Notification.requestPermission()
-            .then(() => navigator.serviceWorker.register('sw.js'))
+            .then(() => navigator.serviceWorker.register('../service-worker.js'))
             .then(() => navigator.serviceWorker.ready
                 .then((s) => {
                     s.showNotification('Click to begin', options);
                 }))
             .catch(e => console.log(e.message));
-    }
+    }   
 }
