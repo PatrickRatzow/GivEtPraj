@@ -1,11 +1,8 @@
-using System;
-using System.Net.Http;
-using Blazor;
-using Blazor.Services;
-using Blazor.Shared;
+using Commentor.GivEtPraj.Blazor;
+using Commentor.GivEtPraj.Blazor.Services;
+using Commentor.GivEtPraj.Blazor.Shared;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Tewr.Blazor.FileReader;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

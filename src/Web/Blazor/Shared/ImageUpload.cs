@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Tewr.Blazor.FileReader;
 
-namespace Blazor.Shared
+namespace Commentor.GivEtPraj.Blazor.Shared
 {
     public class ImageUpload
     {

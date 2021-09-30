@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+    <RootNamespace>Commentor.GivEtPraj.Blazor</RootNamespace>
+    <AssemblyName>Commentor.GivEtPraj.Blazor</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\API\WebApi.Contracts\WebApi.Contracts.csproj" />
+    <ProjectReference Include="..\..\API\WebApi.Contracts\WebApi.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
