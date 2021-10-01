@@ -4,7 +4,7 @@ using Microsoft.JSInterop;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 
-namespace Blazor.Services
+namespace Commentor.GivEtPraj.Blazor.Services
 {
     public interface IGeoLocationService
     {

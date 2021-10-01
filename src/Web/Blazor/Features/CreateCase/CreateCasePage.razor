@@ -13,41 +13,45 @@
     else
     {
         <EditForm name="rate" Model="@model">
-        <h1>Giv Et Praj!</h1>
-        
-        <div>
-            <label>Titel</label>
-            <input type="text" @bind="@Title"/>
-        </div>
-        <div>
-            <label>Beskrivelse</label>
-            <input type="text" @bind="@Description"/>
-        </div>
-        <div>
-            <label>Categori</label>
-            <InputRadioGroup @bind-Value="SelectedCategory">
-            @foreach (var category in Categories)
-            {
-                <InputRadio Value="category.Name" />
-                @category.Name
-            }
+            <h1>Giv Et Praj!</h1>
+
+            <div>
+                <label>Titel</label>
+                <input type="text" @bind="@Title" />
+            </div>
+            <div>
+                <label>Beskrivelse</label>
+                <input type="text" @bind="@Description" />
+            </div>
+            <div>
+                <label>Categori</label>
+                <InputRadioGroup @bind-Value="SelectedCategory">
+                    @foreach (var category in Categories)
+                    {
+                    <InputRadio Value="category.Name" />
+                    @category.Name
+                    }
             </InputRadioGroup>
-            
+
         </div>
+
+        <div>
+            <button @onclick="GetLatLong">Get location</button>
+            <text>@Latitude</text><br />
+            <text>@Longitude</text>
+        </div>
+
         <div>
             <label>Billeder</label>
             <input type="file" @ref="_input" @onchange="UpdateImages" accept=".jpg, .jpeg, png" />
         </div>
 
-        <button @onclick="GetLatLong">Get location</button>
-        <text>@Latitude</text><br />
-        <text>@Longitude</text>
 
-        <button @onclick="@SubmitCase">Giv Prajet</button>   
-            selected category: @SelectedCategory
-            <button @onclick="@SubmitCase">Giv Prajet</button>   
-            </EditForm>
+        <button @onclick="@SubmitCase">Giv Prajet</button>
+        selected category: @SelectedCategory
+    </EditForm>
     }
+
 </div>
 
 @code {
@@ -88,10 +92,11 @@
         GeolocationResult geoLocation = await GeoLocationService.GetCoords();
         Latitude = geoLocation.Location.Coords.Latitude;
         Longitude = geoLocation.Location.Coords.Longitude;
+    }
 
 
     private class Model
     {
-      public string SelectedCategory { get; set;}
+        public string SelectedCategory { get; set; }
     }
 }
