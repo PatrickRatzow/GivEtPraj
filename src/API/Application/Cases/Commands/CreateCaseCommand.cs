@@ -112,5 +112,11 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
         RuleFor(x => x.Latitude)
             .LessThanOrEqualTo(90)
             .GreaterThanOrEqualTo(-90);
+
+        RuleFor(x => x.Category)
+            .NotEmpty();
+
+        RuleForEach(x => x.Images)
+            .NotEmpty();
     }
 }
