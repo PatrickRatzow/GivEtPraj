@@ -20,7 +20,8 @@ namespace Commentor.GivEtPraj.Application.Tests.Integration.Cases.Queries
         public async Task ShouldFindAllCases()
         {
             //Arrange
-            var cases = Database.Factory<CaseFactory>().CreateMany(2);
+            var category = Database.Factory<CategoryFactory>().Create();
+            var cases = Database.Factory<CaseFactory>().CreateMany(category, 2);
             await Database.Save();
             var query = new FindAllCasesQuery();
 
@@ -30,6 +31,7 @@ namespace Commentor.GivEtPraj.Application.Tests.Integration.Cases.Queries
 
             //Assert
             result.Should().AllBeOfType<CaseSummaryDto>();
+            result.Should().HaveCount(cases.Count);
 
         }
     }
