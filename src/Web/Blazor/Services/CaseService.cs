@@ -1,7 +1,7 @@
-﻿using System.Net.Http.Json;
-using Commentor.GivEtPraj.WebApi.Contracts.Requests;
+﻿using Commentor.GivEtPraj.WebApi.Contracts.Requests;
+using System.Net.Http.Json;
 
-namespace Blazor.Services 
+namespace Blazor.Services
 {
     public interface ICaseService
     {
