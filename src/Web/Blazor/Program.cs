@@ -6,6 +6,7 @@ using Blazor.Shared;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.JSInterop;
 using Tewr.Blazor.FileReader;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -19,5 +20,6 @@ builder.Services.AddScoped(sp => new HttpClient
 builder.Services.AddScoped<ICaseService, CaseService>();
 builder.Services.AddFileReaderService(o => o.UseWasmSharedBuffer = true);
 builder.Services.AddScoped<ImageUpload>();
+builder.Services.AddScoped<IGeoLocationService, GeoLocationService>();
 
 await builder.Build().RunAsync();

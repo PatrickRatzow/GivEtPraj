@@ -1,5 +1,6 @@
 ﻿@page "/create-page"
 @using Blazor.Services
+@using BrowserInterop.Geolocation
 
 <PageTitle>Opret Praj</PageTitle>
 
@@ -25,6 +26,10 @@
             <input type="file" @ref="_input" @onchange="UpdateImages" accept=".jpg, .jpeg, png" />
         </div>
 
+        <button @onclick="GetLatLong">Get location</button>
+        <text>@Latitude</text><br />
+        <text>@Longitude</text>
+
         <button @onclick="@SubmitCase">Giv Prajet</button>   
     }
 </div>
@@ -33,8 +38,11 @@
     private ElementReference _input;
     [Inject] private ICaseService CaseService { get; set; }
     [Inject] private ImageUpload ImageUpload { get; set; }
+    [Inject] private IGeoLocationService GeoLocationService { get; set; }
     private string Title { get; set; }
     private string Description { get; set; }
+    private double Latitude { get; set; }
+    private double Longitude { get; set; }
     private bool HasSentCase { get; set; }
     private IList<string> ImagesData = new List<string>();
 
@@ -48,5 +56,14 @@
     private async Task UpdateImages()
     {
         ImagesData = await ImageUpload.GetFilesUploaded(_input);
+    }
+
+    private async Task GetLatLong()
+    {
+        GeolocationResult geoLocation = await GeoLocationService.GetCoords();
+        Latitude = geoLocation.Location.Coords.Latitude;
+        Longitude = geoLocation.Location.Coords.Longitude;
+
+
     }
 }
