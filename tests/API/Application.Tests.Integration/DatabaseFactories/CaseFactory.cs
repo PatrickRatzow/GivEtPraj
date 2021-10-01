@@ -14,25 +14,25 @@ public class CaseFactory : DatabaseFactory
     {
     }
 
-    public Case Create(string? title = null, string? description = null)
+    public Case Create(Category category, string? title = null, string? description = null)
     {
         lock (CreationLock)
         {
-            return CreateCase(title, null);
+            return CreateCase(category, title, null);
         }
     }
 
-    public List<Case> CreateMany(int amount)
+    public List<Case> CreateMany(Category category, int amount)
     {
         lock (CreationLock)
         {
             return Enumerable.Range(0, amount)
-                .Select(x => CreateCase())
+                .Select(x => CreateCase(category))
                 .ToList();
         }
     }
     
-    private Case CreateCase(string? title = null, string? description = null)
+    private Case CreateCase(Category category, string? title = null, string? description = null)
     {
         _casesCreated++;
         
@@ -42,7 +42,8 @@ public class CaseFactory : DatabaseFactory
         return Add(new Case
         {
             Title = title,
-            Description = description
+            Description = description,
+            Category = category
         });
     }
 }
