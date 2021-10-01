@@ -1,4 +1,5 @@
 ﻿@page "/create-page"
+@using BrowserInterop.Geolocation
 @using Commentor.GivEtPraj.Blazor.Services
 @using Commentor.GivEtPraj.Application.Contracts
 
@@ -12,45 +13,73 @@
     else
     {
         <EditForm name="rate" Model="@model">
-        <h1>Giv Et Praj!</h1>
-        
-        <div>
-            <label>Titel</label>
-            <input type="text" @bind="@Title"/>
-        </div>
-        <div>
-            <label>Beskrivelse</label>
-            <input type="text" @bind="@Description"/>
-        </div>
-        <div>
-            <label>Categori</label>
-            <InputRadioGroup @bind-Value="SelectedCategory">
-            @foreach (var category in Categories)
-            {
-                <InputRadio Value="category.Name" />
-                @category.Name
-            }
+            <h1>Giv Et Praj!</h1>
+
+            <div>
+                <label>Titel</label>
+                <input type="text" @bind="@Title" />
+            </div>
+            <div>
+                <label>Beskrivelse</label>
+                <input type="text" @bind="@Description" />
+            </div>
+            <div>
+                <label>Categori</label>
+                <InputRadioGroup @bind-Value="SelectedCategory">
+                    @foreach (var category in Categories)
+                    {
+                    <InputRadio Value="category.Name" />
+                    @category.Name
+                    }
             </InputRadioGroup>
-            
+
         </div>
+
+        <div>
+            <button @onclick="GetLatLong">Get location</button>
+            <text>@Latitude</text><br />
+            <text>@Longitude</text>
+        </div>
+
         <div>
             <label>Billeder</label>
             <input type="file" @ref="_input" @onchange="UpdateImages" accept=".jpg, .jpeg, png" />
         </div>
 
-            selected category: @SelectedCategory
-            <button @onclick="@SubmitCase">Giv Prajet</button>   
+        <div id="TakeImage">
+            <button type="button" class="btn btn-primary" @onclick="StartVideo">Activate camera</button>
+            <button id="click-photo" @onclick="TakePhoto">Take photo</button>
+            <video id="video" width="640" height="480" autoplay></video>
+
+            <ul>
+                    @foreach (string imgStr in ImagesData)
+                    {
+                    <li>
+                        <img width="320" height="240" src="@imgStr" alt="Red dot">
+                    </li>
+                    }
+            </ul>
+    </div>
+
+
+    <button @onclick="@SubmitCase">Giv Prajet</button>
+                selected category: @SelectedCategory
             </EditForm>
     }
+
 </div>
 
 @code {
     private ElementReference _input;
     [Inject] private ICaseService CaseService { get; set; }
     [Inject] private ImageUpload ImageUpload { get; set; }
+    [Inject] private IGeoLocationService GeoLocationService { get; set; }
     [Inject] private ICategoryService CategoryService { get; set; }
+    [Inject] private ICameraService CameraService { get; set; }
     private string Title { get; set; }
     private string Description { get; set; }
+    private double Latitude { get; set; }
+    private double Longitude { get; set; }
     private bool HasSentCase { get; set; }
     private string SelectedCategory { get; set; }
     private IList<string> ImagesData = new List<string>();
@@ -64,7 +93,7 @@
 
     private async Task SubmitCase()
     {
-        await CaseService.CreateCase(Title, Description, ImagesData, SelectedCategory);
+        await CaseService.CreateCase(Title, Description, ImagesData, SelectedCategory, Longitude, Latitude);
 
         HasSentCase = true;
     }
@@ -74,8 +103,25 @@
         ImagesData = await ImageUpload.GetFilesUploaded(_input);
     }
 
+    private async Task GetLatLong()
+    {
+        GeolocationResult geoLocation = await GeoLocationService.GetCoords();
+        Latitude = geoLocation.Location.Coords.Latitude;
+        Longitude = geoLocation.Location.Coords.Longitude;
+    }
+
+    private async Task TakePhoto()
+    {
+        ImagesData.Add(await CameraService.TakePhoto());
+    }
+
+    private async Task StartVideo()
+    {
+        await CameraService.GetCameraFeed();
+    }
+
     private class Model
     {
-      public string SelectedCategory { get; set;}
+        public string SelectedCategory { get; set; }
     }
 }

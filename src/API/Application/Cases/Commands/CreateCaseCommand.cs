@@ -8,7 +8,9 @@ public record CreateCaseCommand(
     string Title,
     string Description,
     IList<string> Images,
-    string Category
+    string Category,
+    double Longitude,
+    double Latitude
 ) : IRequest<OneOf<CaseSummaryDto, InvalidCategory>>;
 
 public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<CaseSummaryDto, InvalidCategory>>
@@ -38,7 +40,9 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
             Title = request.Title,
             Description = request.Description,
             Pictures = images,
-            Category = category
+            Category = category,
+            Longitude = request.Longitude,
+            Latitude = request.Latitude
         };
             
         _db.Cases.Add(newCase);
@@ -100,6 +104,14 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
         RuleFor(x => x.Description)
             .NotEmpty()
             .MaximumLength(4096);
+
+        RuleFor(x => x.Longitude)
+            .LessThanOrEqualTo(180)
+            .GreaterThanOrEqualTo(-180);
+
+        RuleFor(x => x.Latitude)
+            .LessThanOrEqualTo(90)
+            .GreaterThanOrEqualTo(-90);
 
         RuleFor(x => x.Category)
             .NotEmpty();

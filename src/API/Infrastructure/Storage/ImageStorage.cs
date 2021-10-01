@@ -22,10 +22,10 @@ public class ImageStorage : IImageStorage
         var extension = Path.GetExtension(name);
         var contentType = extension switch
         {
-            "jpg" => "image/jpeg;base64",
-            "jpeg" => "image/jpeg;base64",
-            "png" => "image/png;base64",
-            "txt" => "image/jpeg;base64",
+            ".jpg" => "image/jpeg;base64",
+            ".jpeg" => "image/jpeg;base64",
+            ".png" => "image/png;base64",
+            ".txt" => "image/jpeg;base64",
             _ => throw new ArgumentException($"{name} is not an allowed file extension")
         };
         

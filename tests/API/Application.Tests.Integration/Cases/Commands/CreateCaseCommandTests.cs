@@ -24,7 +24,9 @@ public class CreateCaseCommandTests : TestBase
         var title = "Test Case";
         var description = "An example description";
         var images = new List<string>();
-        var command = new CreateCaseCommand(title, description, images, category.Name);
+        var longitude = 0;
+        var latitude = 0;
+        var command = new CreateCaseCommand(title, description, images, category.Name, longitude, latitude);
         
         // Act
         var result = await Send(command);

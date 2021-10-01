@@ -3,6 +3,8 @@ using Commentor.GivEtPraj.Blazor.Services;
 using Commentor.GivEtPraj.Blazor.Shared;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.JSInterop;
 using Tewr.Blazor.FileReader;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -17,5 +19,7 @@ builder.Services.AddScoped<ICaseService, CaseService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddFileReaderService(o => o.UseWasmSharedBuffer = true);
 builder.Services.AddScoped<ImageUpload>();
+builder.Services.AddScoped<IGeoLocationService, GeoLocationService>();
+builder.Services.AddScoped<ICameraService, CameraService>();
 
 await builder.Build().RunAsync();
