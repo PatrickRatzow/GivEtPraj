@@ -52,7 +52,7 @@
             <video id="video" width="640" height="480" autoplay></video>
 
             <ul>
-                    @foreach (string imgStr in base64List)
+                    @foreach (string imgStr in ImagesData)
                     {
                     <li>
                         <img width="320" height="240" src="@imgStr" alt="Red dot">
@@ -85,7 +85,6 @@
     private IList<string> ImagesData = new List<string>();
     private IList<CategoryDto> Categories = new List<CategoryDto>();
     private Model model = new Model();
-    private List<string> base64List = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -94,7 +93,7 @@
 
     private async Task SubmitCase()
     {
-        await CaseService.CreateCase(Title, Description, ImagesData, SelectedCategory);
+        await CaseService.CreateCase(Title, Description, ImagesData, SelectedCategory, Longitude, Latitude);
 
         HasSentCase = true;
     }
@@ -113,7 +112,7 @@
 
     private async Task TakePhoto()
     {
-        base64List.Add(await CameraService.TakePhoto());
+        ImagesData.Add(await CameraService.TakePhoto());
     }
 
     private async Task StartVideo()

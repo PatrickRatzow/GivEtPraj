@@ -15,5 +15,11 @@ public class CaseConfiguration : IEntityTypeConfiguration<Case>
         builder.HasMany(c => c.Pictures)
             .WithOne(cp => cp.Case)
             .HasForeignKey(cp => cp.CaseId);
+
+        builder.Property(c => c.Longitude)
+            .IsRequired();
+
+        builder.Property(c => c.Latitude)
+            .IsRequired();
     }
 }

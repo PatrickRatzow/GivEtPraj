@@ -4,5 +4,7 @@ public record CreateCaseRequest(
     string Title, 
     string Description,
     IList<string> Images,
-    string Category
+    string Category,
+    double Longitude,
+    double Latitude
 );
