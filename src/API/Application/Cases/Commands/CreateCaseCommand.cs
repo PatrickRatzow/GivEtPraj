@@ -100,5 +100,11 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
         RuleFor(x => x.Description)
             .NotEmpty()
             .MaximumLength(4096);
+
+        RuleFor(x => x.Category)
+            .NotEmpty();
+
+        RuleForEach(x => x.Images)
+            .NotEmpty();
     }
 }
