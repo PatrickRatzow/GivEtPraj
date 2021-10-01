@@ -21,6 +21,7 @@ public class FindCaseQueryHandler : IRequestHandler<FindCaseQuery, OneOf<CaseSum
     {
         var @case = await _db.Cases
             .Include(c => c.Pictures)
+            .Include(c => c.Category)
             .Where(c => c.Id == request.Id)
             .FirstOrDefaultAsync(cancellationToken);
             
