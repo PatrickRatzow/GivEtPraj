@@ -46,10 +46,25 @@
             <input type="file" @ref="_input" @onchange="UpdateImages" accept=".jpg, .jpeg, png" />
         </div>
 
+        <div id="TakeImage">
+            <button type="button" class="btn btn-primary" @onclick="StartVideo">Activate camera</button>
+            <button id="click-photo" @onclick="TakePhoto">Take photo</button>
+            <video id="video" width="640" height="480" autoplay></video>
 
-        <button @onclick="@SubmitCase">Giv Prajet</button>
-        selected category: @SelectedCategory
-    </EditForm>
+            <ul>
+                    @foreach (string imgStr in base64List)
+                    {
+                    <li>
+                        <img width="320" height="240" src="@imgStr" alt="Red dot">
+                    </li>
+                    }
+            </ul>
+    </div>
+
+
+    <button @onclick="@SubmitCase">Giv Prajet</button>
+                selected category: @SelectedCategory
+            </EditForm>
     }
 
 </div>
@@ -60,6 +75,7 @@
     [Inject] private ImageUpload ImageUpload { get; set; }
     [Inject] private IGeoLocationService GeoLocationService { get; set; }
     [Inject] private ICategoryService CategoryService { get; set; }
+    [Inject] private ICameraService CameraService { get; set; }
     private string Title { get; set; }
     private string Description { get; set; }
     private double Latitude { get; set; }
@@ -69,6 +85,7 @@
     private IList<string> ImagesData = new List<string>();
     private IList<CategoryDto> Categories = new List<CategoryDto>();
     private Model model = new Model();
+    private List<string> base64List = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -94,6 +111,15 @@
         Longitude = geoLocation.Location.Coords.Longitude;
     }
 
+    private async Task TakePhoto()
+    {
+        base64List.Add(await CameraService.TakePhoto());
+    }
+
+    private async Task StartVideo()
+    {
+        await CameraService.GetCameraFeed();
+    }
 
     private class Model
     {

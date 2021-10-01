@@ -20,5 +20,6 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddFileReaderService(o => o.UseWasmSharedBuffer = true);
 builder.Services.AddScoped<ImageUpload>();
 builder.Services.AddScoped<IGeoLocationService, GeoLocationService>();
+builder.Services.AddScoped<ICameraService, CameraService>();
 
 await builder.Build().RunAsync();
