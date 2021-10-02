@@ -21,19 +21,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\API\Domain\Do
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Persistence", "src\API\Infrastructure.Persistence\Infrastructure.Persistence.csproj", "{D7A56ACE-B018-4DBC-B220-422E16A52DF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor", "src\Web\Blazor\Blazor.csproj", "{A14B3E36-9947-48FF-80B2-CF96511884A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor", "src\Web\Blazor\Blazor.csproj", "{A14B3E36-9947-48FF-80B2-CF96511884A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Contracts", "src\API\Application.Contracts\Application.Contracts.csproj", "{7C453764-6F3E-4B0B-8BF5-6C393550213D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Contracts", "src\API\Application.Contracts\Application.Contracts.csproj", "{7C453764-6F3E-4B0B-8BF5-6C393550213D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.SourceGenerator", "src\API\WebApi.SourceGenerator\WebApi.SourceGenerator.csproj", "{D589A2BA-4B8A-4E37-9650-B1F185DE3181}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.SourceGenerator", "src\API\WebApi.SourceGenerator\WebApi.SourceGenerator.csproj", "{D589A2BA-4B8A-4E37-9650-B1F185DE3181}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.Contracts", "src\API\WebApi.Contracts\WebApi.Contracts.csproj", "{3CD11D6F-0684-46EC-8FA3-170FBBFBAA98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Contracts", "src\API\WebApi.Contracts\WebApi.Contracts.csproj", "{3CD11D6F-0684-46EC-8FA3-170FBBFBAA98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Errors", "src\API\Application.Errors\Application.Errors.csproj", "{3590449C-8B4B-439C-B5DF-55FB915AF9F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Errors", "src\API\Application.Errors\Application.Errors.csproj", "{3590449C-8B4B-439C-B5DF-55FB915AF9F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Tests.Integration", "tests\API\Application.Tests.Integration\Application.Tests.Integration.csproj", "{335A5812-6B63-4149-9093-982492B745AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Tests.Integration", "tests\API\Application.Tests.Integration\Application.Tests.Integration.csproj", "{335A5812-6B63-4149-9093-982492B745AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Tests.Unit", "tests\API\Application.Tests.Unit\Application.Tests.Unit.csproj", "{F701A5A1-3999-4963-9CC5-B10045B30207}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Tests.Unit", "tests\API\Application.Tests.Unit\Application.Tests.Unit.csproj", "{F701A5A1-3999-4963-9CC5-B10045B30207}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -104,7 +104,6 @@ Global
 		{A14B3E36-9947-48FF-80B2-CF96511884A7} = {47C87420-3E15-474A-91BE-7FEE4E1476D9}
 		{7C453764-6F3E-4B0B-8BF5-6C393550213D} = {BB908A82-6585-487B-A532-7884AED9883C}
 		{D589A2BA-4B8A-4E37-9650-B1F185DE3181} = {BB908A82-6585-487B-A532-7884AED9883C}
-		{A14B3E36-9947-48FF-80B2-CF96511884A7} = {BB908A82-6585-487B-A532-7884AED9883C}
 		{3CD11D6F-0684-46EC-8FA3-170FBBFBAA98} = {BB908A82-6585-487B-A532-7884AED9883C}
 		{3590449C-8B4B-439C-B5DF-55FB915AF9F4} = {BB908A82-6585-487B-A532-7884AED9883C}
 		{335A5812-6B63-4149-9093-982492B745AB} = {D96FBFF4-987C-4B33-98E5-9DD966BB8F17}
