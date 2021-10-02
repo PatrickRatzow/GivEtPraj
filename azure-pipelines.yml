@@ -14,7 +14,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   dotNetFramework: 'net6.0'
-  dotNetVersion: '6.0.x'
+  dotNetVersion: '6.0.100-preview.7.21379.14'
 
 steps:
 - task: UseDotNet@2
@@ -22,6 +22,7 @@ steps:
     version: $(dotNetVersion)
     includePreviewVersions: true
 - script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'Build .NET 6 app'
 
 - task: NuGetToolInstaller@1
 
