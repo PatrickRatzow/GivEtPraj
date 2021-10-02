@@ -1,30 +1,29 @@
 ﻿using Microsoft.JSInterop;
 
-namespace Commentor.GivEtPraj.Blazor.Services
+namespace Commentor.GivEtPraj.Blazor.Services;
+
+public interface ICameraService
 {
-    public interface ICameraService
+    Task GetCameraFeed();
+    Task<string> TakePhoto();
+}
+
+public class CameraService : ICameraService
+{
+    private readonly IJSRuntime _jsRuntime;
+
+    public CameraService(IJSRuntime jsRuntime)
     {
-        Task GetCameraFeed();
-        Task<string> TakePhoto();
+        _jsRuntime = jsRuntime;
     }
 
-    public class CameraService : ICameraService
+    public async Task GetCameraFeed()
     {
-        private readonly IJSRuntime _jsRuntime;
+        await _jsRuntime.InvokeVoidAsync("startVideo");
+    }
 
-        public CameraService(IJSRuntime jsRuntime)
-        {
-            _jsRuntime = jsRuntime;
-        }
-
-        public async Task GetCameraFeed()
-        {
-            await _jsRuntime.InvokeVoidAsync("startVideo");
-        }
-
-        public async Task<string> TakePhoto()
-        {
-            return await _jsRuntime.InvokeAsync<string>("takePhoto");
-        }
+    public async Task<string> TakePhoto()
+    {
+        return await _jsRuntime.InvokeAsync<string>("takePhoto");
     }
 }

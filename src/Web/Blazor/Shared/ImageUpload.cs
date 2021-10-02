@@ -1,31 +1,30 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Tewr.Blazor.FileReader;
 
-namespace Commentor.GivEtPraj.Blazor.Shared
+namespace Commentor.GivEtPraj.Blazor.Shared;
+
+public class ImageUpload
 {
-    public class ImageUpload
+    private readonly IFileReaderService _fileReaderService;
+
+    public ImageUpload(IFileReaderService fileReaderService)
     {
-        private readonly IFileReaderService _fileReaderService;
+        _fileReaderService = fileReaderService;
+    }
 
-        public ImageUpload(IFileReaderService fileReaderService)
+    public async Task<IList<string>> GetFilesUploaded(ElementReference input)
+    {
+        var content = new List<string>();
+
+        foreach (var file in await _fileReaderService.CreateReference(input).EnumerateFilesAsync())
         {
-            _fileReaderService = fileReaderService;
+            if (file == null) continue;
+
+            var fileInfo = await file.ReadFileInfoAsync();
+            var ms = await file.CreateMemoryStreamAsync(4 * 1024);
+            content.Add(Convert.ToBase64String(ms.ToArray()));
         }
 
-        public async Task<IList<string>> GetFilesUploaded(ElementReference input)
-        {
-            var content = new List<string>();
-
-            foreach (var file in await _fileReaderService.CreateReference(input).EnumerateFilesAsync())
-            {
-                if (file == null) continue;
-                
-                var fileInfo = await file.ReadFileInfoAsync();
-                var ms = await file.CreateMemoryStreamAsync(4 * 1024);
-                content.Add(Convert.ToBase64String(ms.ToArray()));
-            }
-
-            return content;
-        }
+        return content;
     }
 }
