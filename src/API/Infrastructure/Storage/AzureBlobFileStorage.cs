@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Commentor.GivEtPraj.Application.Common.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -16,14 +13,14 @@ public class AzureBlobFileStorage : IFileStorage
     {
         _blobServiceClient = new(configuration["Azure:Blob:ConnectionString"]);
     }
-        
+
     public async Task<Stream?> FindFile(string path)
     {
         var blobClient = GetBlobClient(path);
 
         var fileExists = await blobClient.ExistsAsync();
         if (!fileExists) return null;
-            
+
         var file = await blobClient.DownloadAsync();
         return file.Value.Content;
     }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Commentor.GivEtPraj.Application.Common.Interfaces;
+﻿using Commentor.GivEtPraj.Application.Common.Interfaces;
 
 namespace Commentor.GivEtPraj.Infrastructure.Storage;
 
@@ -28,7 +25,7 @@ public class ImageStorage : IImageStorage
             ".txt" => "image/jpeg;base64",
             _ => throw new ArgumentException($"{name} is not an allowed file extension")
         };
-        
+
         return await _fileStorage.UploadFile(FullPath(name), content, contentType);
     }
 
