@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace Commentor.GivEtPraj.Application.Common.Interfaces;
+﻿namespace Commentor.GivEtPraj.Application.Common.Interfaces;
 
 public interface IFileStorage
 {

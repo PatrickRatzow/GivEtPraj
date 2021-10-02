@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Threading;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
@@ -26,13 +24,13 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         _imageStorage = imageStorage;
     }
 
-    public async Task<OneOf<CaseSummaryDto, InvalidCategory>> 
+    public async Task<OneOf<CaseSummaryDto, InvalidCategory>>
         Handle(CreateCaseCommand request, CancellationToken cancellationToken)
     {
         var category = await _db.Categories
             .FirstOrDefaultAsync(c => request.Category == c.Name, cancellationToken);
         if (category is null) return new InvalidCategory(request.Category);
-        
+
         var images = await CreateImages(request);
 
         var newCase = new Case
@@ -44,7 +42,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
             Longitude = request.Longitude,
             Latitude = request.Latitude
         };
-            
+
         _db.Cases.Add(newCase);
         await _db.SaveChangesAsync(cancellationToken);
 
@@ -62,7 +60,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
             .ToList();
 
         await UploadImages(images);
-        
+
         return images;
     }
 
@@ -72,12 +70,12 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
 
         var disposables = new List<IAsyncDisposable>();
         await Task.WhenAll(images.Select((cp, index) =>
-        { 
+        {
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
             disposables.Add(stream);
             disposables.Add(writer);
-            
+
             writer.Write(images[index]);
             writer.Flush();
 

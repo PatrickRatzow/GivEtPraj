@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Commentor.GivEtPraj.Application.Cases.Queries;
 
@@ -16,7 +15,7 @@ public class FindCaseQueryHandler : IRequestHandler<FindCaseQuery, OneOf<CaseSum
         _mapper = mapper;
     }
 
-    public async Task<OneOf<CaseSummaryDto, CaseNotFound>> Handle(FindCaseQuery request, 
+    public async Task<OneOf<CaseSummaryDto, CaseNotFound>> Handle(FindCaseQuery request,
         CancellationToken cancellationToken)
     {
         var @case = await _db.Cases
@@ -24,7 +23,7 @@ public class FindCaseQueryHandler : IRequestHandler<FindCaseQuery, OneOf<CaseSum
             .Include(c => c.Category)
             .Where(c => c.Id == request.Id)
             .FirstOrDefaultAsync(cancellationToken);
-            
+
         if (@case is null) return new CaseNotFound(request.Id);
 
         return _mapper.Map<Case, CaseSummaryDto>(@case);
