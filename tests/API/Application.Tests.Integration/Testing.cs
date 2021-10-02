@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using Commentor.GivEtPraj.Application.Tests.Integration.DatabaseFactories;
 using Commentor.GivEtPraj.WebApi;
 using Infrastructure.Persistence;

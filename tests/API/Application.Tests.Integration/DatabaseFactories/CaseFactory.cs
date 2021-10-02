@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Commentor.GivEtPraj.Domain.Entities;
+﻿using Commentor.GivEtPraj.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration.DatabaseFactories;
@@ -31,11 +29,11 @@ public class CaseFactory : DatabaseFactory
                 .ToList();
         }
     }
-    
+
     private Case CreateCase(Category category, string? title = null, string? description = null)
     {
         _casesCreated++;
-        
+
         title ??= $"Case #{_casesCreated}";
         description ??= $"Description #{_casesCreated}";
 

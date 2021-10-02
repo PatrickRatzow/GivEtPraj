@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Commentor.GivEtPraj.Domain.Entities;
+﻿using Commentor.GivEtPraj.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration.DatabaseFactories;
@@ -14,7 +12,7 @@ public class CategoryFactory : DatabaseFactory
     {
     }
 
-    public Category Create(string? name = null) 
+    public Category Create(string? name = null)
     {
         lock (CreationLock)
         {
@@ -31,7 +29,7 @@ public class CategoryFactory : DatabaseFactory
                 .ToList();
         }
     }
-    
+
     private Category CreateCategory(string? name = null)
     {
         _categoriesCreated++;
