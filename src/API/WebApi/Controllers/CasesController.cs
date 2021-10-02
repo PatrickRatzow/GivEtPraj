@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Commentor.GivEtPraj.Application.Cases.Commands;
+﻿using Commentor.GivEtPraj.Application.Cases.Commands;
 using Commentor.GivEtPraj.Application.Cases.Queries;
 
 namespace Commentor.GivEtPraj.WebApi.Controllers;
@@ -18,14 +17,18 @@ public class CasesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCase([FromBody]CreateCaseRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateCase([FromBody] CreateCaseRequest request,
+        CancellationToken cancellationToken)
     {
         var command = _mapper.Map<CreateCaseRequest, CreateCaseCommand>(request);
         var result = await _mediator.Send(command, cancellationToken);
-        
+
         return result.MatchResponse(
-            caseSummaryDto => CreatedAtAction(nameof(FindCase), 
-                new { Id = caseSummaryDto.Id }, caseSummaryDto)
+            caseSummaryDto => CreatedAtAction(nameof(FindCase),
+                new
+                {
+                    Id = caseSummaryDto.Id
+                }, caseSummaryDto)
         );
     }
 

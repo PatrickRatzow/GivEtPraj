@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Commentor.GivEtPraj.Application.Categories.Queries;
+﻿using Commentor.GivEtPraj.Application.Categories.Queries;
 
 namespace Commentor.GivEtPraj.WebApi.Controllers;
 

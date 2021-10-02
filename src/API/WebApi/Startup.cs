@@ -2,12 +2,6 @@
 using Commentor.GivEtPraj.Application;
 using Commentor.GivEtPraj.Infrastructure;
 using Commentor.GivEtPraj.WebApi.Filters;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace Commentor.GivEtPraj.WebApi;
@@ -68,7 +62,7 @@ public class Startup
                 }
             });
         });
-            
+
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
     }
 
