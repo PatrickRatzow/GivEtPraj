@@ -21,23 +21,15 @@ steps:
   inputs:
     version: $(dotNetVersion)
     includePreviewVersions: true
-- script: dotnet build --configuration $(buildConfiguration)
+
+- script: dotnet restore
+  displayName: 'Restore NuGet dependencies'
+
+- script: dotnet build --no-restore --configuration $(buildConfiguration)
   displayName: 'Build .NET 6 app'
 
-- task: NuGetToolInstaller@1
+- script: dotnet test ./tests/API/Application.Tests.Unit --no-build
+  displayName: 'API Application Unit Tests'
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
-
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+- script: dotnet test ./tests/API/Application.Tests.Integration --no-build
+  displayName: 'API Application Integration Tests'
