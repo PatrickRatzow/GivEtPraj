@@ -28,8 +28,8 @@ steps:
 - script: dotnet build --no-restore --configuration $(buildConfiguration)
   displayName: 'Build .NET 6 app'
 
-- script: dotnet test ./tests/API/Application.Tests.Unit --no-build
+- script: dotnet test ./tests/API/Application.Tests.Unit
   displayName: 'API Application Unit Tests'
 
-- script: dotnet test ./tests/API/Application.Tests.Integration --no-build
+- script: dotnet test ./tests/API/Application.Tests.Integration
   displayName: 'API Application Integration Tests'
