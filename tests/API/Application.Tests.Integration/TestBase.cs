@@ -1,7 +1,4 @@
-﻿using Commentor.GivEtPraj.Application.Tests.Integration.DatabaseFactories;
-using NUnit.Framework;
-
-namespace Commentor.GivEtPraj.Application.Tests.Integration;
+﻿namespace Commentor.GivEtPraj.Application.Tests.Integration;
 
 using static Testing;
 

@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using Commentor.GivEtPraj.Application.Tests.Integration.DatabaseFactories;
 using Commentor.GivEtPraj.WebApi;
 using Infrastructure.Persistence;
 using MediatR;
@@ -7,8 +6,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using NUnit.Framework;
 using Respawn;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration;

@@ -1,8 +1,4 @@
 ﻿using Commentor.GivEtPraj.Application.Cases.Queries;
-using Commentor.GivEtPraj.Application.Contracts;
-using Commentor.GivEtPraj.Application.Tests.Integration.DatabaseFactories;
-using FluentAssertions;
-using NUnit.Framework;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration.Cases.Queries;
 

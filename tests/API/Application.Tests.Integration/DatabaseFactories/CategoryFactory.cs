@@ -1,5 +1,4 @@
-﻿using Commentor.GivEtPraj.Domain.Entities;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration.DatabaseFactories;
 
