@@ -10,17 +10,17 @@ public interface ICategoryService
 
 public class CategoryService : ICategoryService
 {
-    private readonly HttpClient _httpClient;
+    private readonly HttpFallbackClient _httpFallbackClient;
 
-    public CategoryService(HttpClient httpClient)
+    public CategoryService(HttpFallbackClient httpFallbackClient)
     {
-        _httpClient = httpClient;
+        _httpFallbackClient = httpFallbackClient;
     }
-    
+
     public async Task<List<CategoryDto>> GetAllCategories()
     {
-        var categories = await _httpClient.GetFromJsonAsync<List<CategoryDto>>("categories");
-        
+        var categories = await _httpFallbackClient.GetOrFallbackAsync<List<CategoryDto>>("categories", "categories");
+
         return categories ?? new();
     }
 }

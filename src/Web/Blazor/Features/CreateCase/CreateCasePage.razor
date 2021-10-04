@@ -83,7 +83,7 @@
     private bool HasSentCase { get; set; }
     private string SelectedCategory { get; set; }
     private IList<string> ImagesData = new List<string>();
-    private IList<CategoryDto> Categories = new List<CategoryDto>();
+    private IList<CategoryDto>? Categories = new List<CategoryDto>();
     private Model model = new Model();
 
     protected override async Task OnInitializedAsync()
