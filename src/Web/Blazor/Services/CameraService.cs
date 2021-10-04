@@ -24,6 +24,8 @@ public class CameraService : ICameraService
 
     public async Task<string> TakePhoto()
     {
-        return await _jsRuntime.InvokeAsync<string>("takePhoto");
+        var stringToRemove = "data:image/png;base64,";
+        var photo = await _jsRuntime.InvokeAsync<string>("takePhoto");
+        return photo.Replace(stringToRemove, string.Empty);
     }
 }

@@ -8,5 +8,6 @@ public class CaseProfile : Profile
             .ForMember(c => c.AmountOfPictures, 
                 opts => opts.MapFrom(m => m.Pictures.Count));
         CreateMap<Category, CategoryDto>();
+        CreateMap<SubCategory, SubCategoryDto>();
     }
 }
