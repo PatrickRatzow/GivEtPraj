@@ -27,6 +27,20 @@ public static class AppDbContextSeed
         });
     }
 
+    private static void SeedSubCategories(AppDbContext context)
+    {
+        var hasAny = context.SubCategories.Any();
+        if (hasAny) return;
+
+        context.SubCategories.AddRange(new()
+        {
+            Name = "Toilet"
+        }, new()
+        {
+            Name = "Vejskade"
+        });
+    }
+
     private static void SeedCases(AppDbContext context)
     {
         var hasAny = context.Cases.Any();
