@@ -1,4 +1,5 @@
-﻿using Commentor.GivEtPraj.Application.Categories.Queries;
+﻿using System.Threading.Tasks;
+using Commentor.GivEtPraj.Application.Categories.Queries;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration.Cases.Queries;
 

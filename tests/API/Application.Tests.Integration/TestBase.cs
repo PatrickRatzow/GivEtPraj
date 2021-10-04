@@ -1,4 +1,6 @@
-﻿namespace Commentor.GivEtPraj.Application.Tests.Integration;
+﻿using System.Threading.Tasks;
+
+namespace Commentor.GivEtPraj.Application.Tests.Integration;
 
 using static Testing;
 
