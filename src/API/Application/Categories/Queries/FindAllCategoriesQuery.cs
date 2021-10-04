@@ -18,7 +18,10 @@ public class FindAllCategoriesQueryHandler : IRequestHandler<FindAllCategoriesQu
     public async Task<List<CategoryDto>> Handle(FindAllCategoriesQuery request,
         CancellationToken cancellationToken)
     {
-        var categories = await _db.Categories.ToListAsync(cancellationToken);
+        var categories = await _db.Categories
+            .Include(category => category.SubCategories)
+            .ToListAsync(cancellationToken);
+
 
         return _mapper.Map<List<Category>, List<CategoryDto>>(categories);
     }

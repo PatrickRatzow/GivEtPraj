@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Commentor.GivEtPraj.Application.Categories.Queries;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration.Cases.Queries;
@@ -36,5 +37,23 @@ public class FindAllCategoriesQueryTests : TestBase
 
         // Assert
         result.Should().BeEmpty();
+    }
+
+    [Test]
+    public async Task ShouldFetchAllSubCategoriesForCategory()
+    {
+        // Arrange
+        var category = Database.Factory<CategoryFactory>().Create();
+        var subCategories = Database.Factory<SubCategoryFactory>().CreateMany(category, 4);
+
+        await Database.Save();
+
+        var query = new FindAllCategoriesQuery();
+
+        // Act
+        var result = await Send(query);
+
+        // Assert
+        result.First().SubCategories.Should().HaveCount(subCategories.Count);
     }
 }
