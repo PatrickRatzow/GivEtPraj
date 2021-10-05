@@ -6,6 +6,7 @@ public interface ICameraService
 {
     Task GetCameraFeed();
     Task<string> TakePhoto();
+    Task FlipCamera();
 }
 
 public class CameraService : ICameraService
@@ -27,5 +28,10 @@ public class CameraService : ICameraService
         var stringToRemove = "data:image/png;base64,";
         var photo = await _jsRuntime.InvokeAsync<string>("takePhoto");
         return photo.Replace(stringToRemove, string.Empty);
+    }
+
+    public async Task FlipCamera()
+    {
+        await _jsRuntime.InvokeVoidAsync("flipCamera");
     }
 }
