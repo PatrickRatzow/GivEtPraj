@@ -54,7 +54,7 @@
                 @foreach (string imgStr in _imagesData)
                     {
                         <li>
-                            <img width="320" height="240" src="@imgStr" alt="Red dot">
+                            <img width="320" height="240" src="data:image/png;base64, @imgStr" alt="Red dot">
                         </li>
                     }
                 </ul>
