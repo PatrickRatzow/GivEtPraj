@@ -75,7 +75,15 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
 
         await UploadImages(compressedList);
 
-        return pictures;
+        var xdPictures = new List<Picture>();
+        foreach(var image in request.Images)
+        {
+            var guid = Guid.NewGuid();
+            list.Add((image, guid));
+            xdPictures.Add(new Picture { Id = guid });
+        }
+
+        return pictures.Concat(xdPictures).ToList();
     }
 
     private async ValueTask UploadImages(IReadOnlyList<(string Image, Guid Id)> images)
@@ -137,7 +145,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
 
             MemoryStream CompressedImg = new MemoryStream(); 
 
-            EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 50L);
+            EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 30L);
             myEncoderParameters.Param[0] = myEncoderParameter;
             bmp1.Save(CompressedImg, jpgEncoder, myEncoderParameters);
 
