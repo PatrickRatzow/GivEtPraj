@@ -1,6 +1,5 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 
 namespace Commentor.GivEtPraj.Application.Services
 {
@@ -44,10 +43,6 @@ namespace Commentor.GivEtPraj.Application.Services
                 bmp1.Save(CompressedImg, jpgEncoder, myEncoderParameters);
 
 
-
-
-
-
                 return CompressedImg;
             }
         }
@@ -66,4 +61,3 @@ namespace Commentor.GivEtPraj.Application.Services
         }
     }
 }
-
