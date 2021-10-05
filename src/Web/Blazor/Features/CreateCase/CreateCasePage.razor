@@ -1,5 +1,6 @@
 ﻿@page "/create-page"
 @using BrowserInterop.Geolocation
+@using Commentor.GivEtPraj.Blazor.Component.Modal
 @using Commentor.GivEtPraj.Blazor.Services
 @using Commentor.GivEtPraj.Application.Contracts
 
@@ -36,22 +37,29 @@
         </div>
 
         <div>
-            <button @onclick="GetLatLong">Get location</button>
-            <text>@Latitude</text><br />
-            <text>@Longitude</text>
-        </div>
+            @if (!HasCameraPermission)
+                {
+                 <ConfirmModal/>    
+                } 
+             else
+               {
+                <button @onclick="GetLatLong">Get location</button>
+                <text>@Latitude</text><br />
+                <text>@Longitude</text>
+               }
+            </div>
 
-        <div>
-            <label>Billeder</label>
-            <input type="file" @ref="_input" @onchange="UpdateImages" accept=".jpg, .jpeg, png" />
-        </div>
+            <div>
+                <label>Billeder</label>
+                <input type="file" @ref="_input" @onchange="UpdateImages" accept=".jpg, .jpeg, png" />
+            </div>
 
-        <div id="TakeImage">
+            <div id="TakeImage">
 
-            <Camera OnElementAdded="ImagesListElementAdded"></Camera>
+                <Camera OnElementAdded="ImagesListElementAdded"></Camera>
 
-            <ul>
-                @foreach (string imgStr in _imagesData)
+                <ul>
+                    @foreach (string imgStr in _imagesData)
                     {
                         <li>
                             <img width="320" height="240" src="data:image/png;base64, @imgStr" alt="Red dot">
@@ -73,7 +81,7 @@
     [Inject] private ICaseService CaseService { get; set; }
     [Inject] private ImageUpload ImageUpload { get; set; }
     [Inject] private IGeoLocationService GeoLocationService { get; set; }
-    [Inject] private ICategoryService CategoryService { get; set; }
+    [Inject] private ICategoryService CategoryService { get; set; }    
     private string Title { get; set; }
     private string Description { get; set; }
     private double Latitude { get; set; }
@@ -83,6 +91,8 @@
     private IList<string> _imagesData = new List<string>();
     private IList<CategoryDto>? Categories = new List<CategoryDto>();
     private Model model = new Model();
+
+    private bool HasCameraPermission { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {

@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Blazored.LocalStorage;
 using Commentor.GivEtPraj.Blazor;
+using Commentor.GivEtPraj.Blazor.Component.Modal;
 using Commentor.GivEtPraj.Blazor.Services;
 using Commentor.GivEtPraj.Blazor.Shared;
 using Microsoft.AspNetCore.Components.Web;
