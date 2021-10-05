@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Commentor.GivEtPraj.Domain.ValueObject;
+using Microsoft.EntityFrameworkCore;
+using System.Drawing;
+using System.Drawing.Imaging;
+using static Commentor.GivEtPraj.Application.Services.CompressionService;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
@@ -39,8 +43,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
             Description = request.Description,
             Pictures = images,
             Category = category,
-            Longitude = request.Longitude,
-            Latitude = request.Latitude
+            Coords = Coords.From(request.Latitude, request.Longitude)
         };
 
         _db.Cases.Add(newCase);
@@ -52,19 +55,39 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
 
     private async Task<List<Picture>> CreateImages(CreateCaseCommand request)
     {
-        var images = request.Images
-            .Select(i => new Picture
-            {
-                Id = Guid.NewGuid()
-            })
-            .ToList();
+        var pictures = new List<Picture>();
+        var list = new List<(string Image, Guid Id)>();
+        foreach (var image in request.Images)
+        {
+            var guid = Guid.NewGuid();
+            list.Add((image, guid));
+            pictures.Add(new Picture { Id = guid });
+        }
 
-        await UploadImages(images);
 
-        return images;
+        var compressedList = new List<(string Image, Guid Id)>();
+        foreach (var item in list)
+        {
+            MemoryStream img = VaryQualityLevel(Base64ToImage(item.Image), 30);
+
+            compressedList.Add((Convert.ToBase64String(img.ToArray()), item.Id));
+
+        }
+
+        await UploadImages(compressedList);
+
+        var xdPictures = new List<Picture>();
+        foreach (var image in request.Images)
+        {
+            var guid = Guid.NewGuid();
+            list.Add((image, guid));
+            xdPictures.Add(new Picture { Id = guid });
+        }
+
+        return pictures.Concat(xdPictures).ToList();
     }
 
-    private async ValueTask UploadImages(IReadOnlyList<Picture> images)
+    private async ValueTask UploadImages(IReadOnlyList<(string Image, Guid Id)> images)
     {
         if (!images.Any()) return;
 
@@ -76,7 +99,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
             disposables.Add(stream);
             disposables.Add(writer);
 
-            writer.Write(images[index]);
+            writer.Write(cp.Image);
             writer.Flush();
 
             stream.Position = 0;
@@ -90,6 +113,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         }
     }
 }
+
 
 public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 {

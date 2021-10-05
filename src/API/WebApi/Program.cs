@@ -1,5 +1,9 @@
 using Infrastructure.Persistence;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Commentor.GivEtPraj.WebApi;
 
@@ -21,8 +25,8 @@ public class Program
                 {
                     await context.Database.MigrateAsync();
                 }
-
-                //await ApplicationDbContextSeed.SeedSampleData(context);
+                
+                await AppDbContextSeed.SeedSampleData(context);
             }
             catch (Exception ex)
             {

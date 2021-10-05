@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211004122627_ReaddSubCategories")]
+    partial class ReaddSubCategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,6 +39,12 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(4096)
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -115,29 +123,7 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Commentor.GivEtPraj.Domain.ValueObject.Coords", "Coords", b1 =>
-                        {
-                            b1.Property<int>("CaseId")
-                                .HasColumnType("int");
-
-                            b1.Property<double>("Latitude")
-                                .HasColumnType("float");
-
-                            b1.Property<double>("Longitude")
-                                .HasColumnType("float");
-
-                            b1.HasKey("CaseId");
-
-                            b1.ToTable("Cases");
-
-                            b1.WithOwner()
-                                .HasForeignKey("CaseId");
-                        });
-
                     b.Navigation("Category");
-
-                    b.Navigation("Coords")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Picture", b =>

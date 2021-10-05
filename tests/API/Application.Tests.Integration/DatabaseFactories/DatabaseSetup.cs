@@ -1,4 +1,6 @@
-﻿using Infrastructure.Persistence;
+﻿using System;
+using System.Threading.Tasks;
+using Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration.DatabaseFactories;
