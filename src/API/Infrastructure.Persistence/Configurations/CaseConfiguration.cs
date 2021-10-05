@@ -16,10 +16,7 @@ public class CaseConfiguration : IEntityTypeConfiguration<Case>
             .WithOne(cp => cp.Case)
             .HasForeignKey(cp => cp.CaseId);
 
-        builder.Property(c => c.Longitude)
-            .IsRequired();
+        builder.OwnsOne(c => c.Coords);
 
-        builder.Property(c => c.Latitude)
-            .IsRequired();
     }
 }

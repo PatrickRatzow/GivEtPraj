@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Linq;
+using Commentor.GivEtPraj.Domain.ValueObject;
 
 namespace Infrastructure.Persistence;
 
@@ -52,17 +53,15 @@ public static class AppDbContextSeed
             Title = "Hul i vejen",
             Description = "Der er et stor hul i vejen på arbejde",
             Category = category,
-            Latitude = 54,
-            Longitude = 54
+            Coords = Coords.From(54, 54)
         }, new()
         {
             Title = "Hul",
             Description = "Hul vejen",
             Category = category,
-            Latitude = 53,
-            Longitude = 53.5,
-            Pictures = new() 
-            { 
+            Coords = Coords.From(53, 53.5),
+            Pictures = new()
+            {
                 new()
                 {
                     Id = Guid.NewGuid()
@@ -72,6 +71,6 @@ public static class AppDbContextSeed
                     Id = Guid.NewGuid()
                 }
             }
-        });
+        }) ;
     }
 }

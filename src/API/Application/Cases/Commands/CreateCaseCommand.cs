@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Commentor.GivEtPraj.Domain.ValueObject;
+using Microsoft.EntityFrameworkCore;
 using System.Drawing;
 using System.Drawing.Imaging;
 using static Commentor.GivEtPraj.Application.Services.CompressionService;
@@ -42,8 +43,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
             Description = request.Description,
             Pictures = images,
             Category = category,
-            Longitude = request.Longitude,
-            Latitude = request.Latitude
+            Coords = Coords.From(request.Latitude, request.Longitude)
         };
 
         _db.Cases.Add(newCase);
