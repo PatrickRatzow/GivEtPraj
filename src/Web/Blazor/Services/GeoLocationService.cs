@@ -26,4 +26,9 @@ public class GeoLocationService : IGeoLocationService
 
         return await geoLocationWrapper.GetCurrentPosition();
     }
+
+    public void HasLocationPermission()
+    {
+
+    }
 }
