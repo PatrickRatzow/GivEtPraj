@@ -39,7 +39,11 @@
         <div>
             @if (!HasCameraPermission)
                 {
-                 <ConfirmModal/>    
+                 <ConfirmModal/>  
+                 @GetLocationError();
+                                 <button @onclick="GetLatLong">Get location</button>
+                <text>@Latitude</text><br />
+                <text>@Longitude</text>
                 } 
              else
                {
@@ -81,7 +85,7 @@
     [Inject] private ICaseService CaseService { get; set; }
     [Inject] private ImageUpload ImageUpload { get; set; }
     [Inject] private IGeoLocationService GeoLocationService { get; set; }
-    [Inject] private ICategoryService CategoryService { get; set; }    
+    [Inject] private ICategoryService CategoryService { get; set; }
     private string Title { get; set; }
     private string Description { get; set; }
     private double Latitude { get; set; }
@@ -92,11 +96,12 @@
     private IList<CategoryDto>? Categories = new List<CategoryDto>();
     private Model model = new Model();
 
-    private bool HasCameraPermission { get; set; } = false;
+    private bool HasCameraPermission { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Categories = await CategoryService.GetAllCategories();
+        GetLatLong();
     }
 
     private async Task SubmitCase()
@@ -111,11 +116,26 @@
         _imagesData = await ImageUpload.GetFilesUploaded(_input);
     }
 
+    private string GetLocationError()
+    {
+       return GeoLocationService.GetLocationError();
+    }
+
     private async Task GetLatLong()
     {
-        GeolocationResult geoLocation = await GeoLocationService.GetCoords();
-        Latitude = geoLocation.Location.Coords.Latitude;
-        Longitude = geoLocation.Location.Coords.Longitude;
+
+        try
+        {
+            GeolocationResult geoLocation = await GeoLocationService.GetCoords();
+            Latitude = geoLocation.Location.Coords.Latitude;
+            Longitude = geoLocation.Location.Coords.Longitude;
+        }
+        catch (NullReferenceException e)
+        {
+            var window = await GeoLocationService.GetWindow();
+            await window.Console.Log(e.StackTrace);
+            await window.Alert(e.Message);
+        }
     }
 
     private class Model
@@ -127,4 +147,5 @@
     {
         _imagesData.Add(str);
     }
+
 }
