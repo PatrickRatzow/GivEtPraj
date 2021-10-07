@@ -10,128 +10,112 @@ public class CoordsTests
     [Test]
     public void ShouldCreateCoordsObjectIfLatitudeHasLowestAllowedValue()
     {
-        //Arrange
-        double latitude = -90;
-        double longitude = 0;
+        // Arrange
+        const double latitude = -90;
+        const double longitude = 0;
 
-
-        //Act
+        // Act
         Action action = () => Coords.From(latitude, longitude);
 
-        //Assert
+        // Assert
         action.Should().NotThrow();
-
     }
 
     [Test]
     public void ShouldCreateCoordsObjectIfLatitudeHasHighestAllowedValue()
     {
-        //Arrange
-        double latitude = 90;
-        double longitude = 0;
+        // Arrange
+        const double latitude = 90;
+        const double longitude = 0;
 
-
-        //Act
+        // Act
         Action action = () => Coords.From(latitude, longitude);
 
-        //Assert
+        // Assert
         action.Should().NotThrow();
-
     }
 
     [Test]
     public void ShouldCreateCoordsObjectIfLongitudeHasLowestAllowedValue()
     {
-        //Arrange
-        double latitude = 0;
-        double longitude = -180;
+        // Arrange
+        const double latitude = 0;
+        const double longitude = -180;
 
-
-        //Act
+        // Act
         Action action = () => Coords.From(latitude, longitude);
 
-        //Assert
+        // Assert
         action.Should().NotThrow();
-
     }
 
     [Test]
     public void ShouldCreateCoordsObjectIfLongitudeHasHighestAllowedValue()
     {
-        //Arrange
-        double latitude = 0;
-        double longitude = 180;
+        // Arrange
+        const double latitude = 0;
+        const double longitude = 180;
 
-
-        //Act
+        // Act
         Action action = () => Coords.From(latitude, longitude);
 
-        //Assert
+        // Assert
         action.Should().NotThrow();
-
     }
 
     [Test]
     public void ShouldThrowInvalidLatitudeExceptionIfLatitudeBelowMinus90()
     {
-        //Arrange
-        double latitude = -91;
-        double longitude = 0;
+        // Arrange
+        const double latitude = -91;
+        const double longitude = 0;
 
-
-        //Act
+        // Act
         Action action = () => Coords.From(latitude, longitude);
 
-        //Assert
+        // Assert
         action.Should().Throw<InvalidLatitudeException>();
-
     }
 
     [Test]
     public void ShouldThrowInvalidLatitudeExceptionIfLatitudeAbove90()
     {
-        //Arrange
-        double latitude = 91;
-        double longitude = 0;
+        // Arrange
+        const double latitude = 91;
+        const double longitude = 0;
 
-
-        //Act
+        // Act
         Action action = () => Coords.From(latitude, longitude);
 
-        //Assert
+        // Assert
         action.Should().Throw<InvalidLatitudeException>();
-
     }
 
     [Test]
     public void ShouldThrowInvalidLongitudeExceptionIfLongitudeBelowMinus180()
     {
-        //Arrange
-        double latitude = 0;
-        double longitude = -181;
+        // Arrange
+        const double latitude = 0;
+        const double longitude = -181;
 
-
-        //Act
+        // Act
         Action action = () => Coords.From(latitude, longitude);
 
-        //Assert
+        // Assert
         action.Should().Throw<InvalidLongitudeException>();
-
     }
 
     [Test]
     public void ShouldThrowInvalidLongitudeExceptionIfLongitudeAbove180()
     {
-        //Arrange
-        double latitude = 0;
-        double longitude = 181;
+        // Arrange
+        const double latitude = 0;
+        const double longitude = 181;
 
-
-        //Act
+        // Act
         Action action = () => Coords.From(latitude, longitude);
 
-        //Assert
+        // Assert
         action.Should().Throw<InvalidLongitudeException>();
-
     }
 }
