@@ -1,4 +1,4 @@
-﻿using Commentor.GivEtPraj.Domain.ValueObject;
+﻿using Commentor.GivEtPraj.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;

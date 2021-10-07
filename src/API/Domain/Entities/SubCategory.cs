@@ -1,9 +1,8 @@
-﻿namespace Commentor.GivEtPraj.Domain.Entities
+﻿namespace Commentor.GivEtPraj.Domain.Entities;
+
+public class SubCategory
 {
-    public class SubCategory
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public Category Category { get; set; }
-    }
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public Category Category { get; set; }
 }
