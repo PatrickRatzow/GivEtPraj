@@ -5,59 +5,59 @@ using NUnit.Framework;
 
 namespace Commentor.GivEtPraj.Application.Tests.Unit.ValueObjects;
 
-public class CoordsTests
+public class GeographicLocationTests
 {
     [Test]
-    public void ShouldCreateCoordsObjectIfLatitudeHasLowestAllowedValue()
+    public void ShouldCreateGeographicLocationObjectIfLatitudeHasLowestAllowedValue()
     {
         // Arrange
         const double latitude = -90;
         const double longitude = 0;
 
         // Act
-        Action action = () => Coords.From(latitude, longitude);
+        Action action = () => GeographicLocation.From(latitude, longitude);
 
         // Assert
         action.Should().NotThrow();
     }
 
     [Test]
-    public void ShouldCreateCoordsObjectIfLatitudeHasHighestAllowedValue()
+    public void ShouldCreateGeographicLocationObjectIfLatitudeHasHighestAllowedValue()
     {
         // Arrange
         const double latitude = 90;
         const double longitude = 0;
 
         // Act
-        Action action = () => Coords.From(latitude, longitude);
+        Action action = () => GeographicLocation.From(latitude, longitude);
 
         // Assert
         action.Should().NotThrow();
     }
 
     [Test]
-    public void ShouldCreateCoordsObjectIfLongitudeHasLowestAllowedValue()
+    public void ShouldCreateGeographicLocationObjectIfLongitudeHasLowestAllowedValue()
     {
         // Arrange
         const double latitude = 0;
         const double longitude = -180;
 
         // Act
-        Action action = () => Coords.From(latitude, longitude);
+        Action action = () => GeographicLocation.From(latitude, longitude);
 
         // Assert
         action.Should().NotThrow();
     }
 
     [Test]
-    public void ShouldCreateCoordsObjectIfLongitudeHasHighestAllowedValue()
+    public void ShouldCreateGeographicLocationObjectIfLongitudeHasHighestAllowedValue()
     {
         // Arrange
         const double latitude = 0;
         const double longitude = 180;
 
         // Act
-        Action action = () => Coords.From(latitude, longitude);
+        Action action = () => GeographicLocation.From(latitude, longitude);
 
         // Assert
         action.Should().NotThrow();
@@ -71,7 +71,7 @@ public class CoordsTests
         const double longitude = 0;
 
         // Act
-        Action action = () => Coords.From(latitude, longitude);
+        Action action = () => GeographicLocation.From(latitude, longitude);
 
         // Assert
         action.Should().Throw<InvalidLatitudeException>();
@@ -85,7 +85,7 @@ public class CoordsTests
         const double longitude = 0;
 
         // Act
-        Action action = () => Coords.From(latitude, longitude);
+        Action action = () => GeographicLocation.From(latitude, longitude);
 
         // Assert
         action.Should().Throw<InvalidLatitudeException>();
@@ -99,7 +99,7 @@ public class CoordsTests
         const double longitude = -181;
 
         // Act
-        Action action = () => Coords.From(latitude, longitude);
+        Action action = () => GeographicLocation.From(latitude, longitude);
 
         // Assert
         action.Should().Throw<InvalidLongitudeException>();
@@ -113,7 +113,7 @@ public class CoordsTests
         const double longitude = 181;
 
         // Act
-        Action action = () => Coords.From(latitude, longitude);
+        Action action = () => GeographicLocation.From(latitude, longitude);
 
         // Assert
         action.Should().Throw<InvalidLongitudeException>();

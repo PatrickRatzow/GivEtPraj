@@ -2,24 +2,24 @@
 
 namespace Commentor.GivEtPraj.Domain.ValueObjects;
 
-public class Coords : ValueObject
+public class GeographicLocation : ValueObject
 {
     public double Latitude { get; private set; }
     public double Longitude { get; private set; }
 
-    private Coords()
+    private GeographicLocation()
     {
     }
 
-    private Coords(double latitude, double longitude)
+    private GeographicLocation(double latitude, double longitude)
     {
         Latitude = latitude;
         Longitude = longitude;
     }
 
-    public static Coords From(double latitude, double longitude)
+    public static GeographicLocation From(double latitude, double longitude)
     {
-        var coords = new Coords(latitude, longitude);
+        var geographicLocation = new GeographicLocation(latitude, longitude);
 
         if (latitude is < -90 or > 90)
         {
@@ -33,7 +33,7 @@ public class Coords : ValueObject
                 $"{nameof(longitude)} is out of range. Must be between -180 and 180.");
         }
 
-        return coords;
+        return geographicLocation;
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
