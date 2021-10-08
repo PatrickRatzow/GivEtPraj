@@ -2,6 +2,8 @@
 using Commentor.GivEtPraj.Application;
 using Commentor.GivEtPraj.Infrastructure;
 using Commentor.GivEtPraj.WebApi.Filters;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,10 +16,7 @@ namespace Commentor.GivEtPraj.WebApi;
 
 public class Startup
 {
-    private static readonly ILoggerFactory Logger = LoggerFactory.Create(builder =>
-    {
-        builder.AddConsole();
-    });
+    private static readonly ILoggerFactory Logger = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
     private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _env;
@@ -70,6 +69,8 @@ public class Startup
         });
 
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        services.AddFluentValidation();
+        services.AddValidatorsFromAssembly(typeof(CreateCaseRequest).Assembly);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -103,9 +104,6 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
+        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }
 }
