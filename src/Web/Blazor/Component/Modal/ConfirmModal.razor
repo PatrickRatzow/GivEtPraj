@@ -1,7 +1,9 @@
 ﻿
 <h3>ConfirmModal</h3>
 
-<button @onclick="AddActiveClass">Activate Modal</button>
+<!--
+    With this button we can set IsActive to be true instantly.
+<button @onclick="AddActiveClass">Activate Modal</button> -->
 <div class="modal @(IsActive ? "is-active" : "")">
   <div class="modal-background"></div>
   <div class="modal-content">
@@ -9,11 +11,12 @@
         Hey you have to accept the app using your location!
     </div>
   </div>
+    <!-- When closing the Modal we want to set IsActive back to true;-->
   <button class="modal-close is-large" @onclick="AddActiveClass" aria-label="close"></button>
 </div>
 
 @code {
-    private bool IsActive { get; set; } = false;
+    private bool IsActive { get; set; } = true;
 
     public void AddActiveClass()
     {
