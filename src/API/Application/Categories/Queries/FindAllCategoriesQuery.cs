@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Commentor.GivEtPraj.Application.Categories.Queries;
 
@@ -16,9 +15,13 @@ public class FindAllCategoriesQueryHandler : IRequestHandler<FindAllCategoriesQu
         _mapper = mapper;
     }
 
-    public async Task<List<CategoryDto>> Handle(FindAllCategoriesQuery request, CancellationToken cancellationToken)
+    public async Task<List<CategoryDto>> Handle(FindAllCategoriesQuery request,
+        CancellationToken cancellationToken)
     {
-        var categories = await _db.Categories.ToListAsync(cancellationToken);
+        var categories = await _db.Categories
+            .Include(category => category.SubCategories)
+            .ToListAsync(cancellationToken);
+
 
         return _mapper.Map<List<Category>, List<CategoryDto>>(categories);
     }

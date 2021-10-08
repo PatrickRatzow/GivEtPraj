@@ -84,6 +84,29 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Pictures");
                 });
 
+            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.SubCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("SubCategories");
+                });
+
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Case", b =>
                 {
                     b.HasOne("Commentor.GivEtPraj.Domain.Entities.Category", "Category")
@@ -92,7 +115,29 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("Commentor.GivEtPraj.Domain.ValueObjects.GeographicLocation", "GeographicLocation", b1 =>
+                        {
+                            b1.Property<int>("CaseId")
+                                .HasColumnType("int");
+
+                            b1.Property<double>("Latitude")
+                                .HasColumnType("float");
+
+                            b1.Property<double>("Longitude")
+                                .HasColumnType("float");
+
+                            b1.HasKey("CaseId");
+
+                            b1.ToTable("Cases");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CaseId");
+                        });
+
                     b.Navigation("Category");
+
+                    b.Navigation("GeographicLocation")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Picture", b =>
@@ -106,6 +151,17 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Case");
                 });
 
+            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.SubCategory", b =>
+                {
+                    b.HasOne("Commentor.GivEtPraj.Domain.Entities.Category", "Category")
+                        .WithMany("SubCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Case", b =>
                 {
                     b.Navigation("Pictures");
@@ -114,6 +170,8 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Cases");
+
+                    b.Navigation("SubCategories");
                 });
 #pragma warning restore 612, 618
         }

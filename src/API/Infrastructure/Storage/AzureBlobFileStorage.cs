@@ -16,14 +16,14 @@ public class AzureBlobFileStorage : IFileStorage
     {
         _blobServiceClient = new(configuration["Azure:Blob:ConnectionString"]);
     }
-        
+
     public async Task<Stream?> FindFile(string path)
     {
         var blobClient = GetBlobClient(path);
 
         var fileExists = await blobClient.ExistsAsync();
         if (!fileExists) return null;
-            
+
         var file = await blobClient.DownloadAsync();
         return file.Value.Content;
     }

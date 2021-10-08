@@ -1,32 +1,43 @@
-﻿using BrowserInterop.Extensions;
+﻿using BrowserInterop;
+using BrowserInterop.Extensions;
 using BrowserInterop.Geolocation;
 using Microsoft.JSInterop;
-using System.Diagnostics;
-using System.Text.Json.Serialization;
 
-namespace Commentor.GivEtPraj.Blazor.Services
+namespace Commentor.GivEtPraj.Blazor.Services;
+
+public interface IGeoLocationService
 {
-    public interface IGeoLocationService
+    Task<GeolocationResult> GetCoords();
+    string GetLocationError();
+    Task<WindowInterop> GetWindow();
+}
+
+public class GeoLocationService : IGeoLocationService
+{
+    private readonly IJSRuntime _jsRuntime;
+
+    public GeoLocationService(IJSRuntime jsRuntime)
     {
-        Task<GeolocationResult> GetCoords();
+        _jsRuntime = jsRuntime;
     }
 
-    public class GeoLocationService : IGeoLocationService
+    public async Task<GeolocationResult> GetCoords()
     {
-        private readonly IJSRuntime _jsRuntime;
+        var window = await _jsRuntime.Window();
+        var navigator = await window.Navigator();
+        var geoLocationWrapper = navigator.Geolocation;
 
-        public GeoLocationService(IJSRuntime jsRuntime)
-        {
-            _jsRuntime = jsRuntime;
-        }
+        return await geoLocationWrapper.GetCurrentPosition();
+    }
 
-        public async Task<GeolocationResult> GetCoords()
-        {
-            var window = await _jsRuntime.Window();
-            var navigator = await window.Navigator();
-            var geoLocationWrapper = navigator.Geolocation;
+    public async Task<WindowInterop> GetWindow()
+    {
+        return await _jsRuntime.Window();
+    }
 
-            return await geoLocationWrapper.GetCurrentPosition();
-        }
+    public string GetLocationError()
+    {
+        GeolocationPositionError error = new GeolocationPositionError();
+        return error.Message;
     }
 }

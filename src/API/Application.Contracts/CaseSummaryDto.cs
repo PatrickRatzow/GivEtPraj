@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Commentor.GivEtPraj.Application.Contracts;
+﻿namespace Commentor.GivEtPraj.Application.Contracts;
 
 public class CaseSummaryDto
 {

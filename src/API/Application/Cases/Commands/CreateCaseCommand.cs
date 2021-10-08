@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Threading;
+﻿using Commentor.GivEtPraj.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
@@ -8,7 +7,9 @@ public record CreateCaseCommand(
     string Title,
     string Description,
     IList<string> Images,
-    string Category
+    string Category,
+    double Longitude,
+    double Latitude
 ) : IRequest<OneOf<CaseSummaryDto, InvalidCategory>>;
 
 public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<CaseSummaryDto, InvalidCategory>>
@@ -24,13 +25,13 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         _imageStorage = imageStorage;
     }
 
-    public async Task<OneOf<CaseSummaryDto, InvalidCategory>> 
+    public async Task<OneOf<CaseSummaryDto, InvalidCategory>>
         Handle(CreateCaseCommand request, CancellationToken cancellationToken)
     {
         var category = await _db.Categories
             .FirstOrDefaultAsync(c => request.Category == c.Name, cancellationToken);
         if (category is null) return new InvalidCategory(request.Category);
-        
+
         var images = await CreateImages(request);
 
         var newCase = new Case
@@ -38,9 +39,10 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
             Title = request.Title,
             Description = request.Description,
             Pictures = images,
-            Category = category
+            Category = category,
+            GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude)
         };
-            
+
         _db.Cases.Add(newCase);
         await _db.SaveChangesAsync(cancellationToken);
 
@@ -50,42 +52,30 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
 
     private async Task<List<Picture>> CreateImages(CreateCaseCommand request)
     {
-        var images = request.Images
-            .Select(i => new Picture
+        var pictures = new List<Picture>();
+        var list = new List<(string Image, Guid Id)>();
+        foreach (var image in request.Images)
+        {
+            var guid = Guid.NewGuid();
+            list.Add((image, guid));
+            pictures.Add(new()
             {
-                Id = Guid.NewGuid()
-            })
-            .ToList();
+                Id = guid
+            });
+        }
 
-        await UploadImages(images);
-        
-        return images;
+        await UploadImages(list);
+
+        return pictures;
     }
 
-    private async ValueTask UploadImages(IReadOnlyList<Picture> images)
+    private async ValueTask UploadImages(IReadOnlyCollection<(string Image, Guid Id)> images)
     {
-        if (!images.Any()) return;
+        if (images.Count == 0) return;
 
-        var disposables = new List<IAsyncDisposable>();
-        await Task.WhenAll(images.Select((cp, index) =>
-        { 
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            disposables.Add(stream);
-            disposables.Add(writer);
-            
-            writer.Write(images[index]);
-            writer.Flush();
+        var imageUploads = images.Select(img => _imageStorage.UploadImage($"{img.Id}.jpg", img.Image));
 
-            stream.Position = 0;
-
-            return _imageStorage.UploadImage($"{cp.Id}.jpg", stream);
-        }));
-
-        foreach (var disposable in disposables)
-        {
-            await disposable.DisposeAsync();
-        }
+        await Task.WhenAll(imageUploads);
     }
 }
 
@@ -100,5 +90,19 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
         RuleFor(x => x.Description)
             .NotEmpty()
             .MaximumLength(4096);
+
+        RuleFor(x => x.Longitude)
+            .LessThanOrEqualTo(180)
+            .GreaterThanOrEqualTo(-180);
+
+        RuleFor(x => x.Latitude)
+            .LessThanOrEqualTo(90)
+            .GreaterThanOrEqualTo(-90);
+
+        RuleFor(x => x.Category)
+            .NotEmpty();
+
+        RuleForEach(x => x.Images)
+            .NotEmpty();
     }
 }

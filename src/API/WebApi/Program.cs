@@ -16,17 +16,17 @@ public class Program
         using (var scope = host.Services.CreateScope())
         {
             var services = scope.ServiceProvider;
-                
+
             try
             {
                 var context = services.GetRequiredService<AppDbContext>();
 
                 if (context.Database.IsSqlServer())
-                { 
+                {
                     await context.Database.MigrateAsync();
                 }
-
-                //await ApplicationDbContextSeed.SeedSampleData(context);
+                
+                await AppDbContextSeed.SeedSampleData(context);
             }
             catch (Exception ex)
             {

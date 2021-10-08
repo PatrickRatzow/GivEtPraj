@@ -1,4 +1,6 @@
 ﻿@page "/create-page"
+@using BrowserInterop.Geolocation
+@using Commentor.GivEtPraj.Blazor.Component.Modal
 @using Commentor.GivEtPraj.Blazor.Services
 @using Commentor.GivEtPraj.WebApi.Contracts.Requests
 @using Commentor.GivEtPraj.Application.Contracts
@@ -39,12 +41,39 @@
                 </InputRadioGroup>
                 <ValidationMessage For="@(() => model.Category)"/>
 
+        </div>
+
+        <div>
+            @if (!HasCameraPermission)
+                {
+                 <ConfirmModal/>  
+                 @GetLocationError();
+                                 <button @onclick="GetLatLong">Get location</button>
+                <text>@Latitude</text><br />
+                <text>@Longitude</text>
+                } 
+             else
+               {
+                <button @onclick="GetLatLong">Get location</button>
+                <text>@Latitude</text><br />
+                <text>@Longitude</text>
+               }
             </div>
 
-            <div>
-                <button @onclick="GetLatLong">Get location</button>
-                <text>@Latitude</text><br/>
-                <text>@Longitude</text>
+            
+
+            <div id="TakeImage">
+
+                <Camera OnElementAdded="ImagesListElementAdded"></Camera>
+
+                <ul>
+                    @foreach (string imgStr in _imagesData)
+                    {
+                        <li>
+                            <img width="320" height="240" src="data:image/png;base64, @imgStr" alt="Red dot">
+                        </li>
+                    }
+                </ul>
             </div>
 
 
@@ -76,38 +105,57 @@
     private double Longitude { get; set; }
     private bool HasSentCase { get; set; }
     private string SelectedCategory { get; set; }
-    private IList<string> ImagesData = new List<string>();
+    private IList<string> _imagesData = new List<string>();
     private IList<CategoryDto> Categories = new List<CategoryDto>();
     private CreateCaseRequest model = new();
+
+    private bool HasCameraPermission { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Categories = await CategoryService.GetAllCategories();
+        GetLatLong();
     }
 
     private async Task SubmitCase()
     {
-        await CaseService.CreateCase(Title, Description, ImagesData, SelectedCategory);
+        await CaseService.CreateCase(Title, Description, _imagesData, SelectedCategory, Longitude, Latitude);
 
         HasSentCase = true;
     }
 
     private async Task UpdateImages()
     {
-        ImagesData = await ImageUpload.GetFilesUploaded(_input);
+        _imagesData = await ImageUpload.GetFilesUploaded(_input);
+    }
+
+    private string GetLocationError()
+    {
+       return GeoLocationService.GetLocationError();
     }
 
     private async Task GetLatLong()
     {
-        GeolocationResult geoLocation = await GeoLocationService.GetCoords();
-        Latitude = geoLocation.Location.Coords.Latitude;
-        Longitude = geoLocation.Location.Coords.Longitude;
+
+        try
+        {
+            GeolocationResult geoLocation = await GeoLocationService.GetCoords();
+            Latitude = geoLocation.Location.Coords.Latitude;
+            Longitude = geoLocation.Location.Coords.Longitude;
+        }
+        catch (NullReferenceException e)
+        {
+            var window = await GeoLocationService.GetWindow();
+            await window.Console.Log(e.StackTrace);
+            await window.Alert(e.Message);
+        }
     }
 
+    
 
-    private class Model
+    public async Task ImagesListElementAdded(string str)
     {
-        public string SelectedCategory { get; set; }
+        _imagesData.Add(str);
     }
 
 }
