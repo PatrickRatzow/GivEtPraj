@@ -1,7 +1,8 @@
 ﻿@page "/create-page"
-@using BrowserInterop.Geolocation
 @using Commentor.GivEtPraj.Blazor.Services
+@using Commentor.GivEtPraj.WebApi.Contracts.Requests
 @using Commentor.GivEtPraj.Application.Contracts
+@using BrowserInterop.Geolocation
 
 <PageTitle>Opret Praj</PageTitle>
 
@@ -12,54 +13,63 @@
     }
     else
     {
-        <EditForm name="rate" Model="@model">
+        <EditForm name="rate" Model="@model" OnValidSubmit="SubmitCase">
+            <FluentValidationValidator/>
+            <ValidationSummary/>
             <h1>Giv Et Praj!</h1>
 
             <div>
                 <label>Titel</label>
-                <input type="text" @bind="@Title" />
+                <InputText @bind-Value="@model.Title"/>
+                <ValidationMessage For="@(() => @model.Title)"/>
             </div>
             <div>
                 <label>Beskrivelse</label>
-                <input type="text" @bind="@Description" />
+                <InputText @bind-Value="@model.Description"/>
+                <ValidationMessage For="@(() => model.Description)"/>
             </div>
             <div>
                 <label>Categori</label>
-                <InputRadioGroup @bind-Value="SelectedCategory">
+                <InputRadioGroup @bind-Value="@model.Category">
                     @foreach (var category in Categories)
                     {
-                    <InputRadio Value="category.Name" />
-                    @category.Name
+                        <InputRadio Value="category.Name"/>
+                        @category.Name
                     }
-            </InputRadioGroup>
+                </InputRadioGroup>
+                <ValidationMessage For="@(() => model.Category)"/>
 
-        </div>
+            </div>
 
-        <div>
-            <button @onclick="GetLatLong">Get location</button>
-            <text>@Latitude</text><br />
-            <text>@Longitude</text>
-        </div>
-
-        <div>
-            <label>Billeder</label>
-            <input type="file" @ref="_input" @onchange="UpdateImages" accept=".jpg, .jpeg, png" />
-        </div>
+            <div>
+                <button @onclick="GetLatLong">Get location</button>
+                <text>@Latitude</text><br/>
+                <text>@Longitude</text>
+            </div>
 
 
-        <button @onclick="@SubmitCase">Giv Prajet</button>
-        selected category: @SelectedCategory
-    </EditForm>
+            <button type="submit">Giv Prajet</button>
+            selected category: @model.Category
+        </EditForm>
     }
 
 </div>
 
 @code {
     private ElementReference _input;
-    [Inject] private ICaseService CaseService { get; set; }
-    [Inject] private ImageUpload ImageUpload { get; set; }
-    [Inject] private IGeoLocationService GeoLocationService { get; set; }
-    [Inject] private ICategoryService CategoryService { get; set; }
+
+    [Inject]
+    private ICaseService CaseService { get; set; }
+
+    [Inject]
+    private ImageUpload ImageUpload { get; set; }
+
+    [Inject]
+    private IGeoLocationService GeoLocationService { get; set; }
+
+    [Inject]
+    private ICategoryService CategoryService { get; set; }
+
     private string Title { get; set; }
     private string Description { get; set; }
     private double Latitude { get; set; }
@@ -68,7 +78,7 @@
     private string SelectedCategory { get; set; }
     private IList<string> ImagesData = new List<string>();
     private IList<CategoryDto> Categories = new List<CategoryDto>();
-    private Model model = new Model();
+    private CreateCaseRequest model = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -99,4 +109,5 @@
     {
         public string SelectedCategory { get; set; }
     }
+
 }
