@@ -1,4 +1,6 @@
-﻿namespace Commentor.GivEtPraj.Domain.ValueObjects;
+﻿using System.Linq;
+
+namespace Commentor.GivEtPraj.Domain.ValueObjects;
 
 public abstract class ValueObject
 {

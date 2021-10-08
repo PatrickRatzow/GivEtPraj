@@ -1,4 +1,6 @@
-﻿namespace Commentor.GivEtPraj.Infrastructure.Compression;
+﻿using System.IO;
+
+namespace Commentor.GivEtPraj.Infrastructure.Compression;
 
 public interface IImageCompression
 {

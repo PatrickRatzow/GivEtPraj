@@ -5,46 +5,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Commentor.GivEtPraj.Application.Tests.Integration.DatabaseFactories
+namespace Commentor.GivEtPraj.Application.Tests.Integration.DatabaseFactories;
+
+public class SubCategoryFactory : DatabaseFactory
 {
-    internal class SubCategoryFactory : DatabaseFactory
+    private static readonly object CreationLock = new();
+    private static int _subCategoriesCreated = 0;
+
+    public SubCategoryFactory(IServiceScope serviceScope) : base(serviceScope)
     {
-        private static readonly object CreationLock = new();
-        private static int _subCategoriesCreated = 0;
+    }
 
-        public SubCategoryFactory(IServiceScope serviceScope) : base(serviceScope)
+    public SubCategory Create(Category category, string? name = null)
+    {
+        lock (CreationLock)
         {
+            return CreateSubcategory(category, name);
         }
+    }
 
-        public SubCategory Create(Category category, string? name = null)
+    public List<SubCategory> CreateMany(Category category, int amount)
+    {
+        lock (CreationLock)
         {
-            lock (CreationLock)
-            {
-                return CreateSubcategory(category, name);
-            }
+            return Enumerable.Range(0, amount)
+                .Select(x => CreateSubcategory(category))
+                .ToList();
         }
+    }
 
-        public List<SubCategory> CreateMany(Category category, int amount)
+    private SubCategory CreateSubcategory(Category category, string? name = null)
+    {
+        _subCategoriesCreated++;
+
+        name ??= $"SubCategory #{_subCategoriesCreated}";
+
+        return Add(new SubCategory
         {
-            lock (CreationLock)
-            {
-                return Enumerable.Range(0, amount)
-                    .Select(x => CreateSubcategory(category))
-                    .ToList();
-            }
-        }
-
-        private SubCategory CreateSubcategory(Category category, string? name = null)
-        {
-            _subCategoriesCreated++;
-
-            name ??= $"SubCategory #{_subCategoriesCreated}";
-
-            return Add(new SubCategory
-            {
-                Name = name,
-                Category = category
-            });
-        }
+            Name = name,
+            Category = category
+        });
     }
 }

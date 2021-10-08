@@ -1,4 +1,7 @@
-﻿using Commentor.GivEtPraj.Domain.ValueObjects;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Commentor.GivEtPraj.Domain.ValueObjects;
 
 namespace Infrastructure.Persistence;
 
@@ -12,8 +15,7 @@ public static class AppDbContextSeed
         SeedCases(context);
         await context.SaveChangesAsync();
     }
-
-
+    
     private static void SeedCategories(AppDbContext context)
     {
         var hasAny = context.Categories.Any();
