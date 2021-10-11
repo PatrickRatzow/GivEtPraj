@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Commentor.GivEtPraj.Application.Cases.Commands;
+using Commentor.GivEtPraj.Domain.Enums;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration.Cases.Commands;
 
@@ -16,12 +18,14 @@ public class CreateCaseCommandTests : TestBase
 
         await Database.Save();
 
-        var title = "Test Case";
+        
         var description = "An example description";
         var images = new List<string>();
         var longitude = 0;
         var latitude = 0;
-        var command = new CreateCaseCommand(title, description, images, category.Name, longitude, latitude);
+        var priority = Priority.Low;
+        var ipAddress = IPAddress.Parse("127.0.0.1");
+        var command = new CreateCaseCommand(description, images, category.Name, longitude, latitude, priority, ipAddress);
 
         // Act
         var result = await Send(command);
@@ -36,13 +40,14 @@ public class CreateCaseCommandTests : TestBase
     public async Task ShouldNotCreateCaseIfCategoryDoesNotExist()
     {
         // Arrange
-        var title = "Test Case";
         var description = "An example description";
         var images = new List<string>();
         var categoryName = "Some category";
         var longitude = 0;
         var latitude = 0;
-        var command = new CreateCaseCommand(title, description, images, categoryName, longitude, latitude);
+        var priority = Priority.Low;
+        var ipAddress = IPAddress.Parse("127.0.0.1");
+        var command = new CreateCaseCommand(description, images, categoryName, longitude, latitude, priority, ipAddress);
 
         // Act
         var result = await Send(command);
