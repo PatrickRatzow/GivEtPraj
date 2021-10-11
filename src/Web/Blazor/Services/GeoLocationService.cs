@@ -8,7 +8,6 @@ namespace Commentor.GivEtPraj.Blazor.Services;
 public interface IGeoLocationService
 {
     Task<GeolocationResult> GetCoords();
-    string GetLocationError();
     Task<WindowInterop> GetWindow();
 }
 
@@ -33,11 +32,5 @@ public class GeoLocationService : IGeoLocationService
     public async Task<WindowInterop> GetWindow()
     {
         return await _jsRuntime.Window();
-    }
-
-    public string GetLocationError()
-    {
-        GeolocationPositionError error = new GeolocationPositionError();
-        return error.Message;
     }
 }
