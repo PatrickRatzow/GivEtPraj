@@ -14,6 +14,7 @@
 
    @code {
     private string captchaResponse;
+    [Parameter] public  EventCallback<string>  ReCaptchaResultGotten { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -25,8 +26,9 @@
     }
 
     [JSInvokable, EditorBrowsable(EditorBrowsableState.Never)]
-    public void CallbackOnSuccess(string response)
+    public async Task CallbackOnSuccess(string response)
     {
+        await ReCaptchaResultGotten.InvokeAsync(response);
         captchaResponse = response;
     }
 
