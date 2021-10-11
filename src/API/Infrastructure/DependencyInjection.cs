@@ -1,4 +1,5 @@
 ﻿using Commentor.GivEtPraj.Application.Common.Interfaces;
+using Commentor.GivEtPraj.Infrastructure.Compression;
 using Commentor.GivEtPraj.Infrastructure.Storage;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>()!);
         services.AddSingleton<IFileStorage, AzureBlobFileStorage>();
         services.AddSingleton<IImageStorage, ImageStorage>();
+        services.AddSingleton<IImageCompression, BitmapImageCompression>();
 
         return services;
     }

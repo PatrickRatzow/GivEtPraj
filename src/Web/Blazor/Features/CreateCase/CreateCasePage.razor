@@ -1,7 +1,10 @@
 ﻿@page "/create-page"
 @using BrowserInterop.Geolocation
+@using Commentor.GivEtPraj.Blazor.Component.Modal
 @using Commentor.GivEtPraj.Blazor.Services
+@using Commentor.GivEtPraj.WebApi.Contracts.Requests
 @using Commentor.GivEtPraj.Application.Contracts
+@using BrowserInterop.Geolocation
 
 <PageTitle>Opret Praj</PageTitle>
 
@@ -12,57 +15,70 @@
     }
     else
     {
-        <EditForm name="rate" Model="@model">
+        <EditForm name="rate" Model="@model" OnValidSubmit="SubmitCase">
+            <FluentValidationValidator/>
+            <ValidationSummary/>
             <h1>Giv Et Praj!</h1>
 
             <div>
                 <label>Titel</label>
-                <input type="text" @bind="@Title" />
+                <InputText @bind-Value="@model.Title"/>
+                <ValidationMessage For="@(() => @model.Title)"/>
             </div>
             <div>
                 <label>Beskrivelse</label>
-                <input type="text" @bind="@Description" />
+                <InputText @bind-Value="@model.Description"/>
+                <ValidationMessage For="@(() => model.Description)"/>
             </div>
             <div>
                 <label>Categori</label>
-                <InputRadioGroup @bind-Value="SelectedCategory">
+                <InputRadioGroup @bind-Value="@model.Category">
                     @foreach (var category in Categories)
                     {
-                    <InputRadio Value="category.Name" />
-                    @category.Name
+                        <InputRadio Value="category.Name"/>
+                        @category.Name
                     }
-            </InputRadioGroup>
+                </InputRadioGroup>
+                <ValidationMessage For="@(() => model.Category)"/>
 
         </div>
 
         <div>
-            <button @onclick="GetLatLong">Get location</button>
-            <text>@Latitude</text><br />
-            <text>@Longitude</text>
-        </div>
+            @if (!HasCameraPermission)
+                {
+                 <ConfirmModal/>  
+                 @GetLocationError();
+                                 <button @onclick="GetLatLong">Get location</button>
+                <text>@Latitude</text><br />
+                <text>@Longitude</text>
+                } 
+             else
+               {
+                <button @onclick="GetLatLong">Get location</button>
+                <text>@Latitude</text><br />
+                <text>@Longitude</text>
+               }
+            </div>
 
-        <div>
-            <label>Billeder</label>
-            <input type="file" @ref="_input" @onchange="UpdateImages" accept=".jpg, .jpeg, png" />
-        </div>
+            
 
-        <div id="TakeImage">
+            <div id="TakeImage">
 
-            <Camera OnElementAdded="ImagesListElementAdded"></Camera>
+                <Camera OnElementAdded="ImagesListElementAdded"></Camera>
 
-            <ul>
-                @foreach (string imgStr in _imagesData)
+                <ul>
+                    @foreach (string imgStr in _imagesData)
                     {
                         <li>
-                            <img width="320" height="240" src="@imgStr" alt="Red dot">
+                            <img width="320" height="240" src="data:image/png;base64, @imgStr" alt="Red dot">
                         </li>
                     }
                 </ul>
             </div>
 
 
-            <button @onclick="@SubmitCase">Giv Prajet</button>
-            selected category: @SelectedCategory
+            <button type="submit">Giv Prajet</button>
+            selected category: @model.Category
         </EditForm>
     }
 
@@ -70,10 +86,19 @@
 
 @code {
     private ElementReference _input;
-    [Inject] private ICaseService CaseService { get; set; }
-    [Inject] private ImageUpload ImageUpload { get; set; }
-    [Inject] private IGeoLocationService GeoLocationService { get; set; }
-    [Inject] private ICategoryService CategoryService { get; set; }
+
+    [Inject]
+    private ICaseService CaseService { get; set; }
+
+    [Inject]
+    private ImageUpload ImageUpload { get; set; }
+
+    [Inject]
+    private IGeoLocationService GeoLocationService { get; set; }
+
+    [Inject]
+    private ICategoryService CategoryService { get; set; }
+
     private string Title { get; set; }
     private string Description { get; set; }
     private double Latitude { get; set; }
@@ -81,12 +106,15 @@
     private bool HasSentCase { get; set; }
     private string SelectedCategory { get; set; }
     private IList<string> _imagesData = new List<string>();
-    private IList<CategoryDto>? Categories = new List<CategoryDto>();
-    private Model model = new Model();
+    private IList<CategoryDto> Categories = new List<CategoryDto>();
+    private CreateCaseRequest model = new();
+
+    private bool HasCameraPermission { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Categories = await CategoryService.GetAllCategories();
+        GetLatLong();
     }
 
     private async Task SubmitCase()
@@ -101,20 +129,33 @@
         _imagesData = await ImageUpload.GetFilesUploaded(_input);
     }
 
-    private async Task GetLatLong()
+    private string GetLocationError()
     {
-        GeolocationResult geoLocation = await GeoLocationService.GetCoords();
-        Latitude = geoLocation.Location.Coords.Latitude;
-        Longitude = geoLocation.Location.Coords.Longitude;
+       return GeoLocationService.GetLocationError();
     }
 
-    private class Model
+    private async Task GetLatLong()
     {
-        public string SelectedCategory { get; set; }
+
+        try
+        {
+            GeolocationResult geoLocation = await GeoLocationService.GetCoords();
+            Latitude = geoLocation.Location.Coords.Latitude;
+            Longitude = geoLocation.Location.Coords.Longitude;
+        }
+        catch (NullReferenceException e)
+        {
+            var window = await GeoLocationService.GetWindow();
+            await window.Console.Log(e.StackTrace);
+            await window.Alert(e.Message);
+        }
     }
+
+    
 
     public async Task ImagesListElementAdded(string str)
     {
         _imagesData.Add(str);
     }
+
 }

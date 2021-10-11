@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Linq;
-using Commentor.GivEtPraj.Domain.ValueObject;
+using System.Threading.Tasks;
+using Commentor.GivEtPraj.Domain.ValueObjects;
 
 namespace Infrastructure.Persistence;
 
@@ -11,17 +11,16 @@ public static class AppDbContextSeed
     {
         SeedCategories(context);
         await context.SaveChangesAsync();
-        
+
         SeedCases(context);
         await context.SaveChangesAsync();
     }
-
-
+    
     private static void SeedCategories(AppDbContext context)
     {
         var hasAny = context.Categories.Any();
         if (hasAny) return;
-        
+
         context.Categories.Add(new()
         {
             Name = "Vejskade"
@@ -71,6 +70,6 @@ public static class AppDbContextSeed
                     Id = Guid.NewGuid()
                 }
             }
-        }) ;
+        });
     }
 }

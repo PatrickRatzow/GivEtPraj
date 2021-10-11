@@ -1,0 +1,43 @@
+﻿@page "/recap"
+ @inject IJSRuntime JSRuntime
+ @using System.ComponentModel
+
+<h3>Google reCAPTCHA</h3>
+
+<div id="google_recaptcha"></div>
+
+<button class="btn btn-primary" @onclick="ShowResponse">Show Response</button>
+
+<br />
+
+<p>@captchaResponse</p>
+
+   @code {
+    private string captchaResponse;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeAsync<int>("render_recaptcha", DotNetObjectReference.Create(this), "google_recaptcha", "6LcvD64cAAAAAExhLEMCgEgWqlkgPYa7cWlt_8c2");
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    [JSInvokable, EditorBrowsable(EditorBrowsableState.Never)]
+    public void CallbackOnSuccess(string response)
+    {
+        captchaResponse = response;
+    }
+
+    [JSInvokable, EditorBrowsable(EditorBrowsableState.Never)]
+    public void CallbackOnExpired(string response)
+    {
+        //...
+    }
+
+    private void ShowResponse()
+    {
+        captchaResponse = $"The response for the Google reCAPTCHA widget: {captchaResponse}";
+    }
+ }

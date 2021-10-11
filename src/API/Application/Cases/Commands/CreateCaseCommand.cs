@@ -1,8 +1,5 @@
-﻿using Commentor.GivEtPraj.Domain.ValueObject;
+﻿using Commentor.GivEtPraj.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing;
-using System.Drawing.Imaging;
-using static Commentor.GivEtPraj.Application.Services.CompressionService;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
@@ -61,59 +58,26 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         {
             var guid = Guid.NewGuid();
             list.Add((image, guid));
-            pictures.Add(new Picture { Id = guid });
+            pictures.Add(new()
+            {
+                Id = guid
+            });
         }
 
+        await UploadImages(list);
 
-        var compressedList = new List<(string Image, Guid Id)>();
-        foreach (var item in list)
-        {
-            MemoryStream img = VaryQualityLevel(Base64ToImage(item.Image), 30);
-
-            compressedList.Add((Convert.ToBase64String(img.ToArray()), item.Id));
-
-        }
-
-        await UploadImages(compressedList);
-
-        var xdPictures = new List<Picture>();
-        foreach (var image in request.Images)
-        {
-            var guid = Guid.NewGuid();
-            list.Add((image, guid));
-            xdPictures.Add(new Picture { Id = guid });
-        }
-
-        return pictures.Concat(xdPictures).ToList();
+        return pictures;
     }
 
-    private async ValueTask UploadImages(IReadOnlyList<(string Image, Guid Id)> images)
+    private async ValueTask UploadImages(IReadOnlyCollection<(string Image, Guid Id)> images)
     {
-        if (!images.Any()) return;
+        if (images.Count == 0) return;
 
-        var disposables = new List<IAsyncDisposable>();
-        await Task.WhenAll(images.Select((cp, index) =>
-        {
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            disposables.Add(stream);
-            disposables.Add(writer);
+        var imageUploads = images.Select(img => _imageStorage.UploadImage($"{img.Id}.jpg", img.Image));
 
-            writer.Write(cp.Image);
-            writer.Flush();
-
-            stream.Position = 0;
-
-            return _imageStorage.UploadImage($"{cp.Id}.jpg", stream);
-        }));
-
-        foreach (var disposable in disposables)
-        {
-            await disposable.DisposeAsync();
-        }
+        await Task.WhenAll(imageUploads);
     }
 }
-
 
 public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 {

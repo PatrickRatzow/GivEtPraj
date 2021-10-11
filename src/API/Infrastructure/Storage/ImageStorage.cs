@@ -2,34 +2,38 @@
 using System.IO;
 using System.Threading.Tasks;
 using Commentor.GivEtPraj.Application.Common.Interfaces;
+using Commentor.GivEtPraj.Infrastructure.Compression;
 
 namespace Commentor.GivEtPraj.Infrastructure.Storage;
 
 public class ImageStorage : IImageStorage
 {
     private readonly IFileStorage _fileStorage;
+    private readonly IImageCompression _imageCompression;
 
-    public ImageStorage(IFileStorage fileStorage)
+    public ImageStorage(IFileStorage fileStorage, IImageCompression imageCompression)
     {
         _fileStorage = fileStorage;
+        _imageCompression = imageCompression;
     }
 
     public async Task<Stream?> FindImage(string name)
         => await _fileStorage.FindFile(FullPath(name));
 
-    public async Task<bool> UploadImage(string name, Stream content)
+    public async Task<bool> UploadImage(string name, string base64String)
     {
         var extension = Path.GetExtension(name);
         var contentType = extension switch
         {
-            ".jpg" => "image/jpeg;base64",
-            ".jpeg" => "image/jpeg;base64",
-            ".png" => "image/png;base64",
-            ".txt" => "image/jpeg;base64",
+            ".jpg" => "image/jpeg",
+            ".jpeg" => "image/jpeg",
+            ".png" => "image/png",
             _ => throw new ArgumentException($"{name} is not an allowed file extension")
         };
 
-        return await _fileStorage.UploadFile(FullPath(name), content, contentType);
+        var compressedImage = _imageCompression.CompressImage(base64String);
+
+        return await _fileStorage.UploadFile(FullPath(name), compressedImage, contentType);
     }
 
     private static string FullPath(string name) => $"cases/{name}";
