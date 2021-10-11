@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 
 namespace Commentor.GivEtPraj.Domain.ValueObject
 {
-    public class Coords : ValueObject
+    public class GeographicLocation : ValueObject
     {
         public double Latitude { get; private set; }
         public double Longitude {  get; private set; }
 
-        private Coords() { }
+        private GeographicLocation() { }
 
-        private Coords(double latitude, double longitude)
+        private GeographicLocation(double latitude, double longitude)
         {
             Latitude = latitude;
             Longitude = longitude;
         }
 
-        public static Coords From(double latitude, double longitude)
+        public static GeographicLocation From(double latitude, double longitude)
         {
-            Coords coords = new Coords(latitude, longitude);
+            GeographicLocation coords = new GeographicLocation(latitude, longitude);
 
             if(latitude is < -90 or > 90)
             {

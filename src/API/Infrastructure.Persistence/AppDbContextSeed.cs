@@ -50,16 +50,16 @@ public static class AppDbContextSeed
         var category = context.Categories.First();
         context.Cases.AddRange(new()
         {
-            Title = "Hul i vejen",
+            
             Description = "Der er et stor hul i vejen på arbejde",
             Category = category,
-            Coords = Coords.From(54, 54)
+            Coords = GeographicLocation.From(54, 54)
         }, new()
         {
-            Title = "Hul",
+            
             Description = "Hul vejen",
             Category = category,
-            Coords = Coords.From(53, 53.5),
+            Coords = GeographicLocation.From(53, 53.5),
             Pictures = new()
             {
                 new()

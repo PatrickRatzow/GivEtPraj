@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Commentor.GivEtPraj.Application.Tests.Unit.ValueObjects
 {
-    public class CoordsTests
+    public class GeographicLocationTests
     {
         [Test]
         public void ShouldCreateCoordsObjectIfLatitudeHasLowestAllowedValue()
@@ -21,7 +21,7 @@ namespace Commentor.GivEtPraj.Application.Tests.Unit.ValueObjects
 
 
             //Act
-            Action action = () => Coords.From(latitude, longitude);
+            Action action = () => GeographicLocation.From(latitude, longitude);
 
             //Assert
             action.Should().NotThrow();
@@ -37,7 +37,7 @@ namespace Commentor.GivEtPraj.Application.Tests.Unit.ValueObjects
 
 
             //Act
-            Action action = () => Coords.From(latitude, longitude);
+            Action action = () => GeographicLocation.From(latitude, longitude);
 
             //Assert
             action.Should().NotThrow();
@@ -53,7 +53,7 @@ namespace Commentor.GivEtPraj.Application.Tests.Unit.ValueObjects
 
 
             //Act
-            Action action = () => Coords.From(latitude, longitude);
+            Action action = () => GeographicLocation.From(latitude, longitude);
 
             //Assert
             action.Should().NotThrow();
@@ -69,7 +69,7 @@ namespace Commentor.GivEtPraj.Application.Tests.Unit.ValueObjects
 
 
             //Act
-            Action action = () => Coords.From(latitude, longitude);
+            Action action = () => GeographicLocation.From(latitude, longitude);
 
             //Assert
             action.Should().NotThrow();
@@ -85,7 +85,7 @@ namespace Commentor.GivEtPraj.Application.Tests.Unit.ValueObjects
 
 
             //Act
-            Action action = () => Coords.From(latitude, longitude);
+            Action action = () => GeographicLocation.From(latitude, longitude);
 
             //Assert
             action.Should().Throw<InvalidLatitudeException>();
@@ -101,7 +101,7 @@ namespace Commentor.GivEtPraj.Application.Tests.Unit.ValueObjects
 
 
             //Act
-            Action action = () => Coords.From(latitude, longitude);
+            Action action = () => GeographicLocation.From(latitude, longitude);
 
             //Assert
             action.Should().Throw<InvalidLatitudeException>();
@@ -117,7 +117,7 @@ namespace Commentor.GivEtPraj.Application.Tests.Unit.ValueObjects
 
 
             //Act
-            Action action = () => Coords.From(latitude, longitude);
+            Action action = () => GeographicLocation.From(latitude, longitude);
 
             //Assert
             action.Should().Throw<InvalidLongitudeException>();
@@ -133,7 +133,7 @@ namespace Commentor.GivEtPraj.Application.Tests.Unit.ValueObjects
 
 
             //Act
-            Action action = () => Coords.From(latitude, longitude);
+            Action action = () => GeographicLocation.From(latitude, longitude);
 
             //Assert
             action.Should().Throw<InvalidLongitudeException>();

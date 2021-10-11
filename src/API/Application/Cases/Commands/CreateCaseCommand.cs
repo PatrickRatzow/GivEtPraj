@@ -39,11 +39,11 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
 
         var newCase = new Case
         {
-            Title = request.Title,
+            
             Description = request.Description,
             Pictures = images,
             Category = category,
-            Coords = Coords.From(request.Latitude, request.Longitude)
+            Coords = GeographicLocation.From(request.Latitude, request.Longitude)
         };
 
         _db.Cases.Add(newCase);
