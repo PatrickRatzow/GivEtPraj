@@ -1,12 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Primitives;
-using Newtonsoft.Json;
-using System.Diagnostics;
-using System.IO;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Commentor.GivEtPraj.WebApi.Filters;
 public class CaptchaVerificationFilter : Attribute, IAsyncAuthorizationFilter
@@ -14,27 +9,21 @@ public class CaptchaVerificationFilter : Attribute, IAsyncAuthorizationFilter
 
     public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {
-        var reCaptchaResponse = context.HttpContext.Request.Headers["X-ReCaptchaResponse"];
-
-
         HttpClient Http = new HttpClient();
 
-
+        var reCaptchaResponse = context.HttpContext.Request.Headers["X-ReCaptchaResponse"];
         HttpResponseMessage httpResp = await Http.PostAsync($"https://www.google.com/recaptcha/api/siteverify?secret=6LcvD64cAAAAAAqiYQuOfEcWQmrHUxct_B0vldqn&response=" + reCaptchaResponse, null);
+        ReCaptchaResponse resp = JsonSerializer.Deserialize<ReCaptchaResponse>(await httpResp.Content.ReadAsStringAsync());
 
-        ReCaptchaResponse resp = JsonConvert.DeserializeObject<ReCaptchaResponse>(await httpResp.Content.ReadAsStringAsync());
-
-        if (resp.Success == false)
+        if (!resp.Success)
             context.Result = new UnauthorizedObjectResult($"No a valid ReCaptcha response");
-
-        Debug.WriteLine("Filter test");
     }
 
     public class ReCaptchaResponse
     {
-        [JsonProperty("success")] public bool Success { get; set; }
-        [JsonProperty("challenge_ts")] public DateTime ChallengeTs { get; set; }
-        [JsonProperty("hostName")] public string HostName { get; set; }
+        [JsonPropertyName("success")] public bool Success { get; set; }
+        [JsonPropertyName("challenge_ts")] public DateTime ChallengeTs { get; set; }
+        [JsonPropertyName("hostName")] public string HostName { get; set; }
 
     }
 }

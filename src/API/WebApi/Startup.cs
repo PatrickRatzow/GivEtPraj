@@ -33,7 +33,6 @@ public class Startup
     {
         services.AddApplication();
         services.AddInfrastructure(_configuration, _env);
-        //services.AddAuthorization().Add(typeof(CaptchaVerificationFilter));
         services.AddCors();
         services.AddControllers();
         services.AddSwaggerGen(c =>
