@@ -2,7 +2,7 @@
 @using Commentor.GivEtPraj.Blazor.Services
 @using Commentor.GivEtPraj.WebApi.Contracts.Requests
 @using Commentor.GivEtPraj.Application.Contracts
-@using Commentor.GivEtPraj.Blazor.Components.Modal;
+@using Commentor.GivEtPraj.Blazor.Components;
 
 <PageTitle>Opret Praj</PageTitle>
 
@@ -45,7 +45,7 @@
                 <!--TODO Check what device we are currently on, and only load modal if we are on pc.-->
                 @if (!HasLocationPermission)
                 {
-                    <ConfirmModal/>
+                    <ConfirmGeoLocationModal/>
                     <button type="button" @onclick="GetLatLong">Get location</button>
                     <text>@_caseRequest.Latitude</text>
                     <br/>
