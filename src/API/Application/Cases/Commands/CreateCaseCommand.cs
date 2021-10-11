@@ -43,7 +43,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
             Description = request.Description,
             Pictures = images,
             Category = category,
-            Coords = GeographicLocation.From(request.Latitude, request.Longitude)
+            GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude)
         };
 
         _db.Cases.Add(newCase);

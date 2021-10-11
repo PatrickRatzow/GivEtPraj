@@ -53,13 +53,13 @@ public static class AppDbContextSeed
             
             Description = "Der er et stor hul i vejen på arbejde",
             Category = category,
-            Coords = GeographicLocation.From(54, 54)
+            GeographicLocation = GeographicLocation.From(54, 54)
         }, new()
         {
             
             Description = "Hul vejen",
             Category = category,
-            Coords = GeographicLocation.From(53, 53.5),
+            GeographicLocation = GeographicLocation.From(53, 53.5),
             Pictures = new()
             {
                 new()
