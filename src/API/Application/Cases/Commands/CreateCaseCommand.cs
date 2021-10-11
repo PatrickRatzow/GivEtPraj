@@ -1,15 +1,19 @@
-﻿using Commentor.GivEtPraj.Domain.ValueObjects;
+﻿using Commentor.GivEtPraj.Domain.Enums;
+using Commentor.GivEtPraj.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
 public record CreateCaseCommand(
-    string Title,
+    
     string Description,
     IList<string> Images,
     string Category,
     double Longitude,
-    double Latitude
+    double Latitude,
+    Priority Priority,
+    IPAddress IpAddress
 ) : IRequest<OneOf<CaseSummaryDto, InvalidCategory>>;
 
 public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<CaseSummaryDto, InvalidCategory>>
@@ -36,11 +40,12 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
 
         var newCase = new Case
         {
-            
             Description = request.Description,
             Pictures = images,
             Category = category,
-            GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude)
+            GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude),
+            Priority = request.Priority,
+            IpAddress = request.IpAddress
         };
 
         _db.Cases.Add(newCase);
@@ -83,10 +88,6 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 {
     public CreateCaseCommandValidator()
     {
-        RuleFor(x => x.Title)
-            .MinimumLength(4)
-            .MaximumLength(64);
-
         RuleFor(x => x.Description)
             .NotEmpty()
             .MaximumLength(4096);
@@ -104,5 +105,31 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 
         RuleForEach(x => x.Images)
             .NotEmpty();
+
+        RuleFor(x => x.Priority)
+            .IsInEnum();
+
+        RuleFor(x => x.IpAddress)
+            .NotNull()
+            .Must(x => ValidateIPv4(x.ToString()));
     }
+
+    private bool ValidateIPv4(string ipString)
+    {
+        if (String.IsNullOrWhiteSpace(ipString))
+        {
+            return false;
+        }
+
+        string[] splitValues = ipString.Split('.');
+        if (splitValues.Length != 4)
+        {
+            return false;
+        }
+
+        byte tempForParsing;
+
+        return splitValues.All(r => byte.TryParse(r, out tempForParsing));
+    }
+
 }

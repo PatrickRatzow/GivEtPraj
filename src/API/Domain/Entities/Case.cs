@@ -1,4 +1,6 @@
-﻿using Commentor.GivEtPraj.Domain.ValueObjects;
+﻿using Commentor.GivEtPraj.Domain.Enums;
+using Commentor.GivEtPraj.Domain.ValueObjects;
+using System.Net;
 
 namespace Commentor.GivEtPraj.Domain.Entities;
 
@@ -9,6 +11,6 @@ public class Case
     public List<Picture> Pictures { get; set; } = new();
     public GeographicLocation GeographicLocation { get; set; }
     public Category Category { get; set; }
-    public int Priority {  get; set; }
-    public string IpAddress {  get; set; }  
+    public Priority Priority {  get; set; }
+    public IPAddress IpAddress {  get; set; }  
 }
