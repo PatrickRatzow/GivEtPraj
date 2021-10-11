@@ -1,0 +1,160 @@
+﻿@page "/create-page2"
+@using BrowserInterop.Geolocation
+@using Commentor.GivEtPraj.Blazor.Component.Modal
+@using Commentor.GivEtPraj.Blazor.Services
+@using Commentor.GivEtPraj.WebApi.Contracts.Requests
+@using Commentor.GivEtPraj.Application.Contracts
+@using Commentor.GivEtPraj.Blazor.Component;
+
+<PageTitle>Opret Praj</PageTitle>
+
+<Content Title="Opret Praj" Icon="far fa-angle-left">
+
+</Content>
+
+<div>
+    @if (HasSentCase)
+    {
+        <h1 style="color:limegreen;text-align:center;">Tak for prajet!</h1>
+    }
+    else
+    {
+        <EditForm name="rate" Model="@model" OnValidSubmit="SubmitCase">
+            <FluentValidationValidator/>
+            <ValidationSummary/>
+            <h1>Giv Et Praj!</h1>
+
+            <div>
+                <label>Beskrivelse</label>
+                <InputText @bind-Value="@model.Description"/>
+                <ValidationMessage For="@(() => model.Description)"/>
+            </div>
+            <div>
+                <label>Categori</label>
+                <InputRadioGroup @bind-Value="@model.Category">
+                    @foreach (var category in Categories)
+                    {
+                        <InputRadio Value="category.Name"/>
+                        @category.Name
+                    }
+                </InputRadioGroup>
+                <ValidationMessage For="@(() => model.Category)"/>
+
+        </div>
+
+        <div>
+            @if (!HasCameraPermission)
+                {
+                 <ConfirmModal/>  
+                 @GetLocationError();
+                                 <button @onclick="GetLatLong">Get location</button>
+                <text>@Latitude</text><br />
+                <text>@Longitude</text>
+                } 
+             else
+               {
+                <button @onclick="GetLatLong">Get location</button>
+                <text>@Latitude</text><br />
+                <text>@Longitude</text>
+               }
+            </div>
+
+            
+
+            <div id="TakeImage">
+
+                <Camera OnElementAdded="ImagesListElementAdded"></Camera>
+
+                <ul>
+                    @foreach (string imgStr in _imagesData)
+                    {
+                        <li>
+                            <img width="320" height="240" src="data:image/png;base64, @imgStr" alt="Red dot">
+                        </li>
+                    }
+                </ul>
+            </div>
+
+
+            <button type="submit">Giv Prajet</button>
+            selected category: @model.Category
+        </EditForm>
+    }
+
+</div>
+
+@code {
+    private ElementReference _input;
+
+    [Inject]
+    private ICaseService CaseService { get; set; }
+
+    [Inject]
+    private ImageUpload ImageUpload { get; set; }
+
+    [Inject]
+    private IGeoLocationService GeoLocationService { get; set; }
+
+    [Inject]
+    private ICategoryService CategoryService { get; set; }
+
+    private string Title { get; set; }
+    private string Description { get; set; }
+    private double Latitude { get; set; }
+    private double Longitude { get; set; }
+    private bool HasSentCase { get; set; }
+    private string SelectedCategory { get; set; }
+    private IList<string> _imagesData = new List<string>();
+    private IList<CategoryDto> Categories = new List<CategoryDto>();
+    private CreateCaseRequest model = new();
+
+    private bool HasCameraPermission { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categories = await CategoryService.GetAllCategories();
+        GetLatLong();
+    }
+
+    private async Task SubmitCase()
+    {
+        await CaseService.CreateCase(Title, Description, _imagesData, SelectedCategory, Longitude, Latitude);
+
+        HasSentCase = true;
+    }
+
+    private async Task UpdateImages()
+    {
+        _imagesData = await ImageUpload.GetFilesUploaded(_input);
+    }
+
+    private string GetLocationError()
+    {
+       return GeoLocationService.GetLocationError();
+    }
+
+    private async Task GetLatLong()
+    {
+
+        try
+        {
+            GeolocationResult geoLocation = await GeoLocationService.GetCoords();
+            Latitude = geoLocation.Location.Coords.Latitude;
+            Longitude = geoLocation.Location.Coords.Longitude;
+        }
+        catch (NullReferenceException e)
+        {
+            var window = await GeoLocationService.GetWindow();
+            await window.Console.Log(e.StackTrace);
+            await window.Alert(e.Message);
+        }
+    }
+
+    
+
+    public async Task ImagesListElementAdded(string str)
+    {
+        _imagesData.Add(str);
+    }
+
+}
