@@ -5,8 +5,7 @@ namespace Commentor.GivEtPraj.Blazor.Services;
 
 public interface ICaseService
 {
-    Task CreateCase(string title, string description, IList<string> images, string category, double longitude,
-        double latitude);
+    Task CreateCase(CreateCaseRequest caseRequest, string reCaptchaResp);
 }
 
 public class CaseService : ICaseService
@@ -18,11 +17,10 @@ public class CaseService : ICaseService
         _httpClient = httpClient;
     }
 
-    public async Task CreateCase(string title, string description, IList<string> images, string category,
-        double longitude, double latitude)
+    public async Task CreateCase(CreateCaseRequest caseRequest, string reCaptchaResp)
     {
-        var request = new CreateCaseRequest(title, description, images, category, longitude, latitude);
-        var response = await _httpClient.PostAsJsonAsync("cases", request);
+        _httpClient.DefaultRequestHeaders.Add("X-ReCaptchaResponse", reCaptchaResp);
+        var response = await _httpClient.PostAsJsonAsync("cases", caseRequest);
         response.EnsureSuccessStatusCode();
     }
 }

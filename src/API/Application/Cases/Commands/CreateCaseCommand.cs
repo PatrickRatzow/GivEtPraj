@@ -3,14 +3,33 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
-public record CreateCaseCommand(
-    string Title,
-    string Description,
-    IList<string> Images,
-    string Category,
-    double Longitude,
-    double Latitude
-) : IRequest<OneOf<CaseSummaryDto, InvalidCategory>>;
+public class CreateCaseCommand : IRequest<OneOf<CaseSummaryDto, InvalidCategory>>
+{
+    public string Description { get; set; }
+    public IList<string> Images { get; set;  }
+    public string Category { get; set;  }
+    public double Longitude { get; set;  }
+    public double Latitude { get; set; }
+    public Priority Priority { get; set; }
+    public IPAddress IpAddress { get; set; }
+
+    public CreateCaseCommand()
+    {
+    }
+
+    public CreateCaseCommand(string description, IList<string> images, string category, double longitude, double latitude, 
+        Priority priority, IPAddress ipAddress)
+    {
+        Description = description;
+        Images = images;
+        Category = category;
+        Longitude = longitude;
+        Latitude = latitude;
+        Priority = priority;
+        IpAddress = ipAddress;
+    }
+}
+
 
 public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<CaseSummaryDto, InvalidCategory>>
 {

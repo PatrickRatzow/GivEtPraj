@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
@@ -32,7 +33,7 @@ public class Startup
     {
         services.AddApplication();
         services.AddInfrastructure(_configuration, _env);
-
+        //services.AddAuthorization().Add(typeof(CaptchaVerificationFilter));
         services.AddCors();
         services.AddControllers();
         services.AddSwaggerGen(c =>
@@ -67,6 +68,8 @@ public class Startup
                 }
             });
         });
+
+
 
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddFluentValidation();
