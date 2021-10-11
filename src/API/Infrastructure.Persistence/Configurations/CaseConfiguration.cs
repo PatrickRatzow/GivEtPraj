@@ -1,4 +1,6 @@
-﻿namespace Infrastructure.Persistence.Configurations;
+﻿using System.Net;
+
+namespace Infrastructure.Persistence.Configurations;
 
 public class CaseConfiguration : IEntityTypeConfiguration<Case>
 {
@@ -14,6 +16,14 @@ public class CaseConfiguration : IEntityTypeConfiguration<Case>
             .HasForeignKey(cp => cp.CaseId);
 
         builder.OwnsOne(c => c.GeographicLocation);
+
+        builder.Property(c => c.IpAddress)
+            .IsRequired()
+            .HasConversion(
+                c => c.ToString(),
+                c => IPAddress.Parse(c));
+
+        builder.Property(c => c.Priority);
 
     }
 }
