@@ -1,122 +1,143 @@
-﻿using System;
-using Commentor.GivEtPraj.Domain.Exceptions;
+﻿using Commentor.GivEtPraj.Domain.Exceptions;
 using Commentor.GivEtPraj.Domain.ValueObjects;
 using FluentAssertions;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Commentor.GivEtPraj.Application.Tests.Unit.ValueObjects;
-
-public class GeographicLocationTests
+namespace Commentor.GivEtPraj.Application.Tests.Unit.ValueObjects
 {
-    [Test]
-    public void ShouldCreateGeographicLocationObjectIfLatitudeHasLowestAllowedValue()
+    public class GeographicLocationTests
     {
-        // Arrange
-        const double latitude = -90;
-        const double longitude = 0;
+        [Test]
+        public void ShouldCreateCoordsObjectIfLatitudeHasLowestAllowedValue()
+        {
+            //Arrange
+            double latitude = -90;
+            double longitude = 0;
 
-        // Act
-        Action action = () => GeographicLocation.From(latitude, longitude);
 
-        // Assert
-        action.Should().NotThrow();
-    }
+            //Act
+            Action action = () => GeographicLocation.From(latitude, longitude);
 
-    [Test]
-    public void ShouldCreateGeographicLocationObjectIfLatitudeHasHighestAllowedValue()
-    {
-        // Arrange
-        const double latitude = 90;
-        const double longitude = 0;
+            //Assert
+            action.Should().NotThrow();
 
-        // Act
-        Action action = () => GeographicLocation.From(latitude, longitude);
+        }
 
-        // Assert
-        action.Should().NotThrow();
-    }
+        [Test]
+        public void ShouldCreateCoordsObjectIfLatitudeHasHighestAllowedValue()
+        {
+            //Arrange
+            double latitude = 90;
+            double longitude = 0;
 
-    [Test]
-    public void ShouldCreateGeographicLocationObjectIfLongitudeHasLowestAllowedValue()
-    {
-        // Arrange
-        const double latitude = 0;
-        const double longitude = -180;
 
-        // Act
-        Action action = () => GeographicLocation.From(latitude, longitude);
+            //Act
+            Action action = () => GeographicLocation.From(latitude, longitude);
 
-        // Assert
-        action.Should().NotThrow();
-    }
+            //Assert
+            action.Should().NotThrow();
 
-    [Test]
-    public void ShouldCreateGeographicLocationObjectIfLongitudeHasHighestAllowedValue()
-    {
-        // Arrange
-        const double latitude = 0;
-        const double longitude = 180;
+        }
 
-        // Act
-        Action action = () => GeographicLocation.From(latitude, longitude);
+        [Test]
+        public void ShouldCreateCoordsObjectIfLongitudeHasLowestAllowedValue()
+        {
+            //Arrange
+            double latitude = 0;
+            double longitude = -180;
 
-        // Assert
-        action.Should().NotThrow();
-    }
 
-    [Test]
-    public void ShouldThrowInvalidLatitudeExceptionIfLatitudeBelowMinus90()
-    {
-        // Arrange
-        const double latitude = -91;
-        const double longitude = 0;
+            //Act
+            Action action = () => GeographicLocation.From(latitude, longitude);
 
-        // Act
-        Action action = () => GeographicLocation.From(latitude, longitude);
+            //Assert
+            action.Should().NotThrow();
 
-        // Assert
-        action.Should().Throw<InvalidLatitudeException>();
-    }
+        }
 
-    [Test]
-    public void ShouldThrowInvalidLatitudeExceptionIfLatitudeAbove90()
-    {
-        // Arrange
-        const double latitude = 91;
-        const double longitude = 0;
+        [Test]
+        public void ShouldCreateCoordsObjectIfLongitudeHasHighestAllowedValue()
+        {
+            //Arrange
+            double latitude = 0;
+            double longitude = 180;
 
-        // Act
-        Action action = () => GeographicLocation.From(latitude, longitude);
 
-        // Assert
-        action.Should().Throw<InvalidLatitudeException>();
-    }
+            //Act
+            Action action = () => GeographicLocation.From(latitude, longitude);
 
-    [Test]
-    public void ShouldThrowInvalidLongitudeExceptionIfLongitudeBelowMinus180()
-    {
-        // Arrange
-        const double latitude = 0;
-        const double longitude = -181;
+            //Assert
+            action.Should().NotThrow();
 
-        // Act
-        Action action = () => GeographicLocation.From(latitude, longitude);
+        }
 
-        // Assert
-        action.Should().Throw<InvalidLongitudeException>();
-    }
+        [Test]
+        public void ShouldThrowInvalidLatitudeExceptionIfLatitudeBelowMinus90()
+        {
+            //Arrange
+            double latitude = -91;
+            double longitude = 0;
 
-    [Test]
-    public void ShouldThrowInvalidLongitudeExceptionIfLongitudeAbove180()
-    {
-        // Arrange
-        const double latitude = 0;
-        const double longitude = 181;
 
-        // Act
-        Action action = () => GeographicLocation.From(latitude, longitude);
+            //Act
+            Action action = () => GeographicLocation.From(latitude, longitude);
 
-        // Assert
-        action.Should().Throw<InvalidLongitudeException>();
+            //Assert
+            action.Should().Throw<InvalidLatitudeException>();
+
+        }
+
+        [Test]
+        public void ShouldThrowInvalidLatitudeExceptionIfLatitudeAbove90()
+        {
+            //Arrange
+            double latitude = 91;
+            double longitude = 0;
+
+
+            //Act
+            Action action = () => GeographicLocation.From(latitude, longitude);
+
+            //Assert
+            action.Should().Throw<InvalidLatitudeException>();
+
+        }
+
+        [Test]
+        public void ShouldThrowInvalidLongitudeExceptionIfLongitudeBelowMinus180()
+        {
+            //Arrange
+            double latitude = 0;
+            double longitude = -181;
+
+
+            //Act
+            Action action = () => GeographicLocation.From(latitude, longitude);
+
+            //Assert
+            action.Should().Throw<InvalidLongitudeException>();
+
+        }
+
+        [Test]
+        public void ShouldThrowInvalidLongitudeExceptionIfLongitudeAbove180()
+        {
+            //Arrange
+            double latitude = 0;
+            double longitude = 181;
+
+
+            //Act
+            Action action = () => GeographicLocation.From(latitude, longitude);
+
+            //Assert
+            action.Should().Throw<InvalidLongitudeException>();
+
+        }
     }
 }

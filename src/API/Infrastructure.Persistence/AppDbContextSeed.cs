@@ -49,13 +49,13 @@ public static class AppDbContextSeed
         var category = context.Categories.First();
         context.Cases.AddRange(new()
         {
-            Title = "Hul i vejen",
+            
             Description = "Der er et stor hul i vejen på arbejde",
             Category = category,
             GeographicLocation = GeographicLocation.From(54, 54)
         }, new()
         {
-            Title = "Hul",
+            
             Description = "Hul vejen",
             Category = category,
             GeographicLocation = GeographicLocation.From(53, 53.5),

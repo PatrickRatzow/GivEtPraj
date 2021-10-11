@@ -15,31 +15,31 @@
     }
     else
     {
-        <EditForm name="rate" Model="@model" OnValidSubmit="SubmitCase">
-            <FluentValidationValidator/>
+        <EditForm Model="@_caseRequest" OnValidSubmit="SubmitCase">
+            <FluentValidationValidator @ref="@_fluentValidationValidator"/>
             <ValidationSummary/>
             <h1>Giv Et Praj!</h1>
 
             <div>
                 <label>Titel</label>
-                <InputText @bind-Value="@model.Title"/>
-                <ValidationMessage For="@(() => @model.Title)"/>
+                <InputText @bind-Value="@_caseRequest.Title"/>
+                <ValidationMessage For="@(() => _caseRequest.Title)"/>
             </div>
             <div>
                 <label>Beskrivelse</label>
-                <InputText @bind-Value="@model.Description"/>
-                <ValidationMessage For="@(() => model.Description)"/>
+                <InputText @bind-Value="@_caseRequest.Description"/>
+                <ValidationMessage For="@(() => _caseRequest.Description)"/>
             </div>
             <div>
                 <label>Categori</label>
-                <InputRadioGroup @bind-Value="@model.Category">
+                <InputRadioGroup @bind-Value="@_caseRequest.Category">
                     @foreach (var category in Categories)
                     {
                         <InputRadio Value="category.Name"/>
                         @category.Name
                     }
                 </InputRadioGroup>
-                <ValidationMessage For="@(() => model.Category)"/>
+                <ValidationMessage For="@(() => _caseRequest.Category)"/>
 
         </div>
 
@@ -47,41 +47,52 @@
                 <!--TODO Check what device we are currently on, and only load modal if we are on pc.-->
                 @if (!HasLocationPermission)
                 {
-                    <ConfirmModal/>
-                    <button @onclick="GetLatLong">Get location</button>
-                    <text>@Latitude</text><br/>
-                    <text>@Longitude</text>
+                 <ConfirmModal/>  
+                 @GetLocationError();
+                    <button type="button" @onclick="GetLatLong">Get location</button>
+                    <text>@_caseRequest.Latitude</text><br />
+                    <text>@_caseRequest.Longitude</text>
                     HasLocationPermission = true;
-                }
-                else
-                {
-                    <button @onclick="GetLatLong">Get location</button>
-                    <text>@Latitude</text><br/>
-                    <text>@Longitude</text>
-                }
+                } 
+             else
+               {
+                <button type="button" @onclick="GetLatLong">Get location</button>
+                <text>@_caseRequest.Latitude</text><br />
+                <text>@_caseRequest.Longitude</text>
+               }
             </div>
+
             
+
             <div id="TakeImage">
 
                 <Camera OnElementAdded="ImagesListElementAdded"></Camera>
 
                 <ul>
-                    @foreach (string imgStr in _imagesData)
+                    @foreach (string imgStr in _caseRequest.Images)
                     {
                         <li>
                             <img width="320" height="240" src="data:image/png;base64, @imgStr" alt="Red dot">
                         </li>
                     }
                 </ul>
+
+                <ValidationMessage For="@(() => _caseRequest.Images)"/>
             </div>
 
+            <ReCaptchaV2 ReCaptchaResultGotten="RecaptchaCompleted"></ReCaptchaV2>
+            <p>@_reCaptchaResp</p>
+
+
             <button type="submit">Giv Prajet</button>
-            selected category: @model.Category
+            selected category: @_caseRequest.Category
         </EditForm>
     }
+
 </div>
 
 @code {
+    private FluentValidationValidator _fluentValidationValidator;
     private ElementReference _input;
 
     [Inject]
@@ -96,15 +107,10 @@
     [Inject]
     private ICategoryService CategoryService { get; set; }
 
-    private string Title { get; set; }
-    private string Description { get; set; }
-    private double Latitude { get; set; }
-    private double Longitude { get; set; }
     private bool HasSentCase { get; set; }
-    private string SelectedCategory { get; set; }
-    private IList<string> _imagesData = new List<string>();
+    private string _reCaptchaResp = "";
     private IList<CategoryDto> Categories = new List<CategoryDto>();
-    private CreateCaseRequest model = new();
+    private CreateCaseRequest _caseRequest = new();
 
     private bool HasLocationPermission { get; set; }
 
@@ -117,20 +123,20 @@
 
     private async Task SubmitCase()
     {
-        await CaseService.CreateCase(Title, Description, _imagesData, SelectedCategory, Longitude, Latitude);
+        await CaseService.CreateCase(_caseRequest, _reCaptchaResp);
 
         HasSentCase = true;
     }
 
     private async Task UpdateImages()
     {
-        _imagesData = await ImageUpload.GetFilesUploaded(_input);
+        _caseRequest.Images = await ImageUpload.GetFilesUploaded(_input);
     }
 
     private async Task GetLatLong()
     {           
         var window = await GeoLocationService.GetWindow();
-        GeolocationResult geoLocation = await GeoLocationService.GetCoords();
+        var geoLocation = await GeoLocationService.GetCoords();
         await window.Console.Log(geoLocation);
         
         if (geoLocation.Error is { Code: 1 })
@@ -140,14 +146,19 @@
         }
         else
         {
-            Latitude = geoLocation.Location.Coords.Latitude;
-            Longitude = geoLocation.Location.Coords.Longitude;
+            _caseRequest.Latitude = geoLocation.Location.Coords.Latitude;
+            _caseRequest.Longitude = geoLocation.Location.Coords.Longitude;
             HasLocationPermission = true;
         }
     }
 
-    public async Task ImagesListElementAdded(string str)
+    public void ImagesListElementAdded(string str)
     {
-        _imagesData.Add(str);
+        _caseRequest.Images.Add(str);
+    }
+
+    public void RecaptchaCompleted(string str)
+    {
+        _reCaptchaResp = str;
     }
 }
