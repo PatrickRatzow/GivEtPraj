@@ -1,22 +1,21 @@
-﻿
-<h3>ConfirmModal</h3>
+﻿<h3>ConfirmModal</h3>
 
 <!--
-    With this button we can set IsActive to be true instantly.
+With this button we can set IsActive to be true instantly.
 <button @onclick="AddActiveClass">Activate Modal</button> -->
 <div class="modal @(IsActive ? "is-active" : "")">
-  <div class="modal-background"></div>
-  <div class="modal-content">
-      <div class="has-text-white">    
-          <!--TODO delete this message at some point-->
-          Hey you have to accept the app using your location!
-          - Seeing this messages means that,
-          you have not allowed our service to use your lacation,
-          which is big SADGE
-      </div>
-  </div>
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="has-text-white">
+            <!--TODO delete this message at some point-->
+            Hey you have to accept the app using your location!
+            - Seeing this messages means that,
+            you have not allowed our service to use your lacation,
+            which is big SADGE
+        </div>
+    </div>
     <!-- When closing the Modal we want to set IsActive back to true;-->
-  <button class="modal-close is-large" @onclick="AddActiveClass" aria-label="close"></button>
+    <button class="modal-close is-large" @onclick="AddActiveClass" aria-label="close"></button>
 </div>
 
 @code {
@@ -26,4 +25,5 @@
     {
         IsActive = !IsActive;
     }
+
 }
