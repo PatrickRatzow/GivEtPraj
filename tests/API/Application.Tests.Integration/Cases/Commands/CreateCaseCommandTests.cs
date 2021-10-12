@@ -18,7 +18,6 @@ public class CreateCaseCommandTests : TestBase
 
         await Database.Save();
 
-        
         var description = "An example description";
         var images = new List<string>();
         var longitude = 0;

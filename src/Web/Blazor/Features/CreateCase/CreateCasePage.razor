@@ -1,10 +1,8 @@
 ﻿@page "/create-page"
-@using BrowserInterop.Geolocation
-@using Commentor.GivEtPraj.Blazor.Component.Modal
 @using Commentor.GivEtPraj.Blazor.Services
 @using Commentor.GivEtPraj.WebApi.Contracts.Requests
 @using Commentor.GivEtPraj.Application.Contracts
-@using BrowserInterop.Geolocation
+@using Commentor.GivEtPraj.Blazor.Components;
 
 <PageTitle>Opret Praj</PageTitle>
 
@@ -41,26 +39,28 @@
                 </InputRadioGroup>
                 <ValidationMessage For="@(() => _caseRequest.Category)"/>
 
-        </div>
-
-        <div>
-            @if (!HasCameraPermission)
-                {
-                 <ConfirmModal/>  
-                 @GetLocationError();
-                                 <button type="button" @onclick="GetLatLong">Get location</button>
-                <text>@_caseRequest.Latitude</text><br />
-                <text>@_caseRequest.Longitude</text>
-                } 
-             else
-               {
-                <button type="button" @onclick="GetLatLong">Get location</button>
-                <text>@_caseRequest.Latitude</text><br />
-                <text>@_caseRequest.Longitude</text>
-               }
             </div>
 
-            
+            <div>
+                <!--TODO Check what device we are currently on, and only load modal if we are on pc.-->
+                @if (!HasLocationPermission)
+                {
+                    <ConfirmGeoLocationModal/>
+                    <button type="button" @onclick="GetLatLong">Get location</button>
+                    <text>@_caseRequest.Latitude</text>
+                    <br/>
+                    <text>@_caseRequest.Longitude</text>
+                    HasLocationPermission = true;
+                }
+                else
+                {
+                    <button type="button" @onclick="GetLatLong">Get location</button>
+                    <text>@_caseRequest.Latitude</text>
+                    <br/>
+                    <text>@_caseRequest.Longitude</text>
+                }
+            </div>
+
 
             <div id="TakeImage">
 
@@ -110,12 +110,13 @@
     private IList<CategoryDto> Categories = new List<CategoryDto>();
     private CreateCaseRequest _caseRequest = new();
 
-    private bool HasCameraPermission { get; set; }
+    private bool HasLocationPermission { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Categories = await CategoryService.GetAllCategories();
-        GetLatLong();
+        var window = await GeoLocationService.GetWindow();
+        await GetLatLong();
     }
 
     private async Task SubmitCase()
@@ -130,24 +131,22 @@
         _caseRequest.Images = await ImageUpload.GetFilesUploaded(_input);
     }
 
-    private string GetLocationError()
-    {
-       return GeoLocationService.GetLocationError();
-    }
-
     private async Task GetLatLong()
     {
-        try
+        var window = await GeoLocationService.GetWindow();
+        var geoLocation = await GeoLocationService.GetCoords();
+        await window.Console.Log(geoLocation);
+
+        if (geoLocation.Error is { Code: 1 })
         {
-            GeolocationResult geoLocation = await GeoLocationService.GetCoords();
+            await window.Console.Log(geoLocation);
+            HasLocationPermission = false;
+        }
+        else
+        {
             _caseRequest.Latitude = geoLocation.Location.Coords.Latitude;
             _caseRequest.Longitude = geoLocation.Location.Coords.Longitude;
-        }
-        catch (NullReferenceException e)
-        {
-            var window = await GeoLocationService.GetWindow();
-            await window.Console.Log(e.StackTrace);
-            await window.Alert(e.Message);
+            HasLocationPermission = true;
         }
     }
 
@@ -160,7 +159,4 @@
     {
         _reCaptchaResp = str;
     }
-
-
-
 }

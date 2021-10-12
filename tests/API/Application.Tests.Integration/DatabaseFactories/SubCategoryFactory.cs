@@ -1,17 +1,19 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration.DatabaseFactories;
 
 public class SubCategoryFactory : DatabaseFactory
 {
     private static readonly object CreationLock = new();
-    private static int _subCategoriesCreated = 0;
-
+    private static int _created;
+    protected override int Created
+    {
+        get => _created; 
+        set => _created = value;
+    }
+    
     public SubCategoryFactory(IServiceScope serviceScope) : base(serviceScope)
     {
     }
@@ -36,9 +38,9 @@ public class SubCategoryFactory : DatabaseFactory
 
     private SubCategory CreateSubcategory(Category category, string? name = null)
     {
-        _subCategoriesCreated++;
+        Created++;
 
-        name ??= $"SubCategory #{_subCategoriesCreated}";
+        name ??= $"SubCategory #{Created}";
 
         return Add(new SubCategory
         {

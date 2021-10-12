@@ -7,7 +7,12 @@ namespace Commentor.GivEtPraj.Application.Tests.Integration.DatabaseFactories;
 public class CategoryFactory : DatabaseFactory
 {
     private static readonly object CreationLock = new();
-    private static int _categoriesCreated = 0;
+    private static int _created;
+    protected override int Created
+    {
+        get => _created; 
+        set => _created = value;
+    }
 
     public CategoryFactory(IServiceScope serviceScope) : base(serviceScope)
     {
@@ -33,9 +38,9 @@ public class CategoryFactory : DatabaseFactory
 
     private Category CreateCategory(string? name = null)
     {
-        _categoriesCreated++;
+        Created++;
 
-        name ??= $"Category #{_categoriesCreated}";
+        name ??= $"Category #{Created}";
 
         return Add(new Category
         {
