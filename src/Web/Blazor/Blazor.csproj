@@ -1,12 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="npm run buildcss" />
-  </Target>
-  
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     <RootNamespace>Commentor.GivEtPraj.Blazor</RootNamespace>
     <AssemblyName>Commentor.GivEtPraj.Blazor</AssemblyName>
@@ -36,5 +33,19 @@
     <ProjectReference Include="..\..\API\Application.Contracts\Application.Contracts.csproj" />
     <ProjectReference Include="..\..\API\WebApi.Contracts\WebApi.Contracts.csproj" />
   </ItemGroup>
+
+  <Target Condition="'$(Configuration)' != 'Release'" Name="npm install" BeforeTargets="tailwind build" Inputs="package.json" Outputs="node_modules/.install-stamp">
+    <Exec Command="npm -v" ContinueOnError="true">
+        <Output TaskParameter="ExitCode" PropertyName="error" />
+    </Exec>
+    <Error Condition="'$(error)' != '0'" Text="install npm please !" />
+    <Exec Command="npm install"/>
+    <Touch Files="node_modules/.install-stamp" AlwaysCreate="true" />
+  </Target>
+  <Target Name="tailwind build" AfterTargets="Build" Condition="'$(TailwindBuild)' == 'true'">
+    <Message Text="tailwind build target running..." Importance="high"></Message>
+    <Exec Command="npm run build" Condition="'$(Configuration)' == 'Debug'"/>
+    <Exec Command="npm run publish" Condition="'$(Configuration)' == 'Release'"/>
+  </Target>
 
 </Project>
