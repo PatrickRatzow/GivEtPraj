@@ -1,0 +1,35 @@
+﻿
+<div class="relative @CssClass">
+    <span class="absolute ml-2 text-base transition-all text-black @TitleClass">@Title</span>
+    <InputText class="p-2 rounded-md caret-orange border border-gray-300 focus:border-gray-700" @onfocus="OnFocus" @onblur="OnBlur" @bind-Value="Value"></InputText>
+</div>
+
+@code {
+    private string Value { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string CssClass { get; set; }
+
+    private string TitleClass =>
+        (string.IsNullOrWhiteSpace(Value), _hasFocus) switch
+        {
+            (_, true) or (false, _) => "-top-full text-sm mt-4",
+            _ => "top-0 mt-2"
+            };
+
+    private bool _hasFocus;
+
+    private void OnFocus(FocusEventArgs args)
+    {
+        _hasFocus = true;
+    }
+
+    private void OnBlur(FocusEventArgs args)
+    {
+        _hasFocus = false;
+    }
+
+}

@@ -9,7 +9,11 @@ module.exports = {
   },
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+      extend: {
+          colors: {
+              orange: "#FFCA98"
+          }
+      },
   },
   variants: {
     extend: {},
