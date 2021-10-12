@@ -1,4 +1,6 @@
-﻿<header>
+﻿<PageTitle>@Title</PageTitle>
+
+<header>
     <span class="flex flex-row items-center text-gray-800 text-md">
         @if (Icon is not null)
         {
@@ -9,8 +11,6 @@
 </header>
 
 @code {
-    [Parameter] 
-    public string Title { get; set; } = "Title";
-    [Parameter]
-    public string? Icon { get; set; }
+    [Parameter] public string Title { get; set; } = "Title";
+    [Parameter] public string? Icon { get; set; }
 }

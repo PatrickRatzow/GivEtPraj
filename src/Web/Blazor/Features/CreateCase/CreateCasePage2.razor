@@ -1,51 +1,17 @@
 ﻿@page "/create-page2"
 @using Commentor.GivEtPraj.Blazor.Services
 @using Commentor.GivEtPraj.WebApi.Contracts.Requests
-@using Commentor.GivEtPraj.Application.Contracts
 @using Commentor.GivEtPraj.Blazor.Components
 @inject ICategoryService _categoryService
 
-<PageContent Title="Opret Praj" Icon="far fa-angle-left" CurrentStep="@_currentStep" Steps="5">
-    <EditForm Model="_model" class="w-full mt-10">
-        <div class="w-full grid gap-y-4 grid-rows-1">
-            <TextField ValueChanged="FilterCategories" Title="Søg"></TextField>
-            @foreach (var category in _filteredCategories)
-            {
-                <ItemRow
-                    IsSelected="category.Name == _model.Category"
-                    Title="@category.Name"
-                    Icon="@category.Icon"
-                    OnClick="() => _model.Category = category.Name">
-                </ItemRow>
-            }
-        </div>
-    </EditForm>
-</PageContent>
+<EditForm Model="_model" class="w-max">
+    <StepHandler>
+        <ChooseCategoryStep Model="@_model"/>
+        <ChooseElementStep Model="@_model"/>
+        <ChooseCategoryStep Model="@_model"/>
+    </StepHandler>
+</EditForm>
 
 @code {
     private readonly CreateCaseRequest _model = new();
-    private List<CategoryDto> _categories = new();
-    private List<CategoryDto> _filteredCategories = new();
-    private int _currentStep = 0;
-
-    protected override async Task OnInitializedAsync()
-    {
-        _categories = await _categoryService.GetAllCategories();
-        _filteredCategories = _categories;
-    }
-
-    private void FilterCategories(string search)
-    {
-        if (string.IsNullOrWhiteSpace(search))
-        {
-            _filteredCategories = _categories;
-
-            return;
-        }
-
-        _filteredCategories = _categories
-            .Where(c => c.Name.ToLowerInvariant().Contains(search.ToLowerInvariant()))
-            .ToList();
-    }
-
 }

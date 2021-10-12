@@ -1,0 +1,46 @@
+﻿<div class="flex flex-row relative">
+    <CascadingValue Value="this">
+        @ChildContent
+    </CascadingValue>
+</div>
+
+<StepIndicator Steps="_steps.Count" CurrentStep="_currentStep"/>
+
+@code {
+    private int _currentStep;
+    [Parameter] public RenderFragment ChildContent { get; set; } = null!;
+
+    private List<Step> _steps = new();
+
+    public void AddStep(Step step)
+    {
+        _steps.Add(step);
+
+        StateHasChanged();
+    }
+
+    public void NextPage()
+    {
+        if (_currentStep == _steps.Count)
+            _currentStep = 0;
+
+        _currentStep++;
+
+        for (var i = 0; i < _steps.Count; i++)
+        {
+            var step = _steps[i];
+            var diff = _currentStep - i;
+            if (diff <= 0)
+            {
+                step.Offset = "";
+
+                continue;
+            }
+
+            step.Offset = "ml-[-100vw]";
+        }
+
+        StateHasChanged();
+    }
+
+}
