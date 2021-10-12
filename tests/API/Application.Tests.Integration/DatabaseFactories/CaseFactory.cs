@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using Commentor.GivEtPraj.Domain.Enums;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,7 +13,8 @@ public class CaseFactory : DatabaseFactory
     {
     }
 
-    public Case Create(Category category,  string? description = null, Priority? priority = null, IPAddress? ipAddress = null )
+    public Case Create(Category category, string? description = null, Priority? priority = null, 
+        IPAddress? ipAddress = null)
     {
         lock (CreationLock)
         {
@@ -33,7 +32,8 @@ public class CaseFactory : DatabaseFactory
         }
     }
 
-    private Case CreateCase(Category category, string? description = null, Priority? priority = null, IPAddress? ipAddress = null)
+    private Case CreateCase(Category category, string? description = null, Priority? priority = null, 
+        IPAddress? ipAddress = null)
     {
         _casesCreated++;
 
