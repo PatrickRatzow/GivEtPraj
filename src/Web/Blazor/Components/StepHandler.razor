@@ -21,11 +21,30 @@
 
     public void NextPage()
     {
-        if (_currentStep == _steps.Count)
-            _currentStep = 0;
+        if (_currentStep == _steps.Count - 1)
+            return;
 
         _currentStep++;
 
+        HandleOffset();
+
+        StateHasChanged();
+    }
+
+    public void PreviousPage()
+    {
+        if (_currentStep == 0)
+            return;
+
+        _currentStep--;
+
+        HandleOffset();
+
+        StateHasChanged();
+    }
+
+    private void HandleOffset()
+    {
         for (var i = 0; i < _steps.Count; i++)
         {
             var step = _steps[i];
@@ -39,8 +58,6 @@
 
             step.Offset = "ml-[-100vw]";
         }
-
-        StateHasChanged();
     }
 
 }

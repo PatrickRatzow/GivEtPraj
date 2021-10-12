@@ -4,7 +4,9 @@
     <span class="flex flex-row items-center text-gray-800 text-md">
         @if (Icon is not null)
         {
-            <i class="@Icon mr-2"></i>
+            <button @onclick="OnBackClicked">
+                <i class="@Icon mr-2"></i>
+            </button>
         }
         <h1>@Title</h1>
     </span>
@@ -13,4 +15,5 @@
 @code {
     [Parameter] public string Title { get; set; } = "Title";
     [Parameter] public string? Icon { get; set; }
+    [Parameter] public EventCallback OnBackClicked { get; set; }
 }

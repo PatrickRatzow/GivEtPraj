@@ -6,7 +6,7 @@
 @inject ICategoryService _categoryService
 
 <div class="transition-all flex flex-col mr-8 @Offset">
-    <Header Title="Vælg Kategori" Icon="fas fa-chevron-left"></Header>
+    <Header Title="Vælg Kategori" Icon="fas fa-chevron-left" OnBackClicked="Parent.PreviousPage"></Header>
 
     <div class="w-[calc(100vw-2rem)] mt-10 grid gap-y-4 grid-rows-1">
         <TextField ValueChanged="FilterCategories" Title="Søg"></TextField>
