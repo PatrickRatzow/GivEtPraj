@@ -1,23 +1,36 @@
 ﻿<div class="relative @CssClass">
-    <span class="absolute ml-2 pointer-events-none text-base transition-all text-black @TitleClass">@Title</span>
-    <InputText class="w-full p-2 rounded-md caret-orange bg-gray-100 border border-gray-300 focus:border-gray-700"
-               @onfocus="OnFocus"
-               @onblur="OnBlur"
-               @bind-Value="Value">
-    </InputText>
+    <span class="absolute ml-2 pointer-events-none text-base transition-all text-gray-500 @TitleClass">@Title</span>
+    <BindableInputText class="w-full p-2 rounded-md caret-orange transition-all bg-gray-100 border border-gray-300 focus:border-gray-700"
+                       @onfocus="OnFocus"
+                       @onblur="OnBlur"
+                       @bind-Value="Value"
+    >
+    </BindableInputText>
     <span class="absolute pointer-events-none top-2 right-2">
         <i class="fas fa-search"></i>
     </span>
 </div>
 
 @code {
-    private string Value { get; set; }
+    private string _value { get; set; }
+    [Parameter] 
+    public string Value
+    {
+        get => _value;
+        set
+        {
+            _value = value;
+
+            ValueChanged.InvokeAsync(_value);
+        }
+    }
 
     [Parameter]
     public string Title { get; set; }
-
     [Parameter]
     public string CssClass { get; set; }
+    [Parameter] 
+    public EventCallback<string> ValueChanged { get; set; }  
 
     private string TitleClass =>
         (string.IsNullOrWhiteSpace(Value), _hasFocus) switch
@@ -37,5 +50,4 @@
     {
         _hasFocus = false;
     }
-
 }

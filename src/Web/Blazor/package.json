@@ -12,7 +12,7 @@
   "private": true,
   "devDependencies": {
     "autoprefixer": "^10.3.7",
-    "postcss-import": "^14.0. 2",
-    "tailwindcss": "^2.2.4"
+    "postcss-import": "^2.0.0",
+    "tailwindcss": "^2.2.16"
   }
 }

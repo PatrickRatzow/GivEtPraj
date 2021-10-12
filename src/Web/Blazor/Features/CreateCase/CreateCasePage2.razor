@@ -1,28 +1,50 @@
 ﻿@page "/create-page2"
-@using Commentor.GivEtPraj.Blazor.Components
 @using Commentor.GivEtPraj.Blazor.Services
+@using Commentor.GivEtPraj.WebApi.Contracts.Requests
 @using Commentor.GivEtPraj.Application.Contracts
-@inject ICategoryService CategoryService
+@inject ICategoryService _categoryService
 
-<PageContent Title="Opret Praj" Icon="far fa-angle-left" CurrentStep="1" Steps="5">
-    <EditForm Model="Model" class="w-full mt-10">
+<PageContent Title="Opret Praj" Icon="far fa-angle-left" CurrentStep="@_currentStep" Steps="5">
+    <EditForm Model="_model" class="w-full mt-10">
         <div class="w-full grid gap-y-4 grid-rows-1">
-            <TextField Title="Søg"></TextField>
-            @foreach (var category in Categories)
+            <TextField ValueChanged="FilterCategories" Title="Søg"></TextField>
+            @foreach (var category in _filteredCategories)
             {
-                <ItemRow Title="@category.Name" Icon="@category.Icon"></ItemRow>
+                <ItemRow 
+                    IsSelected="category.Name == _model.Category"
+                    Title="@category.Name"
+                    Icon="@category.Icon"
+                    OnClick="() => _model.Category = category.Name"
+                >
+                </ItemRow>
             }
         </div>
     </EditForm>
 </PageContent>
 
 @code {
-    private object Model = new();
-    private List<CategoryDto> Categories = new();
+    private readonly CreateCaseRequest _model = new();
+    private List<CategoryDto> _categories = new();
+    private List<CategoryDto> _filteredCategories = new();
+    private int _currentStep = 0;
 
     protected override async Task OnInitializedAsync()
     {
-        Categories = await CategoryService.GetAllCategories();
+        _categories = await _categoryService.GetAllCategories();
+        _filteredCategories = _categories;
     }
 
+    private void FilterCategories(string search)
+    {
+        if (string.IsNullOrWhiteSpace(search))
+        {
+            _filteredCategories = _categories;
+
+            return;
+        }
+
+        _filteredCategories = _categories
+            .Where(c => c.Name.ToLowerInvariant().Contains(search.ToLowerInvariant()))
+            .ToList();
+    }
 }

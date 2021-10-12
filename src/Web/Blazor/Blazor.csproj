@@ -7,6 +7,7 @@
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     <RootNamespace>Commentor.GivEtPraj.Blazor</RootNamespace>
     <AssemblyName>Commentor.GivEtPraj.Blazor</AssemblyName>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -39,13 +40,13 @@
         <Output TaskParameter="ExitCode" PropertyName="error" />
     </Exec>
     <Error Condition="'$(error)' != '0'" Text="install npm please !" />
-    <Exec Command="npm install"/>
+    <Exec Command="npm install" />
     <Touch Files="node_modules/.install-stamp" AlwaysCreate="true" />
   </Target>
     <Target Name="tailwind build" AfterTargets="Build" Condition="'$(TailwindBuild)' == 'true'">
         <Message Text="tailwind build target running..." Importance="high"></Message>
-        <Exec Command="npm run build" Condition="'$(Configuration)' == 'Debug'"/>
-        <Exec Command="npm run publish" Condition="'$(Configuration)' == 'Release'"/>
+        <Exec Command="npm run build" Condition="'$(Configuration)' == 'Debug'" />
+        <Exec Command="npm run publish" Condition="'$(Configuration)' == 'Release'" />
     </Target>
 
 </Project>
