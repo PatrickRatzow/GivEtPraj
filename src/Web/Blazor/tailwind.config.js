@@ -8,7 +8,9 @@ module.exports = {
       extend: {
           colors: {
               orange: "#FFCA98",
-              gray: "#7B7B7B"
+              gray: {
+                  step: "#7B7B7B"
+              }
           }
       },
   },
