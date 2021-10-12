@@ -10,7 +10,7 @@
             <TextField Title="Søg"></TextField>
             @foreach (var category in Categories)
             {
-                <ItemRow Title="@category.Name" Icon="fas fa-road"></ItemRow>
+                <ItemRow Title="@category.Name" Icon="@category.Icon"></ItemRow>
             }
         </div>
     </EditForm>
