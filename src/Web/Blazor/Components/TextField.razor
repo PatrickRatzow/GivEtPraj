@@ -1,7 +1,13 @@
-﻿
-<div class="relative @CssClass">
-    <span class="absolute ml-2 text-base transition-all text-black @TitleClass">@Title</span>
-    <InputText class="p-2 rounded-md caret-orange border border-gray-300 focus:border-gray-700" @onfocus="OnFocus" @onblur="OnBlur" @bind-Value="Value"></InputText>
+﻿<div class="relative @CssClass">
+    <span class="absolute ml-2 pointer-events-none text-base transition-all text-black @TitleClass">@Title</span>
+    <InputText class="w-full p-2 rounded-md caret-orange bg-gray-100 border border-gray-300 focus:border-gray-700"
+               @onfocus="OnFocus"
+               @onblur="OnBlur"
+               @bind-Value="Value">
+    </InputText>
+    <span class="absolute pointer-events-none top-2 right-2">
+        <i class="fas fa-search"></i>
+    </span>
 </div>
 
 @code {

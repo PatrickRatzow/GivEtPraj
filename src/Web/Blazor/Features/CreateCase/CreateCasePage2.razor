@@ -2,8 +2,17 @@
 @using Commentor.GivEtPraj.Blazor.Components
 
 <PageContent Title="Opret Praj" Icon="far fa-angle-left" CurrentStep="1" Steps="5">
-    <div class="w-full grid gap-y-4 grid-rows-1">
-        <ItemRow Title="Vejskade" Icon="fas fa-road"></ItemRow>
-        <ItemRow Title="Skiltning" Icon="fas fa-directions"></ItemRow>
-    </div>
+    <EditForm Model="Model" class="w-full mt-10">
+        <div class="w-full grid gap-y-4 grid-rows-1">
+
+            <TextField Title="Søg"></TextField>
+            <ItemRow Title="Vejskade" Icon="fas fa-road"></ItemRow>
+            <ItemRow Title="Skiltning" Icon="fas fa-directions"></ItemRow>
+
+        </div>
+    </EditForm>
 </PageContent>
+
+@code {
+    private object Model = new();
+}
