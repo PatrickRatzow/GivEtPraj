@@ -7,7 +7,12 @@ namespace Commentor.GivEtPraj.Application.Tests.Integration.DatabaseFactories;
 public class CaseFactory : DatabaseFactory
 {
     private static readonly object CreationLock = new();
-    private static int _casesCreated = 0;
+    private static int _created;
+    protected override int Created
+    {
+        get => _created; 
+        set => _created = value;
+    }
 
     public CaseFactory(IServiceScope serviceScope) : base(serviceScope)
     {
@@ -35,9 +40,9 @@ public class CaseFactory : DatabaseFactory
     private Case CreateCase(Category category, string? description = null, Priority? priority = null, 
         IPAddress? ipAddress = null)
     {
-        _casesCreated++;
+        Created++;
 
-        description ??= $"Description #{_casesCreated}";
+        description ??= $"Description #{Created}";
         ipAddress ??= IPAddress.Parse("127.0.0.1");
         priority ??= Priority.Low;
 
