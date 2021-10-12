@@ -1,0 +1,17 @@
+﻿<div class="flex items-center bg-[#FAF6F3] rounded-md p-[7px] text-xl">
+    @if (Icon is not null)
+    {
+        <i class="ml-1 mr-2 @Icon"></i>
+    }
+    <span>@Title</span>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Title { get; set; } = null!;
+
+    [Parameter]
+    public string? Icon { get; set; }
+
+}
