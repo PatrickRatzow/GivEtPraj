@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Commentor.GivEtPraj.Application.Cases.Commands;
 using Commentor.GivEtPraj.Domain.Enums;
 
@@ -18,7 +16,6 @@ public class CreateCaseCommandTests : TestBase
 
         await Database.Save();
 
-        
         var description = "An example description";
         var images = new List<string>();
         var longitude = 0;
