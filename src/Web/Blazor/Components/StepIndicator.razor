@@ -1,16 +1,16 @@
-﻿<div class="flex flex-column items-center">
+﻿<div class="flex flex-column justify-center absolute bottom-0 left-0 right-0 ml-auto mr-auto w-auto mb-4">
     @ChildContent
     
    @for (var i = 0; i < Steps; i++)
    {
-       <span id="step-@i" class="rounded w-8 h-8 @(CurrentStep == i ? "bg-blue-500" : "bg-black")"></span>
+       <span id="step-@i" class="rounded-full w-2 h-2 mr-1 @(CurrentStep == i ? "bg-orange w-12" : "bg-gray")"></span>
    }
 </div>
+
 
 @code {
     [Parameter] 
     public RenderFragment ChildContent { get; set; } = null!;
-
     [Parameter] 
     public int Steps { get; set; }
     [Parameter] 
