@@ -1,7 +1,18 @@
 ﻿<div class="flex flex-column items-center">
-    	 
+    @ChildContent
+    
+   @for (var i = 0; i < Steps; i++)
+   {
+       <span id="step-@i" class="rounded w-8 h-8 @(CurrentStep == i ? "bg-blue-500" : "bg-black")"></span>
+   }
 </div>
 
 @code {
+    [Parameter] 
+    public RenderFragment ChildContent { get; set; } = null!;
 
+    [Parameter] 
+    public int Steps { get; set; }
+    [Parameter] 
+    public int CurrentStep { get; set; }
 }
