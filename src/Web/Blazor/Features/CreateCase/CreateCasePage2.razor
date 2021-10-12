@@ -1,18 +1,28 @@
 ﻿@page "/create-page2"
 @using Commentor.GivEtPraj.Blazor.Components
+@using Commentor.GivEtPraj.Blazor.Services
+@using Commentor.GivEtPraj.Application.Contracts
+@inject ICategoryService CategoryService
 
 <PageContent Title="Opret Praj" Icon="far fa-angle-left" CurrentStep="1" Steps="5">
     <EditForm Model="Model" class="w-full mt-10">
         <div class="w-full grid gap-y-4 grid-rows-1">
-
             <TextField Title="Søg"></TextField>
-            <ItemRow Title="Vejskade" Icon="fas fa-road"></ItemRow>
-            <ItemRow Title="Skiltning" Icon="fas fa-directions"></ItemRow>
-
+            @foreach (var category in Categories)
+            {
+                <ItemRow Title="@category.Name" Icon="fas fa-road"></ItemRow>
+            }
         </div>
     </EditForm>
 </PageContent>
 
 @code {
     private object Model = new();
+    private List<CategoryDto> Categories = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categories = await CategoryService.GetAllCategories();
+    }
+
 }
