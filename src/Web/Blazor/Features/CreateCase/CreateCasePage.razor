@@ -110,12 +110,17 @@
     private IList<CategoryDto> Categories = new List<CategoryDto>();
     private CreateCaseRequest _caseRequest = new();
 
-    private bool HasLocationPermission { get; set; }
+    private bool HasLocationPermission { get; set; } = true;
 
     protected override async Task OnInitializedAsync()
     {
         Categories = await CategoryService.GetAllCategories();
         var window = await GeoLocationService.GetWindow();
+        await GetLatLong();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
         await GetLatLong();
     }
 
