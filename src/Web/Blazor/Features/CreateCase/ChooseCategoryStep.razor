@@ -9,16 +9,18 @@
     <Header Title="Vælg Kategori" Icon="fas fa-chevron-left" OnBackClicked="Parent.PreviousPage"></Header>
 
     <div class="w-[calc(100vw-2rem)] mt-10 grid gap-y-4 grid-rows-1">
-        <TextField ValueChanged="FilterCategories" Title="Søg"></TextField>
-        @foreach (var category in _filteredCategories)
-        {
-            <ItemRow
-                IsSelected="category.Name == Model.Category"
-                Title="@category.Name"
-                Icon="@category.Icon"
-                OnClick="() => SelectCategory(category.Name)">
-            </ItemRow>
-        }
+        <LoadingSpinner Loading="_loading">
+            <TextField ValueChanged="FilterCategories" Title="Søg"></TextField>
+            @foreach (var category in _filteredCategories)
+            {
+                <ItemRow
+                    IsSelected="category.Name == Model.Category"
+                    Title="@category.Name"
+                    Icon="@category.Icon"
+                    OnClick="() => SelectCategory(category.Name)">
+                </ItemRow>
+            }
+        </LoadingSpinner>
     </div>
 </div>
 
@@ -26,12 +28,15 @@
 {
     [Parameter] public CreateCaseRequest Model { get; set; } = null!;
 
+    private bool _loading;
     private List<CategoryDto> _categories = new();
     private List<CategoryDto> _filteredCategories = new();
 
     protected override async Task OnInitializedAsync()
     {
+        _loading = true;
         _categories = await _categoryService.GetAllCategories();
+    //_loading = false;
         _filteredCategories = _categories;
     }
 

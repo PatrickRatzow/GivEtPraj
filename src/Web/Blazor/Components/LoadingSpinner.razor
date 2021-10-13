@@ -1,0 +1,15 @@
+﻿@if (Loading)
+{
+    <div class="loading">
+        <div class="loader"></div>
+    </div>
+}
+else
+{
+    @ChildContent
+}
+
+@code {
+    [Parameter] public bool Loading { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+}
