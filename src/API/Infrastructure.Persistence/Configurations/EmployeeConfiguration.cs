@@ -8,6 +8,7 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         builder.Property(c => c.Id)
             .IsRequired();
 
+
         builder.Property(c => c.FirstName)
             .IsRequired();
             

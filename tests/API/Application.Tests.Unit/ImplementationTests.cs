@@ -118,19 +118,6 @@ public class ImplementationTests
                         && !t.IsAssignableTo(typeof(INotification)));
     }
 
-    [TestCaseSource(nameof(GetAllRequests))]
-    public void ShouldMakeSureEveryRequestIsARecord(Type request)
-    {
-        // Arrange
-        var isRecord = ((TypeInfo)request).DeclaredProperties
-            .FirstOrDefault(x => x.Name == "EqualityContract")
-            ?.GetMethod
-            ?.GetCustomAttribute(typeof(CompilerGeneratedAttribute)) is not null;
-
-        // Assert
-        isRecord.Should().BeTrue();
-    }
-
     private static IEnumerable<(IValidator validator, string propertyName)>
         GetEachPropertyWithItsRespectiveValidatorFromEveryRequestThatHasAtLeastOneProperty()
     {

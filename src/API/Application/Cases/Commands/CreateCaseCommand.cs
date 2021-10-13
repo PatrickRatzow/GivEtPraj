@@ -14,6 +14,7 @@ public class CreateCaseCommand : IRequest<OneOf<CaseSummaryDto, InvalidCategory>
     public double Latitude { get; set; }
     public Priority Priority { get; set; }
     public IPAddress IpAddress { get; set; }
+    
 
     public CreateCaseCommand()
     {
@@ -29,6 +30,7 @@ public class CreateCaseCommand : IRequest<OneOf<CaseSummaryDto, InvalidCategory>
         Latitude = latitude;
         Priority = priority;
         IpAddress = ipAddress;
+        
     }
 }
 
@@ -129,6 +131,7 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
         RuleFor(x => x.IpAddress)
             .NotNull()
             .Must(x => ValidateIPv4(x.ToString()));
+
     }
 
     private bool ValidateIPv4(string ipString)
