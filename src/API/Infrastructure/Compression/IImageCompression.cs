@@ -4,5 +4,5 @@ namespace Commentor.GivEtPraj.Infrastructure.Compression;
 
 public interface IImageCompression
 {
-    MemoryStream CompressImage(string base64String, int level = 30);
+    MemoryStream CompressImage(Stream content, int level = 30);
 }

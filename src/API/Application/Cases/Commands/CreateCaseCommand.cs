@@ -8,7 +8,7 @@ namespace Commentor.GivEtPraj.Application.Cases.Commands;
 public class CreateCaseCommand : IRequest<OneOf<CaseSummaryDto, InvalidCategory>>
 {
     public string Description { get; set; }
-    public IList<string> Images { get; set;  }
+    public List<Stream> Images { get; set; } = new();
     public string Category { get; set;  }
     public double Longitude { get; set;  }
     public double Latitude { get; set; }
@@ -19,7 +19,7 @@ public class CreateCaseCommand : IRequest<OneOf<CaseSummaryDto, InvalidCategory>
     {
     }
 
-    public CreateCaseCommand(string description, IList<string> images, string category, double longitude, double latitude, 
+    public CreateCaseCommand(string description, List<Stream> images, string category, double longitude, double latitude, 
         Priority priority, IPAddress ipAddress)
     {
         Description = description;
@@ -75,7 +75,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
     private async Task<List<Picture>> CreateImages(CreateCaseCommand request)
     {
         var pictures = new List<Picture>();
-        var list = new List<(string Image, Guid Id)>();
+        var list = new List<(Stream Image, Guid Id)>();
         foreach (var image in request.Images)
         {
             var guid = Guid.NewGuid();
@@ -91,7 +91,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         return pictures;
     }
 
-    private async ValueTask UploadImages(IReadOnlyCollection<(string Image, Guid Id)> images)
+    private async ValueTask UploadImages(IReadOnlyCollection<(Stream Image, Guid Id)> images)
     {
         if (images.Count == 0) return;
 
@@ -128,25 +128,8 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 
         RuleFor(x => x.IpAddress)
             .NotNull()
-            .Must(x => ValidateIPv4(x.ToString()));
+            .Must(x => ValidateIP(x.ToString()));
     }
 
-    private bool ValidateIPv4(string ipString)
-    {
-        if (String.IsNullOrWhiteSpace(ipString))
-        {
-            return false;
-        }
-
-        string[] splitValues = ipString.Split('.');
-        if (splitValues.Length != 4)
-        {
-            return false;
-        }
-
-        byte tempForParsing;
-
-        return splitValues.All(r => byte.TryParse(r, out tempForParsing));
-    }
-
+    private bool ValidateIP(string ipString) => IPAddress.TryParse(ipString, out _);
 }
