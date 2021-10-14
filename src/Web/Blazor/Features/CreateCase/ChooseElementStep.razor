@@ -4,10 +4,10 @@
 @using Commentor.GivEtPraj.Blazor.Services
 @inject ICategoryService _categoryService
 
-<div class="transition-all flex flex-col mr-8 @Offset">
+<div class="w-[calc(100vw-2rem)] transition-all flex flex-col mr-8 @Offset">
     <Header Title="Vælg Element" Icon="fas fa-chevron-left" OnBackClicked="Parent.PreviousPage"></Header>
 
-    <div class="w-[calc(100vw-2rem)] mt-10 grid gap-y-4 grid-rows-1">
+    <div class="w-full mt-10 grid gap-y-4 grid-rows-1">
         <h1>Element strikes back</h1>
         <button class="bg-blue-500 rounded-md py-2 px-4 text-white text-md" @onclick="Parent.NextPage">Next Page!</button>
     </div>

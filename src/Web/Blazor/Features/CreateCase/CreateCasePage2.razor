@@ -4,11 +4,13 @@
 @using Commentor.GivEtPraj.Blazor.Components
 @inject ICategoryService _categoryService
 
-<EditForm Model="_model" class="w-max">
+<EditForm Model="_model" class="w-max h-full">
     <StepHandler>
+        <CameraStep Model="@_model"/>
         <ChooseCategoryStep Model="@_model"/>
         <ChooseElementStep Model="@_model"/>
         <ChooseCategoryStep Model="@_model"/>
+        <CameraStep Model="@_model"/>
     </StepHandler>
 </EditForm>
 

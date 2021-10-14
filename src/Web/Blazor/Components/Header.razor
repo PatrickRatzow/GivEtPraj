@@ -1,7 +1,7 @@
 ﻿<PageTitle>@Title</PageTitle>
 
 <header>
-    <span class="flex flex-row items-center text-gray-800 text-md">
+    <span class="flex flex-row items-center text-gray-800 text-md @CssClass">
         @if (Icon is not null)
         {
             <button @onclick="OnBackClicked">
@@ -16,4 +16,5 @@
     [Parameter] public string Title { get; set; } = "Title";
     [Parameter] public string? Icon { get; set; }
     [Parameter] public EventCallback OnBackClicked { get; set; }
+    [Parameter] public string CssClass { get; set; }
 }

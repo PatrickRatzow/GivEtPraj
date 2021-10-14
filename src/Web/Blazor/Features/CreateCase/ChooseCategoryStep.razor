@@ -13,11 +13,10 @@
             <TextField ValueChanged="FilterCategories" Title="Søg"></TextField>
             @foreach (var category in _filteredCategories)
             {
-                <ItemRow
-                    IsSelected="category.Name == Model.Category"
-                    Title="@category.Name"
-                    Icon="@category.Icon"
-                    OnClick="() => SelectCategory(category.Name)">
+                <ItemRow IsSelected="category.Name == Model.Category"
+                     Title="@category.Name"
+                     Icon="@category.Icon"
+                     OnClick="() => SelectCategory(category.Name)">
                 </ItemRow>
             }
         </LoadingSpinner>
