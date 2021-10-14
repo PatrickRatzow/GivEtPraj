@@ -43,6 +43,23 @@
         StateHasChanged();
     }
 
+    public void GoToPage<TPage>() where TPage : Step
+    {
+        for (var i = 0; i < _steps.Count; i++)
+        {
+            var step = _steps[i];
+            if (step is not TPage) continue;
+            
+            _currentStep = i;
+                
+            HandleOffset();
+                
+            StateHasChanged();
+
+            return;
+        }
+    }
+
     private void HandleOffset()
     {
         for (var i = 0; i < _steps.Count; i++)
@@ -59,5 +76,4 @@
             step.Offset = "ml-[-100vw]";
         }
     }
-
 }

@@ -1,22 +1,39 @@
-﻿<button 
-    type="button" 
-    class="flex items-center transition-all bg-[#FAF6F3] rounded-md p-[7px] text-xl focus:outline-none @(IsSelected ? "bg-green-300" : "")" 
+﻿<button
+    type="button"
+    class="flex flex-row justify-between transition-all bg-[#FAF6F3] rounded-md p-[7px] text-xl focus:outline-none @(IsSelected ? "bg-green-300" : "") @CssClass"
     @onclick="() => OnClick.InvokeAsync()"
 >
-    @if (Icon is not null)
+    <span class="flex flex-row items-center">
+        @if (Icon is not null)
+        {
+            <i class="ml-1 mr-2 @Icon"></i>
+        }
+        <span>@Title</span>
+    </span>
+    @if (ChildContent is not null)
     {
-        <i class="ml-1 mr-2 @Icon"></i>
+        @ChildContent
     }
-    <span>@Title</span>
 </button>
 
 @code {
+
     [Parameter]
     public string Title { get; set; } = null!;
+
     [Parameter]
     public string? Icon { get; set; }
+
     [Parameter]
     public bool IsSelected { get; set; }
-    [Parameter] 
+
+    [Parameter]
     public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter]
+    public string? CssClass { get; set; }
+
 }
