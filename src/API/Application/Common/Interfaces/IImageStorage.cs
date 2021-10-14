@@ -3,5 +3,5 @@
 public interface IImageStorage
 {
     Task<Stream?> FindImage(string name);
-    Task<bool> UploadImage(string name, string base64String);
+    Task<bool> UploadImage(string name, Stream content);
 }

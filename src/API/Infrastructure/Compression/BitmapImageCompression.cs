@@ -8,20 +8,11 @@ namespace Commentor.GivEtPraj.Infrastructure.Compression;
 
 public class BitmapImageCompression : IImageCompression
 {
-    public MemoryStream CompressImage(string base64String, int level = 30)
+    public MemoryStream CompressImage(Stream content, int level = 30)
     {
-        var image = Base64ToImage(base64String);
+        var image = Image.FromStream(content, true);
 
         return VaryQualityLevel(image, level);
-    }
-
-    private static Image Base64ToImage(string base64String)
-    {
-        var imageBytes = Convert.FromBase64String(base64String);
-
-        using var ms = new MemoryStream(imageBytes, 0, imageBytes.Length);
-
-        return Image.FromStream(ms, true);
     }
 
     private static MemoryStream VaryQualityLevel(Image img, int level)
