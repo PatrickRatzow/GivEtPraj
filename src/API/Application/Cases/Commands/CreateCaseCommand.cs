@@ -68,6 +68,10 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         _db.Cases.Add(newCase);
         await _db.SaveChangesAsync(cancellationToken);
 
+        await _db.Entry(newCase.Category)
+            .Collection(c => c.SubCategories)
+            .LoadAsync(cancellationToken);
+            
         var summaryDto = _mapper.Map<Case, CaseDto>(newCase);
         return summaryDto;
     }
