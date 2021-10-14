@@ -5,21 +5,15 @@ using System.Net;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
-public class CreateCaseCommand : IRequest<OneOf<CaseDto, InvalidCategory>>
+public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory>>
 {
-    public string Description { get; set; }
-    public List<Stream> Images { get; set; } = new();
-    public string Category { get; set;  }
-    public double Longitude { get; set;  }
-    public double Latitude { get; set; }
-    public Priority Priority { get; set; }
-    public IPAddress IpAddress { get; set; }
 
     public CreateCaseCommand()
     {
     }
 
-    public CreateCaseCommand(string description, List<Stream> images, string category, double longitude, double latitude, 
+    public CreateCaseCommand(string description, List<Stream> images, string category, double longitude,
+        double latitude,
         Priority priority, IPAddress ipAddress)
     {
         Description = description;
@@ -30,14 +24,21 @@ public class CreateCaseCommand : IRequest<OneOf<CaseDto, InvalidCategory>>
         Priority = priority;
         IpAddress = ipAddress;
     }
+
+    public string Description { get; set; }
+    public List<Stream> Images { get; set; } = new();
+    public string Category { get; set; }
+    public double Longitude { get; set; }
+    public double Latitude { get; set; }
+    public Priority Priority { get; set; }
+    public IPAddress IpAddress { get; set; }
 }
 
-
-public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<CaseDto, InvalidCategory>>
+public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<int, InvalidCategory>>
 {
     private readonly IAppDbContext _db;
-    private readonly IMapper _mapper;
     private readonly IImageStorage _imageStorage;
+    private readonly IMapper _mapper;
 
     public CreateCaseCommandHandler(IAppDbContext db, IMapper mapper, IImageStorage imageStorage)
     {
@@ -46,7 +47,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         _imageStorage = imageStorage;
     }
 
-    public async Task<OneOf<CaseDto, InvalidCategory>>
+    public async Task<OneOf<int, InvalidCategory>>
         Handle(CreateCaseCommand request, CancellationToken cancellationToken)
     {
         var category = await _db.Categories
@@ -68,12 +69,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         _db.Cases.Add(newCase);
         await _db.SaveChangesAsync(cancellationToken);
 
-        await _db.Entry(newCase.Category)
-            .Collection(c => c.SubCategories)
-            .LoadAsync(cancellationToken);
-            
-        var summaryDto = _mapper.Map<Case, CaseDto>(newCase);
-        return summaryDto;
+        return newCase.Id;
     }
 
     private async Task<List<Picture>> CreateImages(CreateCaseCommand request)
