@@ -3,7 +3,7 @@
 @using Commentor.GivEtPraj.WebApi.Contracts.Requests
 @inherits Step
 
-<div class="w-[calc(100vw-2rem)] transition-all flex flex-col mr-8 h-full @Offset">
+<div class="w-[calc(100vw-2rem)] transition-all flex flex-col mr-8 h-full relative @Offset">
     @if (_viewGalleryModal)
     {
         <ImageGalleryModal CssClass="z-50 bg-red-500 absolute -my-2 -mx-4 w-screen h-screen opacity-90"></ImageGalleryModal>
@@ -39,7 +39,7 @@
     [Inject] private ICameraService CameraService { get; set; }
     [Parameter] public EventCallback<string> OnElementAdded { get; set; }
 
-    protected async override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         await CameraService.GetCameraFeed();
     }
@@ -53,4 +53,5 @@
     {
         await CameraService.FlipCamera();
     }
+
 }
