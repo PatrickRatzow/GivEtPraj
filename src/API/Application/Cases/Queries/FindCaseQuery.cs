@@ -2,9 +2,9 @@
 
 namespace Commentor.GivEtPraj.Application.Cases.Queries;
 
-public record FindCaseQuery(int Id) : IRequest<OneOf<CaseSummaryDto, CaseNotFound>>;
+public record FindCaseQuery(int Id) : IRequest<OneOf<CaseDto, CaseNotFound>>;
 
-public class FindCaseQueryHandler : IRequestHandler<FindCaseQuery, OneOf<CaseSummaryDto, CaseNotFound>>
+public class FindCaseQueryHandler : IRequestHandler<FindCaseQuery, OneOf<CaseDto, CaseNotFound>>
 {
     private readonly IAppDbContext _db;
     private readonly IMapper _mapper;
@@ -15,7 +15,7 @@ public class FindCaseQueryHandler : IRequestHandler<FindCaseQuery, OneOf<CaseSum
         _mapper = mapper;
     }
 
-    public async Task<OneOf<CaseSummaryDto, CaseNotFound>> Handle(FindCaseQuery request,
+    public async Task<OneOf<CaseDto, CaseNotFound>> Handle(FindCaseQuery request,
         CancellationToken cancellationToken)
     {
         var @case = await _db.Cases
@@ -26,7 +26,7 @@ public class FindCaseQueryHandler : IRequestHandler<FindCaseQuery, OneOf<CaseSum
 
         if (@case is null) return new CaseNotFound(request.Id);
 
-        return _mapper.Map<Case, CaseSummaryDto>(@case);
+        return _mapper.Map<Case, CaseDto>(@case);
     }
 }
 

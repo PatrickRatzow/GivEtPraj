@@ -2,9 +2,9 @@
 
 namespace Commentor.GivEtPraj.Application.Cases.Queries;
 
-public record FindAllCasesQuery : IRequest<List<CaseSummaryDto>>;
+public record FindAllCasesQuery : IRequest<List<CaseDto>>;
 
-public class FindAllCasesQueryHandler : IRequestHandler<FindAllCasesQuery, List<CaseSummaryDto>>
+public class FindAllCasesQueryHandler : IRequestHandler<FindAllCasesQuery, List<CaseDto>>
 {
     private readonly IAppDbContext _db;
     private readonly IMapper _mapper;
@@ -15,13 +15,13 @@ public class FindAllCasesQueryHandler : IRequestHandler<FindAllCasesQuery, List<
         _mapper = mapper;
     }
 
-    public async Task<List<CaseSummaryDto>> Handle(FindAllCasesQuery request, CancellationToken cancellationToken)
+    public async Task<List<CaseDto>> Handle(FindAllCasesQuery request, CancellationToken cancellationToken)
     {
         var cases = await _db.Cases
             .Include(c => c.Pictures)
             .Include(c => c.Category)
             .ToListAsync(cancellationToken);
 
-        return _mapper.Map<List<Case>, List<CaseSummaryDto>>(cases);
+        return _mapper.Map<List<Case>, List<CaseDto>>(cases);
     }
 }

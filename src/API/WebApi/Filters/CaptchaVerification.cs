@@ -4,19 +4,21 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Commentor.GivEtPraj.WebApi.Filters;
-public class CaptchaVerificationFilter : Attribute, IAsyncAuthorizationFilter
-{
 
+public class CaptchaVerification : Attribute, IAsyncAuthorizationFilter
+{
     public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {
-        HttpClient Http = new HttpClient();
+        using var httpClient = new HttpClient();
 
         var reCaptchaResponse = context.HttpContext.Request.Headers["X-ReCaptchaResponse"];
-        HttpResponseMessage httpResp = await Http.PostAsync($"https://www.google.com/recaptcha/api/siteverify?secret=6LcvD64cAAAAAAqiYQuOfEcWQmrHUxct_B0vldqn&response=" + reCaptchaResponse, null);
-        ReCaptchaResponse resp = JsonSerializer.Deserialize<ReCaptchaResponse>(await httpResp.Content.ReadAsStringAsync());
+        var httpResp = await httpClient.PostAsync($"https://www.google.com/recaptcha/api/siteverify?secret=6LcvD64cAAAAAAqiYQuOfEcWQmrHUxct_B0vldqn&response=" + reCaptchaResponse, null);
+        var content = await httpResp.Content.ReadAsStringAsync();
+        var resp = JsonSerializer.Deserialize<ReCaptchaResponse>(content)!;
 
-        if (!resp.Success)
-            context.Result = new UnauthorizedObjectResult($"No a valid ReCaptcha response");
+        if (resp.Success) return;
+        
+        context.Result = new UnauthorizedObjectResult($"No a valid ReCaptcha response");
     }
 
     public class ReCaptchaResponse
@@ -24,6 +26,5 @@ public class CaptchaVerificationFilter : Attribute, IAsyncAuthorizationFilter
         [JsonPropertyName("success")] public bool Success { get; set; }
         [JsonPropertyName("challenge_ts")] public DateTime ChallengeTs { get; set; }
         [JsonPropertyName("hostName")] public string HostName { get; set; }
-
     }
 }
