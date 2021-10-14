@@ -75,7 +75,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
     private async Task<List<Picture>> CreateImages(CreateCaseCommand request)
     {
         var pictures = new List<Picture>();
-        var list = new List<(Stream Image, Guid Id)>();
+        var list = new List<(string Image, Guid Id)>();
         foreach (var image in request.Images)
         {
             var guid = Guid.NewGuid();
@@ -91,7 +91,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         return pictures;
     }
 
-    private async ValueTask UploadImages(IReadOnlyCollection<(Stream Image, Guid Id)> images)
+    private async ValueTask UploadImages(IReadOnlyCollection<(string Image, Guid Id)> images)
     {
         if (images.Count == 0) return;
 

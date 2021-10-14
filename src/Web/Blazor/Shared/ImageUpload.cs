@@ -12,7 +12,7 @@ public class ImageUpload
         _fileReaderService = fileReaderService;
     }
 
-    public async Task<IList<string>> GetFilesUploaded(ElementReference input)
+    public async Task<List<string>> GetFilesUploaded(ElementReference input)
     {
         var content = new List<string>();
 

@@ -66,14 +66,7 @@
 
                 <Camera OnElementAdded="ImagesListElementAdded"></Camera>
 
-                <ul>
-                    @foreach (string imgStr in _caseRequest.Images)
-                    {
-                        <li>
-                            <img width="320" height="240" src="data:image/png;base64, @imgStr" alt="Red dot">
-                        </li>
-                    }
-                </ul>
+                <ImageHolder OnImageRemoved="RemoveImage" Images="@_caseRequest.Images"></ImageHolder>
 
                 <ValidationMessage For="@(() => _caseRequest.Images)"/>
             </div>
@@ -153,6 +146,11 @@
     public void ImagesListElementAdded(string str)
     {
         _caseRequest.Images.Add(str);
+    }
+
+    public void RemoveImage(string str)
+    {
+        _caseRequest.Images.RemoveAll(x => x == str);
     }
 
     public void RecaptchaCompleted(string str)
