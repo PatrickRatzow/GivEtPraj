@@ -31,8 +31,8 @@ public class CreateCaseCommandTests : TestBase
         var result = await Send(command);
 
         // Assert
-        result.Value.Should().BeOfType<CaseSummaryDto>();
-        var dbResult = await Find<Case>(result.Value.As<CaseSummaryDto>().Id);
+        result.Value.Should().BeOfType<CaseDto>();
+        var dbResult = await Find<Case>(result.Value.As<CaseDto>().Id);
         dbResult.Should().NotBeNull();
     }
 

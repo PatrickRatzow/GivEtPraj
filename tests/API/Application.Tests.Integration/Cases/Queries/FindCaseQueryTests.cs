@@ -22,7 +22,7 @@ public class FindCaseQueryTests : TestBase
         var result = await Send(query);
 
         // Assert
-        result.Value.Should().BeOfType<CaseSummaryDto>();
+        result.Value.Should().BeOfType<CaseDto>();
         result.Value.Should().NotBeNull();
     }
 
@@ -55,6 +55,6 @@ public class FindCaseQueryTests : TestBase
         var result = await Send(query);
 
         // Assert
-        result.Value.As<CaseSummaryDto>().Category.Should().NotBeNull();
+        result.Value.As<CaseDto>().Category.Should().NotBeNull();
     }
 }

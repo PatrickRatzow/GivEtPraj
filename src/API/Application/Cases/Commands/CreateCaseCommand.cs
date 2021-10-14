@@ -5,7 +5,7 @@ using System.Net;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
-public class CreateCaseCommand : IRequest<OneOf<CaseSummaryDto, InvalidCategory>>
+public class CreateCaseCommand : IRequest<OneOf<CaseDto, InvalidCategory>>
 {
     public string Description { get; set; }
     public List<Stream> Images { get; set; } = new();
@@ -33,7 +33,7 @@ public class CreateCaseCommand : IRequest<OneOf<CaseSummaryDto, InvalidCategory>
 }
 
 
-public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<CaseSummaryDto, InvalidCategory>>
+public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<CaseDto, InvalidCategory>>
 {
     private readonly IAppDbContext _db;
     private readonly IMapper _mapper;
@@ -46,7 +46,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         _imageStorage = imageStorage;
     }
 
-    public async Task<OneOf<CaseSummaryDto, InvalidCategory>>
+    public async Task<OneOf<CaseDto, InvalidCategory>>
         Handle(CreateCaseCommand request, CancellationToken cancellationToken)
     {
         var category = await _db.Categories
@@ -68,14 +68,14 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         _db.Cases.Add(newCase);
         await _db.SaveChangesAsync(cancellationToken);
 
-        var summaryDto = _mapper.Map<Case, CaseSummaryDto>(newCase);
+        var summaryDto = _mapper.Map<Case, CaseDto>(newCase);
         return summaryDto;
     }
 
     private async Task<List<Picture>> CreateImages(CreateCaseCommand request)
     {
         var pictures = new List<Picture>();
-        var list = new List<(string Image, Guid Id)>();
+        var list = new List<(Stream Image, Guid Id)>();
         foreach (var image in request.Images)
         {
             var guid = Guid.NewGuid();
@@ -91,7 +91,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         return pictures;
     }
 
-    private async ValueTask UploadImages(IReadOnlyCollection<(string Image, Guid Id)> images)
+    private async ValueTask UploadImages(IReadOnlyCollection<(Stream Image, Guid Id)> images)
     {
         if (images.Count == 0) return;
 
