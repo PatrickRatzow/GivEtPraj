@@ -22,7 +22,7 @@ public class FindAllCasesQueryTest : TestBase
         var result = await Send(query);
 
         // Assert
-        result.Should().AllBeOfType<CaseSummaryDto>();
+        result.Should().AllBeOfType<CaseDto>();
         result.Should().HaveCount(cases.Count);
     }
 }

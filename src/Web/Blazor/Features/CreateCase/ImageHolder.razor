@@ -1,0 +1,22 @@
+﻿<h3>ImageHolder</h3>
+
+<ul>
+    @foreach (string imgStr in Images)
+    {
+        <li>
+            <img width="320" height="240" src="data:image/png;base64, @imgStr" alt="Red dot">
+            <button @onclick="() => RemoveImage(imgStr)">Remove</button>
+        </li>
+    }   
+</ul>
+
+@code {
+    [Parameter] public List<string> Images { get; set; }
+    [Parameter] public EventCallback<string> OnImageRemoved { get; set; }
+
+    private void RemoveImage(string str)
+    {
+        OnImageRemoved.InvokeAsync(str);
+    }
+
+}
