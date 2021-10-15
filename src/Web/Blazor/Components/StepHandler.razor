@@ -1,16 +1,24 @@
-﻿<div class="flex flex-row relative h-full">
+﻿@using System.Runtime.InteropServices.ComTypes
+<div class="flex flex-row relative h-full">
     <CascadingValue Value="this">
         @ChildContent
     </CascadingValue>
 </div>
 
-<StepIndicator Steps="_steps.Count" CurrentStep="_currentStep"/>
+@if (CurrentStepIsHidden())
+{
+    <StepIndicator Steps="@Steps.Count()" CurrentStep="_currentStep"/>    
+}
 
 @code {
     private int _currentStep;
-    [Parameter] public RenderFragment ChildContent { get; set; } = null!;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = null!;
 
     private List<Step> _steps = new();
+
+    private IEnumerable<Step> Steps => _steps.Where(x => x.Hidden != true);
 
     public void AddStep(Step step)
     {
@@ -19,6 +27,13 @@
         StateHasChanged();
     }
 
+    private bool CurrentStepIsHidden()
+    {
+        if (_currentStep == 0) return false;
+
+        return true;
+    }
+    
     public void NextPage()
     {
         if (_currentStep == _steps.Count - 1)
@@ -49,11 +64,11 @@
         {
             var step = _steps[i];
             if (step is not TPage) continue;
-            
+
             _currentStep = i;
-                
+
             HandleOffset();
-                
+
             StateHasChanged();
 
             return;
@@ -76,4 +91,5 @@
             step.Offset = "ml-[-100vw]";
         }
     }
+
 }

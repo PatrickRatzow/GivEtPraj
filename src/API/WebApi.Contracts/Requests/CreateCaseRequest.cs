@@ -4,26 +4,29 @@ namespace Commentor.GivEtPraj.WebApi.Contracts.Requests;
 
 public class CreateCaseRequest
 {
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public List<string> Images { get; set; } = new List<string>();
-    public string Category { get; set; }
-    public double Longitude { get; set; }
-    public double Latitude { get; set; }
-
     public CreateCaseRequest()
     {
     }
 
-    public CreateCaseRequest(string title, string description, List<string> images, string category, double longitude, double latitude)
+    public CreateCaseRequest(string title, string description, List<string> images, string category, 
+        List<string> subCategories, double longitude, double latitude)
     {
         Title = title;
         Description = description;
         Images = images;
         Category = category;
+        SubCategories = subCategories;
         Longitude = longitude;
         Latitude = latitude;
     }
+
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public List<string> Images { get; set; } = new();
+    public string Category { get; set; }
+    public List<string> SubCategories { get; set; } = new();
+    public double Longitude { get; set; }
+    public double Latitude { get; set; }
 }
 
 public class CreateCaseRequestValidator : AbstractValidator<CreateCaseRequest>
@@ -46,7 +49,9 @@ public class CreateCaseRequestValidator : AbstractValidator<CreateCaseRequest>
             .ForEach(image =>
             {
                 // Maximum 20MB of ASCII characters
-                image.MaximumLength(20_000_000 / 8);
+                image.MaximumLength(20_000_000 / 8).WithMessage("Billeder må højst være 20 MB");
+                image.Must(i => Convert.TryFromBase64String(i, new(new byte[i.Length]), out _))
+                    .WithMessage("Titlen er ikke i det rigtige format");
             });
 
         RuleFor(c => c.Category)

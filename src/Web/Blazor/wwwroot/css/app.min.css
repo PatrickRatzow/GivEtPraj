@@ -612,6 +612,10 @@ video {
   pointer-events: none;
 }
 
+.fixed {
+  position: fixed;
+}
+
 .absolute {
   position: absolute;
 }
@@ -773,6 +777,14 @@ video {
 
 .mt-10 {
   margin-top: 2.5rem;
+}
+
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
+.block {
+  display: block;
 }
 
 .flex {
@@ -1032,6 +1044,10 @@ video {
   padding-bottom: 1rem;
 }
 
+.text-right {
+  text-align: right;
+}
+
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -1155,9 +1171,18 @@ body, html {
   }
 }
 
+.focus\:border-2:focus {
+  border-width: 2px;
+}
+
 .focus\:border-gray-700:focus {
   --tw-border-opacity: 1;
   border-color: rgba(55, 65, 81, var(--tw-border-opacity));
+}
+
+.focus\:border-orange:focus {
+  --tw-border-opacity: 1;
+  border-color: rgba(255, 202, 152, var(--tw-border-opacity));
 }
 
 .focus\:outline-none:focus {

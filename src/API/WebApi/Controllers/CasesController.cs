@@ -8,8 +8,8 @@ namespace Commentor.GivEtPraj.WebApi.Controllers;
 [Route("v1/cases")]
 public class CasesController : ControllerBase
 {
-    private readonly IMediator _mediator;
     private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
 
     public CasesController(IMediator mediator, IMapper mapper)
     {
@@ -31,11 +31,11 @@ public class CasesController : ControllerBase
         var result = await _mediator.Send(command, cancellationToken);
 
         return result.MatchResponse(
-            caseSummaryDto => CreatedAtAction(nameof(FindCase),
+            caseId => CreatedAtAction(nameof(FindCase),
                 new
                 {
-                    Id = caseSummaryDto.Id
-                }, caseSummaryDto)
+                    Id = caseId
+                }, null)
         );
     }
 

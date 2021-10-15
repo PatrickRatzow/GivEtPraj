@@ -3,7 +3,7 @@
 @using Commentor.GivEtPraj.WebApi.Contracts.Requests
 @inherits Step
 
-<div class="w-[calc(100vw-2rem)] transition-all flex flex-col mr-8 h-full @Offset">
+<div class="w-[calc(100vw-2rem)] transition-all flex flex-col mr-8 h-full relative @Offset">
     @if (_viewGalleryModal)
     {
         <ImageGalleryModal Images=@Model.Images OnImageRemoved=RemoveImage ToggleModal=ToggleModal CssClass="z-50 bg-black absolute -my-2 -mx-4 w-screen h-screen"></ImageGalleryModal>
@@ -26,7 +26,8 @@
                 }
                 else
                 {
-                    <Base64Picture CssClass="rounded-full w-13 h-13" ImgStr="@Model.Images.Last()"></Base64Picture>
+                    <Base64Img CssClass="rounded-full w-13 h-13" ImgStr="@Model.Images.Last()"></Base64Img>
+
                 }
             </button>
         </div>
@@ -38,7 +39,7 @@
     [Parameter] public CreateCaseRequest Model { get; set; } = null!;
     [Inject] private ICameraService CameraService { get; set; }
 
-    protected async override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         await CameraService.GetCameraFeed();
     }
@@ -52,7 +53,7 @@
     {
         await CameraService.FlipCamera();
     }
-
+    
     private void ToggleModal()
     {
         if ((Model.Images.Count > 0 && !_viewGalleryModal) || _viewGalleryModal)

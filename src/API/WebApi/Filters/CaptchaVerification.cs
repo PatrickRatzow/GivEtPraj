@@ -12,13 +12,18 @@ public class CaptchaVerification : Attribute, IAsyncAuthorizationFilter
         using var httpClient = new HttpClient();
 
         var reCaptchaResponse = context.HttpContext.Request.Headers["X-ReCaptchaResponse"];
-        var httpResp = await httpClient.PostAsync($"https://www.google.com/recaptcha/api/siteverify?secret=6LcvD64cAAAAAAqiYQuOfEcWQmrHUxct_B0vldqn&response=" + reCaptchaResponse, null);
+        if (string.IsNullOrWhiteSpace(reCaptchaResponse))
+            context.Result = new UnauthorizedResult();
+
+        var httpResp = await httpClient.PostAsync(
+            $"https://www.google.com/recaptcha/api/siteverify?secret=6LcvD64cAAAAAAqiYQuOfEcWQmrHUxct_B0vldqn&response=" +
+            reCaptchaResponse, null);
         var content = await httpResp.Content.ReadAsStringAsync();
         var resp = JsonSerializer.Deserialize<ReCaptchaResponse>(content)!;
 
         if (resp.Success) return;
-        
-        context.Result = new UnauthorizedObjectResult($"No a valid ReCaptcha response");
+
+        context.Result = new ForbidResult();
     }
 
     public class ReCaptchaResponse

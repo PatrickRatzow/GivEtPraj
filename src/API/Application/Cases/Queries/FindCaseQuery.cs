@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Commentor.GivEtPraj.Application.Cases.Queries;
 
@@ -18,15 +19,14 @@ public class FindCaseQueryHandler : IRequestHandler<FindCaseQuery, OneOf<CaseDto
     public async Task<OneOf<CaseDto, CaseNotFound>> Handle(FindCaseQuery request,
         CancellationToken cancellationToken)
     {
-        var @case = await _db.Cases
-            .Include(c => c.Pictures)
-            .Include(c => c.Category)
-            .Where(c => c.Id == request.Id)
+        var @case = await _mapper.ProjectTo<CaseDto>(
+                _db.Cases.Where(c => c.Id == request.Id)
+            )
             .FirstOrDefaultAsync(cancellationToken);
 
         if (@case is null) return new CaseNotFound(request.Id);
 
-        return _mapper.Map<Case, CaseDto>(@case);
+        return @case;
     }
 }
 

@@ -4,51 +4,54 @@
 @using Commentor.GivEtPraj.Application.Contracts
 @using Commentor.GivEtPraj.Blazor.Services
 @inject ICategoryService _categoryService
+@implements IDisposable
 
 <div class="transition-all flex flex-col mr-8 @Offset">
     <Header Title="Vælg Kategori" Icon="fas fa-chevron-left" OnBackClicked="Parent.PreviousPage"></Header>
 
     <div class="w-[calc(100vw-2rem)] mt-10 grid gap-y-4 grid-rows-1">
-        <LoadingSpinner Loading="_loading">
-            <TextField ValueChanged="FilterCategories" Title="Søg"></TextField>
-            @foreach (var category in _filteredCategories)
-            {
-                <ItemRow IsSelected="category.Name == Model.Category"
-                     Title="@category.Name"
-                     Icon="@category.Icon"
-                     OnClick="() => SelectCategory(category.Name)">
-                </ItemRow>
-            }
-        </LoadingSpinner>
+        <TextField ValueChanged="FilterCategories" Title="Søg"></TextField>
+        @foreach (var category in _filteredCategories)
+        {
+            <ItemRow IsSelected="category.Name == Model.Category"
+                 Title="@category.Name"
+                 Icon="@category.Icon"
+                 OnClick="() => SelectCategory(category.Name)">
+            </ItemRow>
+        }
     </div>
 </div>
 
 @code
 {
     [Parameter] public CreateCaseRequest Model { get; set; } = null!;
-
-    private bool _loading;
-    private List<CategoryDto> _categories = new();
     private List<CategoryDto> _filteredCategories = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        _loading = true;
-        _categories = await _categoryService.GetAllCategories();
-        _loading = false;
-        _filteredCategories = _categories;
+        _categoryService.OnChange += StateHasChanged;
+        
+        // Repopulate filtered categories
+        FilterCategories(string.Empty);
+        
+        base.OnInitialized();
+    }
+
+    public void Dispose()
+    {
+        _categoryService.OnChange -= StateHasChanged;
     }
 
     private void FilterCategories(string search)
     {
         if (string.IsNullOrWhiteSpace(search))
         {
-            _filteredCategories = _categories;
+            _filteredCategories = _categoryService.Categories;
 
             return;
         }
 
-        _filteredCategories = _categories
+        _filteredCategories = _categoryService.Categories
             .Where(c => c.Name.ToLowerInvariant().Contains(search.ToLowerInvariant()))
             .ToList();
     }
