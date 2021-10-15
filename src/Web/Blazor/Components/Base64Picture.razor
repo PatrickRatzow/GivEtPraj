@@ -1,7 +1,7 @@
 ﻿
-<img src="data:image/png;base64, @ImgStr">
+<img  src="data:image/png;base64, @ImgStr" class="@CssClass">
 
 @code {
-    [Parameter]
-    public string ImgStr { get; set; }
+    [Parameter] public string? CssClass { get; set; }
+    [Parameter] public string ImgStr { get; set; }
 }
