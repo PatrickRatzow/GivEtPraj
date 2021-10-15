@@ -29,9 +29,7 @@
 
     private bool CurrentStepIsHidden()
     {
-        if (_currentStep == 0) return false;
-
-        return true;
+        return _currentStep != _steps.Count;
     }
     
     public void NextPage()
