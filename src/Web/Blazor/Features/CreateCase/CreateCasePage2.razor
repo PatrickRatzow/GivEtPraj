@@ -5,15 +5,24 @@
 @inject ICategoryService _categoryService
 
 <EditForm Model="_model" class="w-max h-full">
-    <StepHandler>
-        <CaseOverview Model="@_model"/>
-        <ChooseCategoryStep Model="@_model"/>
-        <ChooseElementStep Model="@_model"/>
-        <ChooseCategoryStep Model="@_model"/>
-        <CameraStep Model="@_model"/>
-    </StepHandler>
+    <LoadingSpinner Loading="_loading">
+        <StepHandler>
+            <ChooseCategoryStep Model="@_model"/>
+            <ChooseElementStep Model="@_model"/>
+            <CameraStep Model="@_model"/>
+            <CaseOverview Model="@_model"/>
+        </StepHandler>
+    </LoadingSpinner>
 </EditForm>
 
 @code {
     private readonly CreateCaseRequest _model = new();
+    private bool _loading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _loading = true;
+        await _categoryService.GetAllCategories();
+        _loading = false;
+    }
 }

@@ -1,6 +1,10 @@
 ﻿@inherits Step
 @using Commentor.GivEtPraj.Blazor.Components;
+@using Commentor.GivEtPraj.Blazor.Services
 @using Commentor.GivEtPraj.WebApi.Contracts.Requests
+@using Commentor.GivEtPraj.Application.Contracts
+@using System.Linq;
+@inject ICategoryService _categoryService;
 
 <div class="transition-all flex flex-col mr-8 @Offset">
     <Header Title="Case Oversigt" Icon="fas fa-chevron-left" OnBackClicked="Parent.PreviousPage"></Header>
@@ -9,7 +13,7 @@
         <CaseOverviewSection Title="Kategori">
             <ItemRow
                 Title="@Model.Category"
-                Icon="fas fa-directions"
+                Icon="@ActiveCategory?.Icon"
                 IsSelected="false"
                 OnClick="() => Parent.GoToPage<ChooseCategoryStep>()"
                 CssClass="w-full">
@@ -18,14 +22,13 @@
                 </span>
             </ItemRow>
         </CaseOverviewSection>
-
+        
         <CaseOverviewSection Title="Subkategorier">
             <div class="grid grid-rows-1 gap-y-2">
-                @for (var i = 0; i < 3; i++)
+                @foreach (var subCategory in SelectedSubCategories)
                 {
                     <ItemRow
-                        Title="@Model.Category"
-                        Icon="fas fa-directions"
+                        Title="@subCategory.Name"
                         IsSelected="false"
                         OnClick="() => Parent.GoToPage<ChooseElementStep>()"
                         CssClass="w-full">
@@ -67,4 +70,9 @@
     [Parameter]
     public CreateCaseRequest Model { get; set; } = null!;
 
+    private CategoryDto? ActiveCategory
+        => _categoryService.Categories.FirstOrDefault(c => c.Name == Model.Category);
+
+    private List<SubCategoryDto> SelectedSubCategories
+        => ActiveCategory?.SubCategories.Where(sc => Model.SubCategories.Contains(sc.Name)).ToList() ?? new();
 }

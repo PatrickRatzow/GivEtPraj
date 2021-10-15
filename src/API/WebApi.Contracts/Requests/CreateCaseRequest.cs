@@ -4,26 +4,27 @@ namespace Commentor.GivEtPraj.WebApi.Contracts.Requests;
 
 public class CreateCaseRequest
 {
-
     public CreateCaseRequest()
     {
     }
 
-    public CreateCaseRequest(string title, string description, List<string> images, string category, double longitude,
-        double latitude)
+    public CreateCaseRequest(string title, string description, List<string> images, string category, 
+        List<string> subCategories, double longitude, double latitude)
     {
         Title = title;
         Description = description;
         Images = images;
         Category = category;
+        SubCategories = subCategories;
         Longitude = longitude;
         Latitude = latitude;
     }
 
     public string Title { get; set; }
     public string Description { get; set; }
-    public List<string> Images { get; set; } = new List<string>();
+    public List<string> Images { get; set; } = new();
     public string Category { get; set; }
+    public List<string> SubCategories { get; set; } = new();
     public double Longitude { get; set; }
     public double Latitude { get; set; }
 }
