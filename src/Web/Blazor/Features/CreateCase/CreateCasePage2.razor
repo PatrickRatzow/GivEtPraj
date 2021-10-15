@@ -6,11 +6,11 @@
 
 <EditForm Model="_model" class="w-max h-full">
     <StepHandler>
-        <CaseOverview Model="@_model"/>
+        <CaseOverview Model="@_model" Hidden="true"/>
         <ChooseCategoryStep Model="@_model"/>
         <ChooseElementStep Model="@_model"/>
         <ChooseCategoryStep Model="@_model"/>
-        <CameraStep Model="@_model"/>
+        <!--<CameraStep Model="@_model"/>-->
     </StepHandler>
 </EditForm>
 
