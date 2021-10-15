@@ -17,11 +17,9 @@ public class FindAllCasesQueryHandler : IRequestHandler<FindAllCasesQuery, List<
 
     public async Task<List<CaseDto>> Handle(FindAllCasesQuery request, CancellationToken cancellationToken)
     {
-        var cases = await _db.Cases
-            .Include(c => c.Pictures)
-            .Include(c => c.Category)
+        var cases = await _mapper.ProjectTo<CaseDto>(_db.Cases)
             .ToListAsync(cancellationToken);
 
-        return _mapper.Map<List<Case>, List<CaseDto>>(cases);
+        return cases;
     }
 }
