@@ -1,4 +1,9 @@
+<script setup lang="ts">
+import ReloadPWA from "./components/ReloadPWA.vue";
+</script>
+
 <template>
+  <ReloadPWA />
   <div class="p-4 bg-gray-200">
     <router-link class="mr-4" to="/">Home</router-link>
     <router-link to="/about">About</router-link>
