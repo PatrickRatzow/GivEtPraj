@@ -5,11 +5,6 @@ import { VitePWA as pwa } from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	// server: {
-	// 	fs: {
-	// 		allow: [],
-	// 	},
-	// },
 	plugins: [
 		vue(),
 		eslintPlugin(),
