@@ -12,8 +12,9 @@ const isActive = computed(() => hasFocus.value || props.text.length > 0);
     <span
       class="absolute ml-2 pointer-events-none text-base transition-all text-black"
       :class="[isActive ? ['-top-full', 'text-sm', 'mt-4'] : ['top-0', 'mt-2']]"
-      >{{ title }}</span
     >
+      {{ title }}
+    </span>
     <input
       :value="text"
       type="text"

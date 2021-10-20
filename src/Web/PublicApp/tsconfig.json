@@ -9,9 +9,9 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "/@/*": ["src/*"]
+      "@/*": ["./*"]
     },
     "lib": ["ESnext", "DOM", "WebWorker"]
   },
