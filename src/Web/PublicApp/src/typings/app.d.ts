@@ -24,10 +24,4 @@ declare global {
 		images: Photo[];
 		comment?: string;
 	}
-
-	interface State {
-		caseInCreation: CaseCreation | null;
-		cases: Case[];
-		categories: Category[];
-	}
 }

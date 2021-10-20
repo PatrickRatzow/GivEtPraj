@@ -1,48 +1,25 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { useStore } from "../../store";
-import { Geolocation } from "@capacitor/geolocation";
+import { ref } from "vue";
+import { Geolocation, Position } from "@capacitor/geolocation";
 
-const store = useStore();
-const caseInCreation = computed(() => store.state.caseInCreation);
-
-const loc = ref<{
-  lat: null | number;
-  long: null | number;
-}>({
-  lat: null,
-  long: null,
-});
+const position = ref<Position | null>(null);
 
 const getCurrentPosition = async () => {
-  const pos = await Geolocation.getCurrentPosition();
-  loc.value = {
-    lat: pos.coords.latitude,
-    long: pos.coords.longitude,
-  };
+  position.value = await Geolocation.getCurrentPosition();
 };
 </script>
 
 <template>
   <div>
-    <h1 v-if="caseInCreation">
-      Case in creation!
-
-      <br />
-
-      {{ caseInCreation.category }}
-
+    <h1 v-if="position">
       <div>
         <h1>Geolocation</h1>
         <p>Your location is:</p>
-        <p>Latitude: {{ loc.lat }}</p>
-        <p>Longitude: {{ loc.long }}</p>
+        <p>Latitude: {{ position?.coords.latitude }}</p>
+        <p>Longitude: {{ position?.coords.longitude }}</p>
 
         <button @click="getCurrentPosition">Get Current Location</button>
       </div>
     </h1>
-    <div v-else>
-      <button @click="store.commit('startCaseCreation')">start</button>
-    </div>
   </div>
 </template>

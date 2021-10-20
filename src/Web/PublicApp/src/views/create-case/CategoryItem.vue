@@ -2,20 +2,22 @@
 import ItemRow from "../../components/ItemRow.vue";
 import TextField from "../../components/TextField.vue";
 import { onMounted, computed, ref } from "vue";
-import { useStore } from "../../store";
+import { useCreateCaseStore, useMainStore } from "@/stores";
 
-const store = useStore();
-store.commit("startCaseCreation");
-onMounted(() => store.dispatch("fetchCategories"));
+const caseStore = useCreateCaseStore();
+const mainStore = useMainStore();
+
+onMounted(() => mainStore.fetchCategories());
+
 const searchQuery = ref("");
 const categories = computed(() =>
-  store.state.categories.filter((c) =>
-    searchQuery.value.length == 0 ? true : c.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  mainStore.categories.filter(
+    (c) => searchQuery.value.length == 0 || c.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 );
 
-const isSelected = (category: any) => store.state.caseInCreation?.category?.name === category.name;
-const selectCategory = (category: any) => store.commit("setChosenCategory", category);
+const isSelected = (category: any) => caseStore.category?.name === category.name;
+const selectCategory = (category: any) => (caseStore.category = category);
 </script>
 
 <template>
