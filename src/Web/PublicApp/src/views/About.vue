@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import TextField from "../components/TextField.vue";
+import ItemRow from "../components/ItemRow.vue";
 
 const name = ref("");
+const selected = ref(false);
 </script>
 
 <template>
@@ -12,4 +14,8 @@ const name = ref("");
     <br />
     Name is: {{ name }}
   </div>
+  <div>
+    <ItemRow title="Item1" icon="Very good icon" :selected="selected" @click="selected = !selected" />
+  </div>
+  <button type="button" @click="selected = !selected">FLIP</button>
 </template>
