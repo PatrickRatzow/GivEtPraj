@@ -2,12 +2,9 @@
 import { Camera, Photo, CameraResultType } from "@capacitor/camera";
 import { computed, ref } from "vue";
 import axios from "../utils/axios";
-import { useStore } from "../store";
+import { useCreateCaseStore } from "@/stores";
 
-const store = useStore();
-store.commit("startCaseCreation");
-const images = computed(() => store.state.caseInCreation?.images ?? []);
-
+const caseStore = useCreateCaseStore();
 const takePicture = async () => {
   const image = await Camera.getPhoto({
     quality: 90,
