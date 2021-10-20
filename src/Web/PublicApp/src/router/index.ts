@@ -14,7 +14,7 @@ const routes = [
 	{
 		path: "/create-case",
 		name: "Category",
-		component: () => import("@/views/create-case/Category.vue"),
+		component: () => import("@/views/create-case/CategoryItem.vue"),
 	},
 	{
 		path: "/create-case/sub-categories",

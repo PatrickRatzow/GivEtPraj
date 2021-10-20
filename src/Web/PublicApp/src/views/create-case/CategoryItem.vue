@@ -8,7 +8,6 @@ const store = useStore();
 store.commit("startCaseCreation");
 onMounted(() => store.dispatch("fetchCategories"));
 const searchQuery = ref("");
-const selected = ref(false);
 const categories = computed(() =>
   store.state.categories.filter((c) =>
     searchQuery.value.length == 0 ? true : c.name.toLowerCase().includes(searchQuery.value.toLowerCase())

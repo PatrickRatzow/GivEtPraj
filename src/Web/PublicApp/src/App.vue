@@ -8,11 +8,7 @@ import ReloadPWA from "./components/ReloadPWA.vue";
     <router-link class="mr-4" to="/">Home</router-link>
     <router-link class="mr-4" to="/about">About</router-link>
     <router-link class="mr-4" to="/camera">Camera</router-link>
-<<<<<<< HEAD
     <router-link class="mr-4" to="/create-case">Create Case</router-link>
-=======
-    <router-link to="/category">Category</router-link>
->>>>>>> cfc32e0f6299e7c84c0d7621e34c4e2ce536471f
   </div>
   <div class="p-2">
     <!-- eslint-disable-next-line vue/no-unused-vars -->
