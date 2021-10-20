@@ -1,20 +1,22 @@
 import { defineConfig } from "vite";
-import vue, { parseVueRequest } from "@vitejs/plugin-vue";
-import eslintPlugin from "vite-plugin-eslint";
-import { VitePWA as pwa } from "vite-plugin-pwa";
+import Vue from "@vitejs/plugin-vue";
+import ESLintPlugin from "vite-plugin-eslint";
+import { VitePWA } from "vite-plugin-pwa";
 import { resolve } from "path";
+import Components from "unplugin-vue-components/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
 	resolve: {
 		alias: {
 			"@": resolve(__dirname, "./src"),
+			"@stores": resolve(__dirname, "./src/stores"),
 		},
 	},
 	plugins: [
-		vue(),
-		eslintPlugin(),
-		pwa({
+		Vue(),
+		ESLintPlugin(),
+		VitePWA({
 			mode: "development",
 			base: "/",
 			srcDir: "src",
@@ -45,6 +47,15 @@ export default defineConfig({
 					},
 				],
 			},
+		}),
+		Components({
+			// allow auto load markdown components under `./src/components/`
+			extensions: ["vue"],
+
+			// allow auto import and register components used in markdown
+			include: [/\.vue$/, /\.vue\?vue/],
+
+			dts: "src/components.d.ts",
 		}),
 	],
 });

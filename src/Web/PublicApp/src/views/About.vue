@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import TextField from "../components/TextField.vue";
-import ItemRow from "../components/ItemRow.vue";
 
 const name = ref("");
 const selected = ref(false);
