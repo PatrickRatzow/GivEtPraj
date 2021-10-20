@@ -1,23 +1,26 @@
 <script setup lang="ts">
-import ItemRow from "../../components/ItemRow.vue";
-import TextField from "../../components/TextField.vue";
-import { onMounted, computed, ref } from "vue";
-import { useCreateCaseStore, useMainStore } from "@/stores";
+import { useCreateCaseStore } from "@/stores/create-case";
+import { useMainStore } from "@/stores/main";
 
-const caseStore = useCreateCaseStore();
-const mainStore = useMainStore();
+const router = useRouter();
+const createCase = useCreateCaseStore();
+const main = useMainStore();
 
-onMounted(() => mainStore.fetchCategories());
+onMounted(() => main.fetchCategories());
 
 const searchQuery = ref("");
 const categories = computed(() =>
-  mainStore.categories.filter(
+  main.categories.filter(
     (c) => searchQuery.value.length == 0 || c.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 );
 
-const isSelected = (category: any) => caseStore.category?.name === category.name;
-const selectCategory = (category: any) => (caseStore.category = category);
+const isSelected = (category: Category) => createCase.category?.name === category.name;
+const selectCategory = (category: Category) => {
+  createCase.category = category;
+
+  router.push("/create-case/sub-categories");
+};
 </script>
 
 <template>
@@ -36,3 +39,8 @@ const selectCategory = (category: any) => (caseStore.category = category);
     </div>
   </div>
 </template>
+
+<route lang="yaml">
+meta:
+  layout: create-case
+</route>

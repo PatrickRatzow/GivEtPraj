@@ -4,4 +4,10 @@ import "./assets/main.css";
 import router from "./router";
 import { createPinia } from "pinia";
 
-createApp(App).use(router).use(createPinia()).mount("#app");
+const pinia = createPinia();
+pinia.state.value = {};
+
+const app = createApp(App);
+app.use(router);
+app.use(pinia);
+app.mount("#app");

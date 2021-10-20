@@ -1,18 +1,17 @@
 import { defineStore } from "pinia";
-import axios from "../utils/axios";
+import axios from "@/utils/axios";
 
-export const useMainStore = defineStore("main", {
-	state: () => ({
-		cases: [] as Case[],
-		categories: [] as Category[],
-	}),
-	actions: {
-		async fetchCategories() {
-			if (this.categories.length > 0) return;
+export const useMainStore = defineStore("main", () => {
+	const cases = ref<Case[]>([]);
+	const categories = ref<Category[]>([]);
 
-			const resp = await axios.get<Category[]>("categories");
+	const fetchCategories = async () => {
+		if (categories.value.length > 0) return;
 
-			this.categories = resp.data;
-		},
-	},
+		const resp = await axios.get<Category[]>("categories");
+
+		categories.value = resp.data;
+	};
+
+	return { cases, categories, fetchCategories };
 });

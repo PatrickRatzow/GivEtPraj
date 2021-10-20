@@ -1,37 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { setupLayouts } from "virtual:generated-layouts";
+import generatedRoutes from "virtual:generated-pages";
 
-const routes = [
-	{
-		path: "/",
-		name: "Home",
-		component: () => import("@/views/Home.vue"),
-	},
-	{
-		path: "/about",
-		name: "About",
-		component: () => import("@/views/About.vue"),
-	},
-	{
-		path: "/create-case",
-		name: "Category",
-		component: () => import("@/views/create-case/CategoryItem.vue"),
-	},
-	{
-		path: "/create-case/sub-categories",
-		name: "Sub Categories",
-		component: () => import("@/views/create-case/SubCategories.vue"),
-	},
-	{
-		path: "/create-case/map",
-		name: "Map",
-		component: () => import("@/views/create-case/Map.vue"),
-	},
-	{
-		path: "/camera",
-		name: "Camera",
-		component: () => import("@/views/Camera.vue"),
-	},
-];
+const routes = setupLayouts(generatedRoutes);
 
 const router = createRouter({
 	history: createWebHistory(),

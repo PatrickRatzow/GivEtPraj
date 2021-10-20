@@ -13,7 +13,8 @@
     "prettier"
   ],
   "rules": {
-    "vue/no-multiple-template-root": "off"
+    "vue/no-multiple-template-root": "off",
+    "no-undef": "off"
   },
   "globals": {
     "defineProps": "readonly",

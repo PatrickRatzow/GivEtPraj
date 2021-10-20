@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Camera, CameraResultType } from "@capacitor/camera";
 import axios from "../utils/axios";
-import { useCreateCaseStore } from "@/stores";
+import { useCreateCaseStore } from "@/stores/create-case";
 
 const caseStore = useCreateCaseStore();
 
@@ -14,8 +14,6 @@ const takePicture = async () => {
 
   caseStore.$patch((state) => {
     state.images.push(image);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (state as any).hasChanged = true;
   });
 };
 

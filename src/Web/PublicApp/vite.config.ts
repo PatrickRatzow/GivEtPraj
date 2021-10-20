@@ -4,13 +4,15 @@ import ESLintPlugin from "vite-plugin-eslint";
 import { VitePWA } from "vite-plugin-pwa";
 import { resolve } from "path";
 import Components from "unplugin-vue-components/vite";
+import AutoImport from "unplugin-auto-import/vite";
+import Pages from "vite-plugin-pages";
+import Layouts from "vite-plugin-vue-layouts";
 
 // https://vitejs.dev/config/
 export default defineConfig({
 	resolve: {
 		alias: {
 			"@": resolve(__dirname, "./src"),
-			"@stores": resolve(__dirname, "./src/stores"),
 		},
 	},
 	plugins: [
@@ -57,5 +59,11 @@ export default defineConfig({
 
 			dts: "src/components.d.ts",
 		}),
+		AutoImport({
+			imports: ["vue", "vue-router"],
+			dts: "src/auto-imports.d.ts",
+		}),
+		Pages(),
+		Layouts(),
 	],
 });

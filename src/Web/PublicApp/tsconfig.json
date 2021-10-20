@@ -13,9 +13,13 @@
     "paths": {
       "@/*": ["./*"]
     },
-    "lib": ["ESnext", "DOM", "WebWorker"]
+    "lib": ["ESnext", "DOM", "WebWorker"],
+    "types": [
+      "vite/client",
+      "vite-plugin-vue-layouts/client",
+      "vite-plugin-pages/client"
+    ],
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "exclude": [
     "dist",
     "node_modules",
