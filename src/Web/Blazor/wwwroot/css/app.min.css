@@ -852,10 +852,6 @@ video {
   width: max-content;
 }
 
-.w-\[calc\(100vw\+2rem\)\] {
-  width: calc(100vw + 2rem);
-}
-
 .-translate-y-1\/2 {
   --tw-translate-y: -50%;
   transform: var(--tw-transform);
