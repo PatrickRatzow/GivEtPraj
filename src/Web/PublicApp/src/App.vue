@@ -7,7 +7,8 @@ import ReloadPWA from "./components/ReloadPWA.vue";
   <div class="p-4 bg-gray-200">
     <router-link class="mr-4" to="/">Home</router-link>
     <router-link class="mr-4" to="/about">About</router-link>
-    <router-link to="/camera">Camera</router-link>
+    <router-link class="mr-4" to="/camera">Camera</router-link>
+    <router-link to="/category">Category</router-link>
   </div>
   <div class="p-2">
     <router-view></router-view>

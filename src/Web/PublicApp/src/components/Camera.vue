@@ -1,58 +1,39 @@
 <script setup lang="ts">
-import { Camera, CameraResultType } from "@capacitor/camera";
+import { Camera, Photo, CameraResultType } from "@capacitor/camera";
+import { computed, ref } from "vue";
+import axios from "../utils/axios";
+import { useStore } from "../store";
+
+const store = useStore();
+store.commit("startCaseCreation");
+const images = computed(() => store.state.caseInCreation?.images ?? []);
 
 const takePicture = async () => {
   const image = await Camera.getPhoto({
     quality: 90,
     allowEditing: true,
-    resultType: CameraResultType.Uri,
+    resultType: CameraResultType.Base64,
   });
 
-  // image.webPath will contain a path that can be set as an image src.
-  // You can access the original file using image.path, which can be
-  // passed to the Filesystem API to read the raw data of the image,
-  // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
-  var imageUrl = image.webPath;
-
-  // Can be set to the src of an image now
-  //This gives an error;
-  //imageElement.src = imageUrl;
+  store.commit("addImage", image);
 };
-
-let viewGalleryModal = false;
-
-function greet() {
-  alert("HELLO");
+interface CameraRequest {
+  images: string[];
 }
+
+const uploadPictures = async (): Promise<boolean> => {
+  const data: CameraRequest = { images: images.value.map((i) => i.base64String as string) };
+  const resp = await axios.post("camera", data);
+
+  return resp.status === 200;
+};
 </script>
 <template>
   <div class="container">
-    <div class="balck-screen"></div>
-    <div class="video">
-      <video class="w-screen"></video>
+    <div class="image-content">
+      <button @click="takePicture">A button!</button>
+      <img v-for="(image, i) in images" :key="i" :src="`data:image/jpeg;base64,${image.base64String}`" />
+      <button @click="uploadPictures">A button!</button>
     </div>
-
-    <div class="content">
-      <div class="flex flex-row justify-between mx-8 mb-10 items-center">
-        <button class="rounded-full z-10" type="button">
-          <i class="text-black fal fa-sync text-4xl"></i>
-        </button>
-        <button
-          id="click-photo"
-          class="bg-white-500 rounded-full w-16 h-16 border-4 border-black z-10"
-          type="button"
-        ></button>
-        <button
-          id="flipCam-btn"
-          class="rounded-full w-14 h-14 z-10 bg-black border-2 border-gray-200"
-          type="button"
-        ></button>
-      </div>
-    </div>
-
-    <div>
-      <p>Hello there</p>
-    </div>
-    <button @click="takePicture">A button!</button>
   </div>
 </template>
