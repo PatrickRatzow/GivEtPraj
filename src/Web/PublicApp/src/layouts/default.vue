@@ -3,7 +3,7 @@ const router = useRouter();
 </script>
 
 <template>
-  <ion-page>
+  <ion-page fullscreen>
     <ion-header>
       <ion-toolbar>
         <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
