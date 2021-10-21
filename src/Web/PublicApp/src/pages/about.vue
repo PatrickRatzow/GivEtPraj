@@ -5,7 +5,9 @@ const selected = ref(false);
 
 <template>
   <div>
-    <h1>About</h1>
+    <ion-toolbar>
+      <ion-searchbar></ion-searchbar>
+    </ion-toolbar>
     <TextField v-model:text="name" title="XD" />
     <br />
     Name is: {{ name }}
@@ -15,3 +17,8 @@ const selected = ref(false);
   </div>
   <button type="button" @click="selected = !selected">FLIP</button>
 </template>
+
+<route lang="yaml">
+meta:
+  title: "About"
+</route>

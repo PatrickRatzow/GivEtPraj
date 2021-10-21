@@ -7,6 +7,13 @@ import Components from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
 import Pages from "vite-plugin-pages";
 import Layouts from "vite-plugin-vue-layouts";
+import { ComponentResolver } from "unplugin-vue-components/dist/types";
+
+function IonicResolver(): ComponentResolver {
+	return (name: string) => {
+		if (name.match(/^Ion[A-Z]/)) return { importName: name, path: "@ionic/vue" };
+	};
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -56,6 +63,7 @@ export default defineConfig({
 
 			// allow auto import and register components used in markdown
 			include: [/\.vue$/, /\.vue\?vue/],
+			resolvers: [IonicResolver()],
 
 			dts: "src/components.d.ts",
 		}),

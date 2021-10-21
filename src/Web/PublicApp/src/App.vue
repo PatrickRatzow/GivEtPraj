@@ -3,8 +3,10 @@ import ReloadPWA from "./components/ReloadPWA.vue";
 </script>
 
 <template>
-  <ReloadPWA />
-  <router-view />
+  <ion-app>
+    <ReloadPWA />
+    <ion-router-outlet />
+  </ion-app>
 </template>
 
 <style>

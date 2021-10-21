@@ -28,5 +28,5 @@ getCurrentPosition();
 
 <route lang="yaml">
 meta:
-  layout: create-case
+  title: "Vælg lokation"
 </route>

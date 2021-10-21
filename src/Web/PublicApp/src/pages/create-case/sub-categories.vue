@@ -4,5 +4,5 @@
 
 <route lang="yaml">
 meta:
-  layout: create-case
+  title: "Vælg Subkategorier"
 </route>

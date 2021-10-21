@@ -1,15 +1,22 @@
+<script setup lang="ts">
+const router = useRouter();
+</script>
+
 <template>
-  <div>
-    <div class="p-4 bg-gray-200">
-      <router-link class="mr-4" to="/">Home</router-link>
-      <router-link class="mr-4" to="/about">About</router-link>
-      <router-link class="mr-4" to="/pictures">Pictures</router-link>
-      <router-link class="mr-4" to="/create-case">Create Case</router-link>
-    </div>
-    <div class="p-2">
-      <router-view />
-    </div>
-  </div>
+  <ion-page>
+    <ion-header>
+      <ion-toolbar>
+        <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+        <ion-buttons slot="start">
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title>{{ router.currentRoute.value.meta.title ?? "Unknown title" }}</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-router-outlet />
+    </ion-content>
+  </ion-page>
 </template>
 
 <style>
