@@ -1,8 +1,8 @@
 <template>
   <!-- eslint-disable-next-line vue/no-unused-vars -->
-  <router-view v-slot="{ Component }">
+  <router-view v-slot="{ Component, route }">
     <transition name="slide">
-      <component :is="Component" class="w-full min-h-screen" />
+      <component :is="Component" :key="route.path" class="w-full min-h-screen" />
     </transition>
   </router-view>
 </template>
