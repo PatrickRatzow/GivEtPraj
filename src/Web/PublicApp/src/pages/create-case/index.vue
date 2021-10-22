@@ -1,29 +1,26 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { Geolocation, Position } from "@capacitor/geolocation";
+import { Geolocation } from "@capacitor/geolocation";
+import { map, tileLayer } from "leaflet";
 
-const position = ref<Position | null>(null);
+onMounted(async () => {
+  try {
+    const pos = await Geolocation.getCurrentPosition();
 
-const getCurrentPosition = async () => {
-  position.value = await Geolocation.getCurrentPosition();
-};
-
-getCurrentPosition();
+    const myMap = map("mapid").setView([pos.coords.latitude, pos.coords.longitude], 18);
+    tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(myMap);
+  } catch (e: unknown) {
+    const permissions = await Geolocation.checkPermissions();
+    if (permissions.location == "denied") {
+      alert("We needed permission :(");
+    }
+  }
+});
 </script>
 
 <template>
-  <div>
-    <h1>Geolocation</h1>
-    <div v-if="position">
-      <p>Your location is:</p>
-      <p>Latitude: {{ position?.coords.latitude }}</p>
-      <p>Longitude: {{ position?.coords.longitude }}</p>
-    </div>
-
-    <button class="mt-2">
-      <router-link class="bg-green-500 py-2 px-4" to="/create-case/category">Next Page</router-link>
-    </button>
-  </div>
+  <div id="mapid" class="h-full"></div>
 </template>
 
 <route lang="yaml">
