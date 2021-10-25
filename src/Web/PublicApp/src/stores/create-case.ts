@@ -6,6 +6,7 @@ export const useCreateCaseStore = defineStore("createCase", () => {
 	const subCategories = ref<SubCategory[]>([]);
 	const images = reactive<Photo[]>([]);
 	const comment = ref<string | undefined>();
+	const geographicLocation = ref<GeographicLocation>();
 
-	return { category, subCategories, images, comment };
+	return { category, subCategories, images, comment, geographicLocation };
 });

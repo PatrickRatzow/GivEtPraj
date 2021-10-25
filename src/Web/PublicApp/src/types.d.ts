@@ -24,4 +24,9 @@ declare global {
 		images: Photo[];
 		comment?: string;
 	}
+	
+	interface GeographicLocation {
+		latitude: number;
+		longitude: number;
+	}
 }
