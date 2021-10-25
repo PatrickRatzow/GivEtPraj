@@ -49,17 +49,13 @@ const toggleSubCategory = (subCategory: SubCategory) => {
 </script>
 
 <template>
-  <template v-if="createCase.category">
-    <ion-list>
-      <ion-item v-for="(subCat, index) in subCategories" :key="index">
-        <ion-label>{{ subCat.name }}</ion-label>
-        <ion-checkbox
-          :disabled="createCase.subCategories.length == 3 && !isSelected(subCat)"
-          @ionChange="toggleSubCategory(subCat)"
-        ></ion-checkbox>
-      </ion-item>
-    </ion-list>
-  </template>
+  <ion-item v-for="(subCat, index) in subCategories" :key="index" class="w-full px-4 mb-2">
+    <ion-label>{{ subCat.name }}</ion-label>
+    <ion-checkbox
+      :disabled="createCase.subCategories.length == 3 && !isSelected(subCat)"
+      @ionChange="toggleSubCategory(subCat)"
+    ></ion-checkbox>
+  </ion-item>
 </template>
 
 <route lang="yaml">

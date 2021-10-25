@@ -32,17 +32,15 @@ const selectCategory = (category: Category) => {
   ></ion-searchbar>
   <ion-list>
     <ion-radio-group :value="createCase.category?.name">
-      <ion-item v-for="(cat, index) in categories" :key="index" @click="selectCategory(cat)">
-        <div class="flex flex-col">
-          <div class="flex flex-row z-40">
-            <i class="ml-1 mr-2" :class="cat.icon"></i>
-            <ion-label>{{ cat.name }}</ion-label>
-            <ion-radio slot="end" color="success" :value="cat.name"> </ion-radio>
-          </div>
+      <template v-for="(cat, index) in categories" :key="index">
+        <ion-item @click="selectCategory(cat)">
+          <i class="ml-1 mr-2" :class="cat.icon"></i>
+          <ion-label>{{ cat.name }}</ion-label>
+          <ion-radio slot="end" color="success" :value="cat.name"> </ion-radio>
+        </ion-item>
 
-          <sub-categories v-if="createCase.category == cat" class="z-50"></sub-categories>
-        </div>
-      </ion-item>
+        <sub-categories v-if="createCase.category == cat"></sub-categories>
+      </template>
     </ion-radio-group>
   </ion-list>
 </template>
