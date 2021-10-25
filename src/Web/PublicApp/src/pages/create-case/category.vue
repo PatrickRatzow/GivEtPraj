@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useCreateCaseStore } from "@/stores/create-case";
 import { useMainStore } from "@/stores/main";
+import SubCategories from "./sub-categories.vue";
 
 const router = useRouter();
 const createCase = useCreateCaseStore();
@@ -18,7 +19,7 @@ const categories = computed(() =>
 const selectCategory = (category: Category) => {
   createCase.category = category;
 
-  router.push("/create-case/sub-categories");
+  //router.push("/create-case/sub-categories");
 };
 </script>
 
@@ -32,9 +33,15 @@ const selectCategory = (category: Category) => {
   <ion-list>
     <ion-radio-group :value="createCase.category?.name">
       <ion-item v-for="(cat, index) in categories" :key="index" @click="selectCategory(cat)">
-        <i class="ml-1 mr-2" :class="cat.icon"></i>
-        <ion-label>{{ cat.name }}</ion-label>
-        <ion-radio slot="end" color="success" :value="cat.name"></ion-radio>
+        <div class="flex flex-col">
+          <div class="flex flex-row z-40">
+            <i class="ml-1 mr-2" :class="cat.icon"></i>
+            <ion-label>{{ cat.name }}</ion-label>
+            <ion-radio slot="end" color="success" :value="cat.name"> </ion-radio>
+          </div>
+
+          <sub-categories v-if="createCase.category == cat" class="z-50"></sub-categories>
+        </div>
       </ion-item>
     </ion-radio-group>
   </ion-list>

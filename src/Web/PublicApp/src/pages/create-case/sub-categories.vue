@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { useCreateCaseStore } from "@/stores/create-case";
+import { useMainStore } from "@/stores/main";
 
 const router = useRouter();
 const createCase = useCreateCaseStore();
 const category = computed(() => createCase.category as Category);
+const main = useMainStore();
 
 //const currentSelected = computed(() => createCase.category?.subCategories.filter);
 
@@ -13,6 +15,14 @@ const subCategories = computed(() =>
     (s) => searchQuery.value.length == 0 || s.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 );
+
+onMounted(async () => {
+  if (createCase.category) return;
+
+  await main.fetchCategories();
+
+  createCase.category = main.categories[0];
+});
 
 const addSubCategory = (subCategory: SubCategory) => {
   if (createCase.subCategories.length >= 3) return;
@@ -28,6 +38,7 @@ const removeSubCategory = (subCategory: SubCategory) => {
 };
 
 const isSelected = (subCategory: SubCategory) => createCase.subCategories.some((s) => s.name === subCategory.name);
+
 const toggleSubCategory = (subCategory: SubCategory) => {
   if (isSelected(subCategory)) {
     return removeSubCategory(subCategory);
@@ -38,21 +49,17 @@ const toggleSubCategory = (subCategory: SubCategory) => {
 </script>
 
 <template>
-  <h1>Sub Categories {{ category.name }}</h1>
-  <TextField v-model:text="searchQuery" title="Søg" />
-  <div class="mt-10 grid gap-y-4 grid-rows-1">
-    <ItemRow
-      v-for="(subCat, i) in subCategories"
-      :key="i"
-      :title="subCat.name"
-      :icon="category.icon"
-      :selected="isSelected(subCat)"
-      @click="toggleSubCategory(subCat)"
-    ></ItemRow>
-  </div>
-  <div class="mt-10 gap-y-4">
-    <button class="bg-green-500 py-2 px-4 float-right" type="button">Gg go next</button>
-  </div>
+  <template v-if="createCase.category">
+    <ion-list>
+      <ion-item v-for="(subCat, index) in subCategories" :key="index">
+        <ion-label>{{ subCat.name }}</ion-label>
+        <ion-checkbox
+          :disabled="createCase.subCategories.length == 3 && !isSelected(subCat)"
+          @ionChange="toggleSubCategory(subCat)"
+        ></ion-checkbox>
+      </ion-item>
+    </ion-list>
+  </template>
 </template>
 
 <route lang="yaml">
