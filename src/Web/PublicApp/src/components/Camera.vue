@@ -1,49 +1,27 @@
 <script setup lang="ts">
-import { Camera, CameraResultType } from "@capacitor/camera";
-import axios from "../utils/axios";
+import { useImages } from "@/compositions/images";
 import { useCreateCaseStore } from "@/stores/create-case";
 
+const createCase = useCreateCaseStore();
 const router = useRouter();
-const caseStore = useCreateCaseStore();
-
-const takePicture = async () => {
-  const image = await Camera.getPhoto({
-    quality: 90,
-    allowEditing: true,
-    resultType: CameraResultType.Base64,
-  });
-
-  caseStore.$patch((state) => {
-    state.images.push(image);
-  });
-};
-
-interface CameraRequest {
-  images: string[];
-}
-
-const uploadPictures = async (): Promise<boolean> => {
-  const data: CameraRequest = { images: caseStore.images.map((i) => i.base64String as string) };
-  const resp = await axios.post("camera", data);
-
-  return resp.status === 200;
-};
+const images = useImages();
 </script>
 <template>
-  <div class="flex flex-col justify-between items-center h-full">
-    <div class="grid grid-cols-2 h-5/6 w-full justify-items-center pt-8">
-      <div v-for="index in 6" :key="index">
-        <div
-          v-if="caseStore.images[index - 1] == null"
-          class="w-full px-2 bg-green-200 border-4 border-indigo-600 rounded"
-        >
-          <button @click="takePicture">
-            <i class="fas fa-photo-video text-5xl mx-10 my-10"></i>
-          </button>
+  <div class="flex flex-col justify-between items-center h-full ion-padding">
+    <div class="grid grid-cols-3 gap-4 w-full auto-rows-fr">
+      <template v-for="idx in 6" :key="idx">
+        <div class="bg-gray-100 dark:bg-opacity-5 text-center text-xl rounded-md relative">
+          <i class="fas fa-plus text-black dark:text-white my-4" @click="images.takePicture(idx - 1)"></i>
+          <img
+            v-if="createCase.images[idx - 1]"
+            class="absolute inset-0 object-cover w-full h-full"
+            :src="images.getImageAsDataUrl(idx - 1)"
+          />
         </div>
-        <img v-else class="w-full px-8" :src="`data:image/jpeg;base64,${caseStore.images[index - 1]?.base64String}`" />
-      </div>
+      </template>
     </div>
-    <ion-button class="flex flex-row my-6" @click="router.push('/opret-praj/afslut')">Continue</ion-button>
+    <div class="w-full">
+      <ion-button expand="block" @click="router.push('/opret-praj/afslut')">Continue</ion-button>
+    </div>
   </div>
 </template>
