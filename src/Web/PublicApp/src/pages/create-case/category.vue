@@ -18,7 +18,7 @@ const categories = computed(() =>
 
 const selectCategory = (category: Category) => {
   createCase.category = category;
-  createCase.subCategories = [];s
+  createCase.subCategories = [];
 };
 
 const ConfirmCatagories = () => {
@@ -43,14 +43,18 @@ const ConfirmCatagories = () => {
       ></ion-searchbar>
       <ion-list>
         <ion-radio-group :value="createCase.category?.name">
-          <ion-item v-for="(cat, index) in categories" :key="index" @click="selectCategory(cat)">
-            <i class="ml-1 mr-2" :class="cat.icon"></i>
-            <ion-label>{{ cat.name }}</ion-label>
-            <ion-radio slot="end" color="success" :value="cat.name"></ion-radio>
-          </ion-item>
+          <template v-for="(cat, index) in categories" :key="index">
+            <ion-item @click="selectCategory(cat)">
+              <i class="ml-1 mr-2" :class="cat.icon"></i>
+              <ion-label>{{ cat.name }}</ion-label>
+              <ion-radio slot="end" color="success" :value="cat.name"> </ion-radio>
+            </ion-item>
+
+            <sub-categories v-if="createCase.category == cat"></sub-categories>
+          </template>
         </ion-radio-group>
       </ion-list>
-        <ion-button class="flex flex-row my-6 mx-12" @click="ConfirmCatagories()">GG GO NEXT</ion-button>
+      <ion-button class="flex flex-row my-6 mx-12" @click="ConfirmCatagories()">GG GO NEXT</ion-button>
     </ion-content>
   </ion-page>
 </template>

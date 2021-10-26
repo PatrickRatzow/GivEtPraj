@@ -57,8 +57,3 @@ const toggleSubCategory = (subCategory: SubCategory) => {
     ></ion-checkbox>
   </ion-item>
 </template>
-
-<route lang="yaml">
-meta:
-  title: "Vælg Subkategorier"
-</route>
