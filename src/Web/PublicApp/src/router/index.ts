@@ -22,6 +22,10 @@ const cfgRoutes: RouteRecordRaw[] = [
 				path: "kategori",
 				component: () => import("@/pages/create-case/category.vue"),
 			},
+			{
+				path: "billeder",
+				component: () => import("@/pages/create-case/pictures.vue"),
+			},
 		],
 	},
 	{

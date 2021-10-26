@@ -12,7 +12,6 @@ declare module 'vue' {
     IonButtons: typeof import('@ionic/vue')['IonButtons']
     IonCheckbox: typeof import('@ionic/vue')['IonCheckbox']
     IonContent: typeof import('@ionic/vue')['IonContent']
-    IonHeader: typeof import('@ionic/vue')['IonHeader']
     IonIcon: typeof import('@ionic/vue')['IonIcon']
     IonItem: typeof import('@ionic/vue')['IonItem']
     IonLabel: typeof import('@ionic/vue')['IonLabel']
