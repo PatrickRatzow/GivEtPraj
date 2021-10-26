@@ -43,6 +43,7 @@ const selectCategory = (category: Category) => {
       </template>
     </ion-radio-group>
   </ion-list>
+  <ion-button class="float-right">GG GO NEXT</ion-button>
 </template>
 
 <route lang="yaml">

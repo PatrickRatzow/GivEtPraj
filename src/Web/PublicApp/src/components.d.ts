@@ -8,6 +8,7 @@ declare module 'vue' {
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     IonApp: typeof import('@ionic/vue')['IonApp']
     IonBackButton: typeof import('@ionic/vue')['IonBackButton']
+    IonButton: typeof import('@ionic/vue')['IonButton']
     IonButtons: typeof import('@ionic/vue')['IonButtons']
     IonCheckbox: typeof import('@ionic/vue')['IonCheckbox']
     IonContent: typeof import('@ionic/vue')['IonContent']
