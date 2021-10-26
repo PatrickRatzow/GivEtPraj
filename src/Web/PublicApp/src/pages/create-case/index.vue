@@ -45,6 +45,8 @@ onMounted(async () => {
       </ion-buttons>
       <ion-title>Vælg Lokation</ion-title>
     </ion-toolbar>
-    <div id="mapid" class="h-full"></div>
+    <ion-content>
+      <div id="mapid" class="h-full"></div>
+    </ion-content>
   </ion-page>
 </template>
