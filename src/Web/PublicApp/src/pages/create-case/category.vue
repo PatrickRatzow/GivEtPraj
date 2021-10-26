@@ -29,7 +29,7 @@ const confirmCategories = () => {
   <ion-page>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-back-button></ion-back-button>
+        <ion-back-button default-href="/opret-praj/lokation"></ion-back-button>
       </ion-buttons>
       <ion-title>Vælg Kategori</ion-title>
     </ion-toolbar>
