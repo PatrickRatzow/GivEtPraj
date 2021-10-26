@@ -22,7 +22,7 @@ const selectCategory = (category: Category) => {
 };
 
 const ConfirmCatagories = () => {
-  router.push("/create-case/pictures");
+  router.push("/opret-praj/billeder");
 };
 </script>
 
