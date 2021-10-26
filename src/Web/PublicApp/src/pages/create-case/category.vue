@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useCreateCaseStore } from "@/stores/create-case";
 import { useMainStore } from "@/stores/main";
-import SubCategories from "./sub-categories.vue";
 
 const router = useRouter();
 const createCase = useCreateCaseStore();
@@ -21,7 +20,7 @@ const selectCategory = (category: Category) => {
   createCase.subCategories = [];
 };
 
-const ConfirmCatagories = () => {
+const confirmCategories = () => {
   router.push("/opret-praj/billeder");
 };
 </script>
@@ -35,26 +34,30 @@ const ConfirmCatagories = () => {
       <ion-title>Vælg Kategori</ion-title>
     </ion-toolbar>
     <ion-content>
-      <ion-searchbar
-        placeholder="Søg"
-        :value="searchQuery"
-        @ionInput="searchQuery = $event.target.value"
-        @ionClear="searchQuery = ''"
-      ></ion-searchbar>
-      <ion-list>
-        <ion-radio-group :value="createCase.category?.name">
-          <template v-for="(cat, index) in categories" :key="index">
-            <ion-item @click="selectCategory(cat)">
-              <i class="ml-1 mr-2" :class="cat.icon"></i>
-              <ion-label>{{ cat.name }}</ion-label>
-              <ion-radio slot="end" color="success" :value="cat.name"> </ion-radio>
-            </ion-item>
+      <div class="flex flex-col justify-between h-full">
+        <div>
+          <ion-searchbar
+            placeholder="Søg"
+            :value="searchQuery"
+            @ionInput="searchQuery = $event.target.value"
+            @ionClear="searchQuery = ''"
+          ></ion-searchbar>
+          <ion-list>
+            <ion-radio-group :value="createCase.category?.name">
+              <template v-for="(cat, index) in categories" :key="index">
+                <ion-item @click="selectCategory(cat)">
+                  <i class="ml-1 mr-2" :class="cat.icon"></i>
+                  <ion-label>{{ cat.name }}</ion-label>
+                  <ion-radio slot="end" color="success" :value="cat.name"> </ion-radio>
+                </ion-item>
 
-            <sub-categories v-if="createCase.category == cat"></sub-categories>
-          </template>
-        </ion-radio-group>
-      </ion-list>
-      <ion-button class="flex flex-row my-6 mx-12" @click="ConfirmCatagories()">GG GO NEXT</ion-button>
+                <sub-categories v-if="createCase.category == cat"></sub-categories>
+              </template>
+            </ion-radio-group>
+          </ion-list>
+        </div>
+        <ion-button class="flex flex-row my-6 mx-12 float-bottom" @click="confirmCategories()">GG GO NEXT</ion-button>
+      </div>
     </ion-content>
   </ion-page>
 </template>

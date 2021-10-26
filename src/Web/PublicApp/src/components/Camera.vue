@@ -30,17 +30,14 @@ const uploadPictures = async (): Promise<boolean> => {
 </script>
 <template>
   <div class="flex flex-col justify-between items-center h-full">
-    <div class="flex flex-col items-center h-5/6 w-full">
-      <ion-button class="my-8" @click="takePicture">Upload/Take picture</ion-button>
-
-      <ion-content :scroll-events="true">
-        <img
-          v-for="(image, i) in caseStore.images"
-          :key="i"
-          :src="`data:image/jpeg;base64,${image.base64String}`"
-          class="px-8 pb-5"
-        />
-      </ion-content>
+    <div class="grid grid-cols-2 h-5/6 w-full justify-items-center pt-8">
+      <img
+        v-for="index in 6"
+        :key="index"
+        class="h-12 w-12 bg-red-200"
+        :src="`data:image/jpeg;base64,${caseStore.images[index - 1]}`"
+        @click="takePicture"
+      />
     </div>
     <ion-button class="flex flex-row my-6" @click="uploadPictures">Continue</ion-button>
   </div>

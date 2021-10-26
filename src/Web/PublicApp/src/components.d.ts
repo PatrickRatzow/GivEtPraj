@@ -28,6 +28,7 @@ declare module 'vue' {
     IonToolbar: typeof import('@ionic/vue')['IonToolbar']
     ItemRow: typeof import('./components/ItemRow.vue')['default']
     ReloadPWA: typeof import('./components/ReloadPWA.vue')['default']
+    SubCategories: typeof import('./components/SubCategories.vue')['default']
     Tabs: typeof import('./components/Tabs.vue')['default']
     TextField: typeof import('./components/TextField.vue')['default']
   }
