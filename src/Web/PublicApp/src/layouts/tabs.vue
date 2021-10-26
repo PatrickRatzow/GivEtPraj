@@ -1,3 +1,5 @@
 <template>
-  <ion-router-outlet />
+  <ion-page>
+    <ion-router-outlet />
+  </ion-page>
 </template>
