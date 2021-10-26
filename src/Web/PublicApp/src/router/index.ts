@@ -4,11 +4,25 @@ import { RouteRecordRaw } from "vue-router";
 const cfgRoutes: RouteRecordRaw[] = [
 	{
 		path: "/",
-		redirect: "/opret-praj",
+		redirect: "/opret-praj/lokation",
 	},
 	{
-		path: "/opret-praj",
-		component: () => import("@/pages/create-case/index.vue"),
+		path: "/opret-praj/",
+		component: () => import("@/layouts/tabs.vue"),
+		children: [
+			{
+				path: "",
+				redirect: "/opret-praj/lokation",
+			},
+			{
+				path: "lokation",
+				component: () => import("@/pages/create-case/map.vue"),
+			},
+			{
+				path: "kategori",
+				component: () => import("@/pages/create-case/category.vue"),
+			},
+		],
 	},
 	{
 		path: "/mine-prajs",

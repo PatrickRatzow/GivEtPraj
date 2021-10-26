@@ -3,6 +3,7 @@ import { useCreateCaseStore } from "@/stores/create-case";
 import { Geolocation } from "@capacitor/geolocation";
 import { map, tileLayer, marker, LeafletMouseEvent, Marker } from "leaflet";
 
+const router = useRouter();
 const createCase = useCreateCaseStore();
 
 onMounted(async () => {
@@ -34,6 +35,14 @@ onMounted(async () => {
     }
   }
 });
+
+const isPositionValid = computed(() => createCase.geographicLocation);
+
+const nextPage = () => {
+  if (!isPositionValid.value) return;
+
+  router.push("/opret-praj/kategori");
+};
 </script>
 
 <template>
@@ -47,6 +56,28 @@ onMounted(async () => {
     </ion-toolbar>
     <ion-content>
       <div id="mapid" class="h-full"></div>
+      <button
+        class="
+          absolute
+          bottom-4
+          left-1/2
+          right-1/2
+          transform
+          -translate-x-1/2
+          py-2
+          px-4
+          z-[99999]
+          rounded-md
+          w-max
+          text-lg
+          transition-all
+        "
+        type="button"
+        :class="[isPositionValid ? ['bg-green-500 text-white'] : ['bg-gray-200 text-black border-red-500 opacity-90']]"
+        @click="nextPage"
+      >
+        {{ isPositionValid ? "Godkend Placering " : "Vælg Placering" }}
+      </button>
     </ion-content>
   </ion-page>
 </template>
