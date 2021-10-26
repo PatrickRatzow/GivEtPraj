@@ -6,7 +6,7 @@
       </ion-buttons>
       <ion-title>Kamera</ion-title>
     </ion-toolbar>
-    <ion-content>
+    <ion-content class="px-16">
       <Camera />
     </ion-content>
   </ion-page>
