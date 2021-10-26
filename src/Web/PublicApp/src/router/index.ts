@@ -14,6 +14,10 @@ const cfgRoutes: RouteRecordRaw[] = [
 		path: "/mine-prajs",
 		component: () => import("@/pages/about.vue"),
 	},
+	{
+		path: "/:pathMatch(.*)*",
+		component: () => import("@/pages/404.vue"),
+	},
 ];
 
 const router = createRouter({
