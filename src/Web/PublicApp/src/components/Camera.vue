@@ -3,6 +3,7 @@ import { Camera, CameraResultType } from "@capacitor/camera";
 import axios from "../utils/axios";
 import { useCreateCaseStore } from "@/stores/create-case";
 
+const router = useRouter();
 const caseStore = useCreateCaseStore();
 
 const takePicture = async () => {
@@ -39,6 +40,6 @@ const uploadPictures = async (): Promise<boolean> => {
         @click="takePicture"
       />
     </div>
-    <ion-button class="flex flex-row my-6" @click="uploadPictures">Continue</ion-button>
+    <ion-button class="flex flex-row my-6" @click="router.push('/opret-praj/afslut')">Continue</ion-button>
   </div>
 </template>
