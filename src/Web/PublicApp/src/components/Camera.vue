@@ -35,7 +35,7 @@ const uploadPictures = async (): Promise<boolean> => {
         v-for="index in 6"
         :key="index"
         class="h-12 w-12 bg-red-200"
-        :src="`data:image/jpeg;base64,${caseStore.images[index - 1]}`"
+        :src="`data:image/jpeg;base64,${caseStore.images[index - 1]?.base64String}`"
         @click="takePicture"
       />
     </div>
