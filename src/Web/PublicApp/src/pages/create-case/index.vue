@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { useCreateCaseStore } from "@/stores/create-case";
 import { Geolocation } from "@capacitor/geolocation";
-import { map, tileLayer } from "leaflet";
+import { map, tileLayer, marker, LeafletMouseEvent, Marker } from "leaflet";
+
+const createCase = useCreateCaseStore();
 
 onMounted(async () => {
   try {
@@ -10,6 +13,20 @@ onMounted(async () => {
     tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(myMap);
+
+    let m: Marker | undefined;
+    const setLocation = (location: GeographicLocation) => {
+      m ??= marker([location.latitude, location.longitude]).addTo(myMap);
+      m.setLatLng({
+        lat: location.latitude,
+        lng: location.longitude,
+      });
+
+      createCase.geographicLocation = location;
+    };
+    myMap.on("click", (e: LeafletMouseEvent) => {
+      setLocation({ latitude: e.latlng.lat, longitude: e.latlng.lng });
+    });
   } catch (e: unknown) {
     const permissions = await Geolocation.checkPermissions();
     if (permissions.location == "denied") {
