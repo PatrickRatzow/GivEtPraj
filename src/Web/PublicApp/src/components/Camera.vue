@@ -32,7 +32,14 @@ const uploadPictures = async (): Promise<boolean> => {
   <div class="flex flex-col justify-between items-center h-full">
     <div class="flex flex-col items-center">
       <ion-button class="my-8" @click="takePicture">Upload/Take picture</ion-button>
-      <img v-for="(image, i) in caseStore.images" :key="i" :src="`data:image/jpeg;base64,${image.base64String}`" />
+
+      <ion-content fullscreen>
+        <img v-for="(image, i) in caseStore.images" :key="i" :src="`data:image/jpeg;base64,${image.base64String}`" />
+      </ion-content>
+
+      <ion-content :scroll-events="true">
+        <div slot="fixed"></div>
+      </ion-content>
     </div>
     <ion-button class="flex flex-row my-6" @click="uploadPictures">Continue</ion-button>
   </div>

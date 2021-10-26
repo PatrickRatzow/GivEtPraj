@@ -20,7 +20,6 @@ declare module 'vue' {
     IonRadio: typeof import('@ionic/vue')['IonRadio']
     IonRadioGroup: typeof import('@ionic/vue')['IonRadioGroup']
     IonRouterOutlet: typeof import('@ionic/vue')['IonRouterOutlet']
-    IonScroll: typeof import('@ionic/vue')['IonScroll']
     IonSearchbar: typeof import('@ionic/vue')['IonSearchbar']
     IonTitle: typeof import('@ionic/vue')['IonTitle']
     IonToolbar: typeof import('@ionic/vue')['IonToolbar']
