@@ -19,7 +19,10 @@ const categories = computed(() =>
 const selectCategory = (category: Category) => {
   createCase.category = category;
   createCase.subCategories = [];
-  //router.push("/create-case/sub-categories");
+};
+
+const ConfirmCatagories = () => {
+  router.push("/create-case/pictures");
 };
 </script>
 
@@ -43,7 +46,7 @@ const selectCategory = (category: Category) => {
       </template>
     </ion-radio-group>
   </ion-list>
-  <ion-button class="float-right">GG GO NEXT</ion-button>
+  <ion-button class="flex flex-row my-6 mx-12" @click="ConfirmCatagories()">GG GO NEXT</ion-button>
 </template>
 
 <route lang="yaml">
