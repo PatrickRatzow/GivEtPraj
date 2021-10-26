@@ -18,7 +18,7 @@ const categories = computed(() =>
 
 const selectCategory = (category: Category) => {
   createCase.category = category;
-
+  createCase.subCategories = [];
   //router.push("/create-case/sub-categories");
 };
 </script>
