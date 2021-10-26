@@ -5,8 +5,6 @@ import { VitePWA } from "vite-plugin-pwa";
 import { resolve } from "path";
 import Components from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
-import Pages from "vite-plugin-pages";
-import Layouts from "vite-plugin-vue-layouts";
 import { ComponentResolver } from "unplugin-vue-components/dist/types";
 
 function IonicResolver(): ComponentResolver {
@@ -71,7 +69,5 @@ export default defineConfig({
 			imports: ["vue", "vue-router"],
 			dts: "src/auto-imports.d.ts",
 		}),
-		Pages(),
-		Layouts(),
 	],
 });

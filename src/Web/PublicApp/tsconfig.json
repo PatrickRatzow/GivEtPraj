@@ -15,9 +15,7 @@
     },
     "lib": ["ESnext", "DOM", "WebWorker"],
     "types": [
-      "vite/client",
-      "vite-plugin-vue-layouts/client",
-      "vite-plugin-pages/client"
+      "vite/client"
     ],
   },
   "exclude": [

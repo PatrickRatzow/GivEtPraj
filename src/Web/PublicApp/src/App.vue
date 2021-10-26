@@ -1,11 +1,28 @@
 <script setup lang="ts">
-import ReloadPWA from "./components/ReloadPWA.vue";
+import { create, fileTrayFull } from "ionicons/icons";
 </script>
 
 <template>
   <ion-app>
+    <ion-page>
+      <ion-tabs>
+        <ion-router-outlet />
+
+        <ion-tab-bar slot="bottom">
+          <ion-tab-button tab="create-case" href="/opret-praj">
+            <ion-icon :icon="create"></ion-icon>
+            <ion-label>Opret Praj</ion-label>
+          </ion-tab-button>
+
+          <ion-tab-button tab="history" href="/mine-prajs">
+            <ion-icon :icon="fileTrayFull"></ion-icon>
+            <ion-label>Historik</ion-label>
+          </ion-tab-button>
+        </ion-tab-bar>
+      </ion-tabs>
+    </ion-page>
+
     <ReloadPWA />
-    <ion-router-outlet />
   </ion-app>
 </template>
 

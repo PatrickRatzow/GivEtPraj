@@ -20,10 +20,14 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div id="mapid" class="h-full"></div>
+  <ion-page>
+    <ion-toolbar>
+      <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title>Vælg Lokation</ion-title>
+    </ion-toolbar>
+    <div id="mapid" class="h-full"></div>
+  </ion-page>
 </template>
-
-<route lang="yaml">
-meta:
-  title: "Vælg lokation"
-</route>
