@@ -9,7 +9,10 @@ const pinia = createPinia();
 pinia.state.value = {};
 
 const app = createApp(App);
+app.use(ionic);
 app.use(router);
 app.use(pinia);
-app.use(ionic);
-app.mount("#app");
+
+router.isReady().then(() => {
+	app.mount("#app");
+});

@@ -1,24 +1,16 @@
-<script setup lang="ts">
-const name = ref("");
-const selected = ref(false);
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div>
+  <ion-page>
     <ion-toolbar>
-      <ion-searchbar></ion-searchbar>
+      <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title>Vælg Lokation</ion-title>
     </ion-toolbar>
-    <TextField v-model:text="name" title="XD" />
-    <br />
-    Name is: {{ name }}
-  </div>
-  <div>
-    <ItemRow title="Item1" icon="Very good icon" :selected="selected" @click="selected = !selected" />
-  </div>
-  <button type="button" @click="selected = !selected">FLIP</button>
+    <ion-content class="ion-padding">
+      <h1>Dine Prajs</h1>
+    </ion-content>
+  </ion-page>
 </template>
-
-<route lang="yaml">
-meta:
-  title: "About"
-</route>
