@@ -1,12 +1,8 @@
-<script lang="ts">
-export default {
-  created() {
-    const url = "/404-not-found";
-    if (window.location.pathname === url) return;
-
-    window.location.pathname = url;
-  },
-};
+<script setup lang="ts">
+const url = "/404-not-found";
+if (window.location.pathname !== url) {
+  window.location.pathname = url;
+}
 </script>
 
 <template>
