@@ -56,7 +56,7 @@ const confirmCategories = () => {
             </ion-radio-group>
           </ion-list>
         </div>
-        <ion-button class="flex flex-row my-6 mx-12 float-bottom" @click="confirmCategories()">GG GO NEXT</ion-button>
+        <ion-button class="flex flex-row my-6 mx-12 float-bottom" @click="confirmCategories">GG GO NEXT</ion-button>
       </div>
     </ion-content>
   </ion-page>

@@ -22,10 +22,16 @@ export function useImages() {
 			resultType: CameraResultType.Base64,
 		});
 
-		createCase.$patch((state) => {
-			state.images[index] = image;
-		});
+		const images = [...createCase.images];
+		images[index] = image;
+		createCase.images = images;
 	}
 
-	return { base64ToDataUrl, getImageAsDataUrl, takePicture };
+	function removePicture(index: number) {
+		const images = [...createCase.images];
+		delete images[index];
+		createCase.images = images;
+	}
+
+	return { base64ToDataUrl, getImageAsDataUrl, takePicture, removePicture };
 }

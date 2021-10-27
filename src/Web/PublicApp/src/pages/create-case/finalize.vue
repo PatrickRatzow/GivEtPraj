@@ -5,12 +5,12 @@ import { useMainStore } from "@/stores/main";
 const createCase = useCreateCaseStore();
 const main = useMainStore();
 
-createCase.category = {
-  name: "Vejskade",
-  icon: "fas fa-road",
-  subCategories: [],
-};
-createCase.subCategories = [{ name: "Hul" }, { name: "XD" }, { name: "XD2" }];
+// createCase.category = {
+//   name: "Vejskade",
+//   icon: "fas fa-road",
+//   subCategories: [],
+// };
+//createCase.subCategories = [{ name: "Hul" }, { name: "XD" }, { name: "XD2" }];
 </script>
 
 <template>
@@ -22,29 +22,35 @@ createCase.subCategories = [{ name: "Hul" }, { name: "XD" }, { name: "XD2" }];
       <ion-title>Afslut</ion-title>
     </ion-toolbar>
     <ion-content>
-      <ion-list>
-        <ion-list-header>Kategori</ion-list-header>
-        <ion-item>
-          <i class="ml-1 mr-2" :class="createCase.category?.icon"></i>
-          <ion-label>{{ createCase.category?.name }}</ion-label>
-        </ion-item>
-      </ion-list>
-      <ion-list>
-        <ion-list-header>Underkategorier</ion-list-header>
-        <ion-item v-for="(sub, idx) in createCase.subCategories" :key="idx">
-          <ion-label>{{ sub.name }}</ion-label>
-        </ion-item>
-      </ion-list>
-      <ion-list>
-        <ion-list-header>Billeder</ion-list-header>
-        <ion-item>I'm an image</ion-item>
-      </ion-list>
-      <ion-list>
-        <ion-list-header>Kommentar</ion-list-header>
-        <ion-item>
-          <ion-textarea placeholder="Skriv her"></ion-textarea>
-        </ion-item>
-      </ion-list>
+      <div class="flex flex-col justify-between h-full ion-padding">
+        <ion-list>
+          <ion-list-header>Kategori</ion-list-header>
+          <ion-item>
+            <i class="ml-1 mr-2" :class="createCase.category?.icon"></i>
+            <ion-label>{{ createCase.category?.name }}</ion-label>
+          </ion-item>
+        </ion-list>
+        <ion-list>
+          <ion-list-header>Underkategorier</ion-list-header>
+          <ion-item v-for="(sub, idx) in createCase.subCategories" :key="idx">
+            <ion-label>{{ sub.name }}</ion-label>
+          </ion-item>
+        </ion-list>
+        <ion-list>
+          <ion-list-header>Billeder</ion-list-header>
+          <ion-item>I'm an image</ion-item>
+        </ion-list>
+        <ion-list>
+          <ion-list-header>Kommentar</ion-list-header>
+          <ion-item>
+            <ion-textarea placeholder="Skriv her"></ion-textarea>
+          </ion-item>
+          <p class="float-right">0/200</p>
+        </ion-list>
+        <div class="w-full ion-padding">
+          <ion-button expand="block">Afslut</ion-button>
+        </div>
+      </div>
     </ion-content>
   </ion-page>
 </template>

@@ -4,7 +4,7 @@ import { defineStore } from "pinia";
 export const useCreateCaseStore = defineStore("createCase", () => {
 	const category = ref<Category | null>(null);
 	const subCategories = ref<SubCategory[]>([]);
-	const images = reactive<Photo[]>([]);
+	const images = ref<Photo[]>([]);
 	const comment = ref<string | undefined>();
 	const geographicLocation = ref<GeographicLocation>();
 

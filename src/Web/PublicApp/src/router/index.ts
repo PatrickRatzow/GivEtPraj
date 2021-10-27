@@ -27,6 +27,10 @@ const cfgRoutes: RouteRecordRaw[] = [
 				component: () => import("@/pages/create-case/pictures.vue"),
 			},
 			{
+				path: "billeder/:id",
+				component: () => import("@/pages/create-case/picture-preview.vue"),
+			},
+			{
 				path: "afslut",
 				component: () => import("@/pages/create-case/finalize.vue"),
 			},
