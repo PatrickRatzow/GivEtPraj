@@ -46,7 +46,9 @@ fetchImage(route.params.id);
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-img :src="image" />
+      <div class="bg-black h-full flex justify-center">
+        <ion-img :src="image" />
+      </div>
     </ion-content>
   </ion-page>
 </template>
