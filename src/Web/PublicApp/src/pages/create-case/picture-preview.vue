@@ -5,7 +5,7 @@ const route = useRoute();
 const images = useImages();
 const router = useRouter();
 
-const redirectTo404 = () => router.push("/404-not-found");
+const redirectTo404 = () => router.replace("/404-not-found");
 
 const image = ref<string | undefined>();
 const fetchImage = (id: string | string[]) => {
