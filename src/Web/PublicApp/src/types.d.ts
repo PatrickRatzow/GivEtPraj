@@ -32,4 +32,5 @@ declare global {
 	}
 
 	export type AppModule = (app: App) => Promise<void>;
+	export type Language = "en" | "da";
 }

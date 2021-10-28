@@ -8,6 +8,7 @@ const cfgRoutes: RouteRecordRaw[] = [
 	},
 	{
 		path: "/opret-praj/",
+		alias: "/create-praj/",
 		component: () => import("@/layouts/tabs.vue"),
 		children: [
 			{
@@ -15,32 +16,45 @@ const cfgRoutes: RouteRecordRaw[] = [
 				redirect: "/opret-praj/lokation",
 			},
 			{
+				name: "location",
 				path: "lokation",
+				alias: "location",
 				component: () => import("@/pages/create-case/map.vue"),
 			},
 			{
+				name: "category",
 				path: "kategori",
+				alias: "category",
 				component: () => import("@/pages/create-case/category.vue"),
 			},
 			{
+				name: "pictures",
 				path: "billeder",
+				alias: "pictures",
 				component: () => import("@/pages/create-case/pictures.vue"),
 			},
 			{
+				name: "picture-preview",
 				path: "billeder/:id",
+				alias: "pictures/:id",
 				component: () => import("@/pages/create-case/picture-preview.vue"),
 			},
 			{
+				name: "checkout",
 				path: "afslut",
+				alias: "checkout",
 				component: () => import("@/pages/create-case/finalize.vue"),
 			},
 		],
 	},
 	{
+		name: "my-cases",
 		path: "/mine-prajs",
+		alias: "/my-prajs",
 		component: () => import("@/pages/my-cases.vue"),
 	},
 	{
+		name: "404",
 		path: "/:pathMatch(.*)*",
 		component: () => import("@/pages/404.vue"),
 	},

@@ -1,5 +1,7 @@
 import { createI18n } from "vue-i18n";
-import { Device } from "@capacitor/device";
+import { useLocale } from "@/compositions/locale";
+
+const locale = useLocale();
 
 // Import i18n resources
 // https://vitejs.dev/guide/features.html#glob-import
@@ -11,11 +13,10 @@ const messages = Object.fromEntries(
 );
 
 export const install: AppModule = async (app) => {
-	const languageCode = await Device.getLanguageCode();
-
+	const languageCode = await locale.getLanguageCode();
 	const i18n = createI18n({
 		legacy: false,
-		locale: languageCode.value == "da" ? "da" : "en",
+		locale: languageCode,
 		messages,
 	});
 

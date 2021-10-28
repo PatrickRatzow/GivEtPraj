@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { useLocalizedRoutes } from "@/compositions/localizedRoutes";
 import { useCreateCaseStore } from "@/stores/create-case";
 import { Geolocation } from "@capacitor/geolocation";
 import { map, tileLayer, marker, LeafletMouseEvent, Marker } from "leaflet";
 
+const localizedRoutes = useLocalizedRoutes();
 const router = useRouter();
 const createCase = useCreateCaseStore();
 const { t } = useI18n();
@@ -39,20 +41,16 @@ onMounted(async () => {
 
 const isPositionValid = computed(() => createCase.geographicLocation);
 
-const nextPage = () => {
+const nextPage = async () => {
   if (!isPositionValid.value) return;
 
-  router.push("/opret-praj/kategori");
+  router.push(await localizedRoutes.getCategoryUrl());
 };
 </script>
 
 <template>
   <ion-page>
     <ion-toolbar>
-      <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-      <ion-buttons slot="start">
-        <ion-back-button></ion-back-button>
-      </ion-buttons>
       <ion-title>{{ t("create-case.map.title") }}</ion-title>
     </ion-toolbar>
     <ion-content>
