@@ -1,4 +1,5 @@
 import { Photo } from "@capacitor/camera";
+import { App } from "vue";
 
 declare global {
 	interface SubCategory {
@@ -39,4 +40,7 @@ declare global {
 		latitude: number;
 		longitude: number;
 	}
+
+	export type AppModule = (app: App) => Promise<void>;
+	export type Language = "en" | "da";
 }

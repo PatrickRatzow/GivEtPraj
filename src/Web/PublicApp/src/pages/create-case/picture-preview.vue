@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { useImages } from "@/compositions/images";
+import { useLocalizedRoutes } from "@/compositions/localizedRoutes";
 
 const route = useRoute();
 const images = useImages();
 const router = useRouter();
+const localizedRoutes = useLocalizedRoutes();
 const { t } = useI18n();
 
 const redirectTo404 = () => router.replace("/404-not-found");
@@ -28,6 +30,11 @@ const deleteImage = () => {
 
 watch(() => route.params.id, fetchImage);
 fetchImage(route.params.id);
+
+const backUrl = ref<string>();
+onMounted(async () => {
+  backUrl.value = await localizedRoutes.getPicturesUrl();
+});
 </script>
 
 <template>
@@ -35,7 +42,7 @@ fetchImage(route.params.id);
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <back-button url="/opret-praj/billeder"></back-button>
+          <back-button :url="backUrl"></back-button>
         </ion-buttons>
         <ion-buttons slot="end">
           <ion-button class="flex justify-center" @click="deleteImage">
@@ -46,7 +53,9 @@ fetchImage(route.params.id);
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-img :src="image" />
+      <div class="bg-black h-full flex justify-center">
+        <ion-img :src="image" />
+      </div>
     </ion-content>
   </ion-page>
 </template>
