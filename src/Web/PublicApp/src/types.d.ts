@@ -12,10 +12,20 @@ declare global {
 	}
 
 	interface Case {
-		category: string;
-		subCategories: string[];
+		id: number;
+		category: Category;
+		subCategories: SubCategory[];
 		images: string[];
 		comment: string | null;
+		status: Status;
+		geographicLocation: GeographicLocation;
+		createdAt: Date;
+		updatedAt?: Date;
+	}
+
+	interface Status {
+		color: string;
+		name: string;
 	}
 
 	interface CaseCreation {
