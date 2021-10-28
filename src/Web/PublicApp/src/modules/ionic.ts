@@ -16,4 +16,8 @@ import "@ionic/vue/css/text-transformation.css";
 import "@ionic/vue/css/flex-utils.css";
 import "@ionic/vue/css/display.css";
 
-export default IonicVue;
+export const install: AppModule = (app) => {
+	app.use(IonicVue);
+
+	return Promise.resolve();
+};
