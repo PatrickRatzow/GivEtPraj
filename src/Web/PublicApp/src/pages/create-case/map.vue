@@ -60,34 +60,30 @@ const nextPage = async () => {
     </ion-toolbar>
     <ion-content>
       <offline v-if="!network.status.value?.connected" class="h-full"></offline>
-      <div v-else id="mapid" class="h-full">
-        <button
-          class="
-            absolute
-            bottom-4
-            left-1/2
-            right-1/2
-            transform
-            -translate-x-1/2
-            py-2
-            px-4
-            z-[99999]
-            rounded-md
-            w-max
-            text-lg
-            transition-all
-          "
-          type="button"
-          :class="[
-            isPositionValid ? ['bg-green-500 text-white'] : ['bg-gray-200 text-black border-red-500 opacity-90'],
-          ]"
-          @click="nextPage"
-        >
-          {{
-            isPositionValid ? t("create-case.map.confirm-button.valid") : t("create-case.map.confirm-button.invalid")
-          }}
-        </button>
-      </div>
+      <div v-else id="mapid" class="h-full"></div>
+      <button
+        v-if="network.status.value?.connected"
+        class="
+          absolute
+          bottom-4
+          left-1/2
+          right-1/2
+          transform
+          -translate-x-1/2
+          py-2
+          px-4
+          z-[99999]
+          rounded-md
+          w-max
+          text-lg
+          transition-all
+        "
+        type="button"
+        :class="[isPositionValid ? ['bg-green-500 text-white'] : ['bg-gray-200 text-black border-red-500 opacity-90']]"
+        @click="nextPage"
+      >
+        {{ isPositionValid ? t("create-case.map.confirm-button.valid") : t("create-case.map.confirm-button.invalid") }}
+      </button>
     </ion-content>
   </ion-page>
 </template>
