@@ -24,10 +24,7 @@ const { t } = useI18n();
       <div class="flex flex-col justify-between h-full ion-padding">
         <ion-list>
           <ion-list-header>{{ t("create-case.overview.category") }}</ion-list-header>
-          <ion-item>
-            <i class="ml-1 mr-2" :class="createCase.category?.icon"></i>
-            <ion-label>{{ createCase.category?.name }}</ion-label>
-          </ion-item>
+          <category-row :category="createCase.category!"></category-row>
         </ion-list>
         <ion-list>
           <ion-list-header>{{ t("create-case.overview.sub-categories") }}</ion-list-header>

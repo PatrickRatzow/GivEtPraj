@@ -2,6 +2,7 @@
 import { useMainStore } from "@/stores/main";
 
 const main = useMainStore();
+const router = useRouter();
 const { t } = useI18n();
 </script>
 
@@ -15,13 +16,12 @@ const { t } = useI18n();
     </ion-toolbar>
     <ion-content class="ion-padding">
       <ion-list>
-        <ion-item v-for="currentCase in main.cases" :key="currentCase.id">
-          <span
-            :title="currentCase.status.name"
-            class="w-8 h-8 rounded-full mr-2"
-            :style="`background: ${currentCase.status.color};`"
-          >
-          </span>
+        <ion-item
+          v-for="currentCase in main.cases"
+          :key="currentCase.id"
+          @click="router.push(`/praj/${currentCase.id}`)"
+        >
+          <status-indicator :status="currentCase.status"> </status-indicator>
           <ion-label>
             <h3>{{ currentCase.id }}</h3>
             <p>{{ currentCase.category.name }}</p>

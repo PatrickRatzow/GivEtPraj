@@ -16,12 +16,12 @@ export const useMainStore = defineStore("main", () => {
 		{
 			id: 2,
 			category: { name: "Vejskade", icon: "fas fa-road", subCategories: [] },
-			subCategories: [{ name: "Hul" }],
-			images: [],
+			subCategories: [{ name: "Hul" }, { name: "Isskade" }],
+			images: ["KekW"],
 			comment: null,
 			status: { color: "#00ff00", name: "Færdig" },
 			geographicLocation: { latitude: 0, longitude: 0 },
-			createdAt: new Date(),
+			createdAt: new Date(2018, 11, 15),
 		},
 	]);
 	const categories = ref<Category[]>([]);

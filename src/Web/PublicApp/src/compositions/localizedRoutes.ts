@@ -25,6 +25,10 @@ export function useLocalizedRoutes() {
 			da: "/opret-praj/afslut",
 			en: "/create-praj/checkout",
 		},
+		cases: {
+			da: "/mine-prajs",
+			en: "/my-prajs",
+		},
 	};
 
 	async function getLocationUrl() {
@@ -49,5 +53,9 @@ export function useLocalizedRoutes() {
 		return routes.checkout[await language.value()];
 	}
 
-	return { getLocationUrl, getCategoryUrl, getPicturesUrl, getPicturePreviewUrl, getCheckoutUrl };
+	async function getCasesUrl() {
+		return routes.cases[await language.value()];
+	}
+
+	return { getLocationUrl, getCategoryUrl, getPicturesUrl, getPicturePreviewUrl, getCheckoutUrl, getCasesUrl };
 }
