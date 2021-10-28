@@ -9,5 +9,5 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <ion-back-button :text="t('title-bar.back')" :default-href="url"></ion-back-button>
+  <ion-back-button :text="t('navigation.back')" :default-href="url"></ion-back-button>
 </template>

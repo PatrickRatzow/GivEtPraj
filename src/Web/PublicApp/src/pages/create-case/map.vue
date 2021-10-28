@@ -5,6 +5,7 @@ import { map, tileLayer, marker, LeafletMouseEvent, Marker } from "leaflet";
 
 const router = useRouter();
 const createCase = useCreateCaseStore();
+const { t } = useI18n();
 
 onMounted(async () => {
   try {
@@ -52,7 +53,7 @@ const nextPage = () => {
       <ion-buttons slot="start">
         <ion-back-button></ion-back-button>
       </ion-buttons>
-      <ion-title>Vælg Lokation</ion-title>
+      <ion-title>{{ t("create-case.map.title") }}</ion-title>
     </ion-toolbar>
     <ion-content>
       <div id="mapid" class="h-full"></div>
@@ -76,7 +77,7 @@ const nextPage = () => {
         :class="[isPositionValid ? ['bg-green-500 text-white'] : ['bg-gray-200 text-black border-red-500 opacity-90']]"
         @click="nextPage"
       >
-        {{ isPositionValid ? "Godkend Placering " : "Vælg Placering" }}
+        {{ isPositionValid ? t("create-case.map.confirm-button.valid") : t("create-case.map.confirm-button.invalid") }}
       </button>
     </ion-content>
   </ion-page>

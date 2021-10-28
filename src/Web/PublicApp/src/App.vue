@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { create, fileTrayFull } from "ionicons/icons";
+
+const { t } = useI18n();
 </script>
 
 <template>
@@ -11,12 +13,12 @@ import { create, fileTrayFull } from "ionicons/icons";
         <ion-tab-bar slot="bottom">
           <ion-tab-button tab="create-case" href="/opret-praj">
             <ion-icon :icon="create"></ion-icon>
-            <ion-label>Opret Praj</ion-label>
+            <ion-label>{{ t("tabs.create-case") }}</ion-label>
           </ion-tab-button>
 
           <ion-tab-button tab="history" href="/mine-prajs">
             <ion-icon :icon="fileTrayFull"></ion-icon>
-            <ion-label>Historik</ion-label>
+            <ion-label>{{ t("tabs.my-cases") }}</ion-label>
           </ion-tab-button>
         </ion-tab-bar>
       </ion-tabs>

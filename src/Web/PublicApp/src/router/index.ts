@@ -38,7 +38,7 @@ const cfgRoutes: RouteRecordRaw[] = [
 	},
 	{
 		path: "/mine-prajs",
-		component: () => import("@/pages/about.vue"),
+		component: () => import("@/pages/my-cases.vue"),
 	},
 	{
 		path: "/:pathMatch(.*)*",

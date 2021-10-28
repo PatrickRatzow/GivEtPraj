@@ -40,7 +40,7 @@ fetchImage(route.params.id);
         <ion-buttons slot="end">
           <ion-button class="flex justify-center" @click="deleteImage">
             <i class="fas fa-trash mr-1"></i>
-            <ion-label>{{ t("title-bar.delete") }}</ion-label>
+            <ion-label>{{ t("navigation.delete") }}</ion-label>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>

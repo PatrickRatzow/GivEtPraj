@@ -5,6 +5,7 @@ import { useMainStore } from "@/stores/main";
 const router = useRouter();
 const createCase = useCreateCaseStore();
 const main = useMainStore();
+const { t } = useI18n();
 
 main.fetchCategories();
 
@@ -31,13 +32,13 @@ const confirmCategories = () => {
       <ion-buttons slot="start">
         <ion-back-button default-href="/opret-praj/lokation"></ion-back-button>
       </ion-buttons>
-      <ion-title>Vælg Kategori</ion-title>
+      <ion-title>{{ t("create-case.category.title") }}</ion-title>
     </ion-toolbar>
     <ion-content>
       <div class="flex flex-col justify-between h-full">
         <div>
           <ion-searchbar
-            placeholder="Søg"
+            :placeholder="t('create-case.category.search-placeholder')"
             :value="searchQuery"
             @ionInput="searchQuery = $event.target.value"
             @ionClear="searchQuery = ''"
@@ -56,7 +57,9 @@ const confirmCategories = () => {
             </ion-radio-group>
           </ion-list>
         </div>
-        <ion-button class="flex flex-row my-6 mx-12 float-bottom" @click="confirmCategories">GG GO NEXT</ion-button>
+        <ion-button class="flex flex-row my-6 mx-12 float-bottom" @click="confirmCategories">
+          {{ t("navigation.next") }}
+        </ion-button>
       </div>
     </ion-content>
   </ion-page>

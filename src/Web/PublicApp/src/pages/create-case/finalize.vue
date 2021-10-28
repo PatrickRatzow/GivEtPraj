@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { useCreateCaseStore } from "@/stores/create-case";
-import { useMainStore } from "@/stores/main";
 
 const createCase = useCreateCaseStore();
-const main = useMainStore();
+const { t } = useI18n();
 
 // createCase.category = {
 //   name: "Vejskade",
@@ -19,36 +18,36 @@ const main = useMainStore();
       <ion-buttons slot="start">
         <ion-back-button default-href="/opret-praj/billeder"></ion-back-button>
       </ion-buttons>
-      <ion-title>Afslut</ion-title>
+      <ion-title>{{ t("create-case.overview.title") }}</ion-title>
     </ion-toolbar>
     <ion-content>
       <div class="flex flex-col justify-between h-full ion-padding">
         <ion-list>
-          <ion-list-header>Kategori</ion-list-header>
+          <ion-list-header>{{ t("create-case.overview.category") }}</ion-list-header>
           <ion-item>
             <i class="ml-1 mr-2" :class="createCase.category?.icon"></i>
             <ion-label>{{ createCase.category?.name }}</ion-label>
           </ion-item>
         </ion-list>
         <ion-list>
-          <ion-list-header>Underkategorier</ion-list-header>
+          <ion-list-header>{{ t("create-case.overview.sub-categories") }}</ion-list-header>
           <ion-item v-for="(sub, idx) in createCase.subCategories" :key="idx">
             <ion-label>{{ sub.name }}</ion-label>
           </ion-item>
         </ion-list>
         <ion-list>
-          <ion-list-header>Billeder</ion-list-header>
-          <ion-item>I'm an image</ion-item>
+          <ion-list-header>{{ t("create-case.overview.pictures") }}</ion-list-header>
+          <ion-item></ion-item>
         </ion-list>
         <ion-list>
-          <ion-list-header>Kommentar</ion-list-header>
+          <ion-list-header>{{ t("create-case.overview.comment.title") }}</ion-list-header>
           <ion-item>
-            <ion-textarea placeholder="Skriv her"></ion-textarea>
+            <ion-textarea :placeholder="t('create-case.overview.comment.placeholder')"></ion-textarea>
           </ion-item>
           <p class="float-right">0/200</p>
         </ion-list>
         <div class="w-full ion-padding">
-          <ion-button expand="block">Afslut</ion-button>
+          <ion-button expand="block">{{ t("create-case.overview.finish") }}</ion-button>
         </div>
       </div>
     </ion-content>

@@ -5,6 +5,7 @@ import { useCreateCaseStore } from "@/stores/create-case";
 const createCase = useCreateCaseStore();
 const router = useRouter();
 const images = useImages();
+const { t } = useI18n();
 </script>
 
 <template>
@@ -13,7 +14,7 @@ const images = useImages();
       <ion-buttons slot="start">
         <back-button url="/opret-praj/kategori"></back-button>
       </ion-buttons>
-      <ion-title>Kamera</ion-title>
+      <ion-title>{{ t("create-case.pictures.title") }} </ion-title>
     </ion-toolbar>
     <ion-content class="ion-padding">
       <div class="flex flex-col justify-between items-center h-full">
@@ -31,7 +32,7 @@ const images = useImages();
           </template>
         </div>
         <div class="w-full">
-          <ion-button expand="block" @click="router.push('/opret-praj/afslut')">Fortsæt</ion-button>
+          <ion-button expand="block" @click="router.push('/opret-praj/afslut')">{{ t("navigation.next") }}</ion-button>
         </div>
       </div>
     </ion-content>

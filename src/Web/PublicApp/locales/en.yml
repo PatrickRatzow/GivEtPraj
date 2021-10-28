@@ -1,3 +1,31 @@
-title-bar:
+tabs:
+  create-case: "Create Praj"
+  my-cases: "My Prajs"
+create-case:
+  map:
+    title: "Choose Location"
+    confirm-button:
+      valid: "Accept Location"
+      invalid: "Select Location"
+  category:
+    title: "Choose Category"
+    search-placeholder: "Search"
+  pictures:
+    title: "Choose Pictures"
+  overview:
+    title: "Overview"
+    category: "Category"
+    sub-categories: "Sub categories"
+    pictures: "Pictures"
+    comment:
+      title: "Comment"
+      placeholder: "Type here"
+    finish: "Send"
+navigation:
   back: "Back"
   delete: "Delete"
+  next: "Next"
+not-found:
+  text: "Ain't nothing here"
+my-cases:
+  title: "Your Prajs"

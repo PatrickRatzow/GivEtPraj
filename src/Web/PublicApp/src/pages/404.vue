@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n();
+
 const url = "/404-not-found";
 if (window.location.pathname !== url) {
   window.location.pathname = url;
@@ -10,7 +12,7 @@ if (window.location.pathname !== url) {
     <div class="text-black dark:text-white text-center">
       <i class="fas fa-question text-6xl mb-4"></i>
       <h1 class="text-2xl">404</h1>
-      <p class="text-lg">Ain't nothing here</p>
+      <p class="text-lg">{{ t("not-found.text") }}</p>
     </div>
   </ion-page>
 </template>

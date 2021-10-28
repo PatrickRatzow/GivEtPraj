@@ -1,4 +1,5 @@
 import { createI18n } from "vue-i18n";
+import { Device } from "@capacitor/device";
 
 // Import i18n resources
 // https://vitejs.dev/guide/features.html#glob-import
@@ -9,11 +10,11 @@ const messages = Object.fromEntries(
 	})
 );
 
-console.log(messages);
+const languageCode = await Device.getLanguageCode();
 
 const i18n = createI18n({
 	legacy: false,
-	locale: "en",
+	locale: languageCode.value == "da" ? "da" : "en",
 	messages,
 });
 
