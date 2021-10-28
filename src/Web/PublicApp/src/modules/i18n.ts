@@ -10,12 +10,14 @@ const messages = Object.fromEntries(
 	})
 );
 
-const languageCode = await Device.getLanguageCode();
+export const install: AppModule = async (app) => {
+	const languageCode = await Device.getLanguageCode();
 
-const i18n = createI18n({
-	legacy: false,
-	locale: languageCode.value == "da" ? "da" : "en",
-	messages,
-});
+	const i18n = createI18n({
+		legacy: false,
+		locale: languageCode.value == "da" ? "da" : "en",
+		messages,
+	});
 
-export default i18n;
+	app.use(i18n);
+};
