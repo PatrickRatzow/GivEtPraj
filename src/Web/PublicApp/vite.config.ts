@@ -6,6 +6,7 @@ import { resolve } from "path";
 import Components from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
 import { ComponentResolver } from "unplugin-vue-components/dist/types";
+import VueI18n from "@intlify/vite-plugin-vue-i18n";
 
 function IonicResolver(): ComponentResolver {
 	return (name: string) => {
@@ -66,8 +67,13 @@ export default defineConfig({
 			dts: "src/components.d.ts",
 		}),
 		AutoImport({
-			imports: ["vue", "vue-router"],
+			imports: ["vue", "vue-router", "vue-i18n"],
 			dts: "src/auto-imports.d.ts",
+		}),
+		VueI18n({
+			runtimeOnly: true,
+			compositionOnly: true,
+			include: [resolve(__dirname, "./locales/**")],
 		}),
 	],
 });

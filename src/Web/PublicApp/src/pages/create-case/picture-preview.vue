@@ -4,6 +4,7 @@ import { useImages } from "@/compositions/images";
 const route = useRoute();
 const images = useImages();
 const router = useRouter();
+const { t } = useI18n();
 
 const redirectTo404 = () => router.replace("/404-not-found");
 
@@ -34,12 +35,12 @@ fetchImage(route.params.id);
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button default-href="/opret-praj/billeder"></ion-back-button>
+          <back-button url="/opret-praj/billeder"></back-button>
         </ion-buttons>
         <ion-buttons slot="end">
           <ion-button class="flex justify-center" @click="deleteImage">
             <i class="fas fa-trash mr-1"></i>
-            <ion-label>Slet</ion-label>
+            <ion-label>{{ t("title-bar.delete") }}</ion-label>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>

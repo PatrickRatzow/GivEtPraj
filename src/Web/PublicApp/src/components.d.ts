@@ -4,6 +4,7 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    BackButton: typeof import('./components/BackButton.vue')['default']
     Camera: typeof import('./components/Camera.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     IonApp: typeof import('@ionic/vue')['IonApp']
@@ -18,6 +19,7 @@ declare module 'vue' {
     IonItem: typeof import('@ionic/vue')['IonItem']
     IonLabel: typeof import('@ionic/vue')['IonLabel']
     IonList: typeof import('@ionic/vue')['IonList']
+    IonListHeader: typeof import('@ionic/vue')['IonListHeader']
     IonPage: typeof import('@ionic/vue')['IonPage']
     IonRadio: typeof import('@ionic/vue')['IonRadio']
     IonRadioGroup: typeof import('@ionic/vue')['IonRadioGroup']
@@ -26,6 +28,7 @@ declare module 'vue' {
     IonTabBar: typeof import('@ionic/vue')['IonTabBar']
     IonTabButton: typeof import('@ionic/vue')['IonTabButton']
     IonTabs: typeof import('@ionic/vue')['IonTabs']
+    IonTextarea: typeof import('@ionic/vue')['IonTextarea']
     IonTitle: typeof import('@ionic/vue')['IonTitle']
     IonToolbar: typeof import('@ionic/vue')['IonToolbar']
     ItemRow: typeof import('./components/ItemRow.vue')['default']

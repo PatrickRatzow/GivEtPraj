@@ -11,7 +11,7 @@ const images = useImages();
   <ion-page>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-back-button default-href="/opret-praj/kategori"></ion-back-button>
+        <back-button url="/opret-praj/kategori"></back-button>
       </ion-buttons>
       <ion-title>Kamera</ion-title>
     </ion-toolbar>
