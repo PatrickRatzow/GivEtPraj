@@ -13,7 +13,6 @@
     "@capacitor/camera": "^1.1.2",
     "@capacitor/core": "^3.2.5",
     "@capacitor/device": "^1.0.5",
-    "@capacitor/filesystem": "^1.0.5",
     "@capacitor/geolocation": "^1.1.2",
     "@capacitor/network": "^1.0.5",
     "@ionic/vue": "^6.0.0-rc.0",
