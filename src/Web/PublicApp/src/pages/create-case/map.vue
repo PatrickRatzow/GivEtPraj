@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useLocalizedRoutes } from "@/compositions/localizedRoutes";
+import { useNetwork } from "@/compositions/network";
 import { useCreateCaseStore } from "@/stores/create-case";
 import { Geolocation } from "@capacitor/geolocation";
 import { map, tileLayer, marker, LeafletMouseEvent, Marker } from "leaflet";
@@ -8,7 +9,11 @@ const localizedRoutes = useLocalizedRoutes();
 const router = useRouter();
 const createCase = useCreateCaseStore();
 const { t } = useI18n();
+const network = useNetwork();
 
+/*
+check if person is offline when loading in, then dont load map
+*/
 onMounted(async () => {
   try {
     const pos = await Geolocation.getCurrentPosition();
@@ -54,29 +59,35 @@ const nextPage = async () => {
       <ion-title>{{ t("create-case.map.title") }}</ion-title>
     </ion-toolbar>
     <ion-content>
-      <div id="mapid" class="h-full"></div>
-      <button
-        class="
-          absolute
-          bottom-4
-          left-1/2
-          right-1/2
-          transform
-          -translate-x-1/2
-          py-2
-          px-4
-          z-[99999]
-          rounded-md
-          w-max
-          text-lg
-          transition-all
-        "
-        type="button"
-        :class="[isPositionValid ? ['bg-green-500 text-white'] : ['bg-gray-200 text-black border-red-500 opacity-90']]"
-        @click="nextPage"
-      >
-        {{ isPositionValid ? t("create-case.map.confirm-button.valid") : t("create-case.map.confirm-button.invalid") }}
-      </button>
+      <offline v-if="!network.status.value?.connected" class="h-full"></offline>
+      <div v-else id="mapid" class="h-full">
+        <button
+          class="
+            absolute
+            bottom-4
+            left-1/2
+            right-1/2
+            transform
+            -translate-x-1/2
+            py-2
+            px-4
+            z-[99999]
+            rounded-md
+            w-max
+            text-lg
+            transition-all
+          "
+          type="button"
+          :class="[
+            isPositionValid ? ['bg-green-500 text-white'] : ['bg-gray-200 text-black border-red-500 opacity-90'],
+          ]"
+          @click="nextPage"
+        >
+          {{
+            isPositionValid ? t("create-case.map.confirm-button.valid") : t("create-case.map.confirm-button.invalid")
+          }}
+        </button>
+      </div>
     </ion-content>
   </ion-page>
 </template>

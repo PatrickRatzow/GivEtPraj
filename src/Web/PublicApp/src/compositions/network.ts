@@ -1,9 +1,13 @@
-import { Network } from "@capacitor/network";
+import { ConnectionStatus, Network } from "@capacitor/network";
 
 export function useNetwork() {
-	function getStatus() {
-		return Network.getStatus();
-	}
+	const status = ref<ConnectionStatus | undefined>();
 
-	return { getStatus };
+	Network.addListener("networkStatusChange", (newStatus) => {
+		status.value = newStatus;
+	});
+
+	Network.getStatus().then((connectionStatus) => (status.value = connectionStatus));
+
+	return { status };
 }
