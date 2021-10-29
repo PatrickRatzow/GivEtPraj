@@ -17,7 +17,7 @@ export const useMainStore = defineStore("main", () => {
 			id: 2,
 			category: { name: "Vejskade", icon: "fas fa-road", subCategories: [] },
 			subCategories: [{ name: "Hul" }, { name: "Isskade" }],
-			images: ["KekW"],
+			images: [],
 			comment: null,
 			status: { color: "#00ff00", name: "Færdig" },
 			geographicLocation: { latitude: 0, longitude: 0 },
