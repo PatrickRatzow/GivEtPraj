@@ -6,10 +6,10 @@ declare module 'vue' {
   export interface GlobalComponents {
     BackButton: typeof import('./components/BackButton.vue')['default']
     CategoryRow: typeof import('./components/CategoryRow.vue')['default']
+    Comment: typeof import('./components/Comment.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     IonApp: typeof import('@ionic/vue')['IonApp']
     IonBackButton: typeof import('@ionic/vue')['IonBackButton']
-    IonButton: typeof import('@ionic/vue')['IonButton']
     IonButtons: typeof import('@ionic/vue')['IonButtons']
     IonContent: typeof import('@ionic/vue')['IonContent']
     IonIcon: typeof import('@ionic/vue')['IonIcon']

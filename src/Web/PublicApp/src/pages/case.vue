@@ -72,6 +72,12 @@ const lastUpdatedAt = (): string => {
             <ion-img v-for="(picture, idx) in currentCase!.images" :key="idx" :src="picture"></ion-img>
           </ion-list>
         </div>
+        <div>
+          <ion-list>
+            <ion-list-header>{{ t("create-case.overview.comment.title") }}</ion-list-header>
+            <ion-item>{{currentCase!.comment}}</ion-item>
+          </ion-list>
+        </div>
       </div>
     </ion-content>
   </ion-page>

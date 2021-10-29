@@ -11,10 +11,7 @@ const createCase = useCreateCaseStore();
 const { t } = useI18n();
 const network = useNetwork();
 
-/*
-check if person is offline when loading in, then dont load map
-*/
-onMounted(async () => {
+const loadMap = async () => {
   try {
     const pos = await Geolocation.getCurrentPosition();
 
@@ -42,7 +39,13 @@ onMounted(async () => {
       alert("We needed permission :(");
     }
   }
-});
+};
+
+onMounted(loadMap);
+
+const getStatus = () => network.status.value?.connected;
+
+watch(getStatus, loadMap);
 
 const isPositionValid = computed(() => createCase.geographicLocation);
 
@@ -59,10 +62,10 @@ const nextPage = async () => {
       <ion-title>{{ t("create-case.map.title") }}</ion-title>
     </ion-toolbar>
     <ion-content>
-      <offline v-if="!network.status.value?.connected" class="h-full"></offline>
+      <offline v-if="!getStatus()" class="h-full"></offline>
       <div v-else id="mapid" class="h-full"></div>
       <button
-        v-if="network.status.value?.connected"
+        v-if="getStatus()"
         class="
           absolute
           bottom-4
