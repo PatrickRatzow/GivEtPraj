@@ -7,7 +7,9 @@ create-case:
     confirm-button:
       valid: "Accept Location"
       invalid: "Select Location"
-    no-internet: "You have no internet :)"
+    internet-error:
+      no-internet: "No internet"
+      internet-msg: "Take pictures of your Praj case, and upload them later"
   category:
     title: "Choose Category"
     search-placeholder: "Search"
