@@ -36,4 +36,8 @@ const { t } = useI18n();
   overflow-x: hidden;
   min-height: 100vh;
 }
+
+.grecaptcha-badge {
+  visibility: hidden;
+}
 </style>

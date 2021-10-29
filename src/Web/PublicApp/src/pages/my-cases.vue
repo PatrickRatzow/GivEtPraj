@@ -1,9 +1,26 @@
 <script setup lang="ts">
 import { useMainStore } from "@/stores/main";
+import { useReCaptcha } from "vue-recaptcha-v3";
+import axios from "@/utils/axios";
 
 const main = useMainStore();
 const router = useRouter();
 const { t } = useI18n();
+const { executeRecaptcha, recaptchaLoaded } = useReCaptcha();
+
+const captcha = async () => {
+  await recaptchaLoaded();
+
+  const token = await executeRecaptcha("case");
+
+  const req = await axios.post("captcha", undefined, {
+    headers: {
+      ["X-ReCAPTCHA-V3"]: token,
+    },
+  });
+
+  console.log({ req: req.data });
+};
 </script>
 
 <template>
@@ -28,6 +45,8 @@ const { t } = useI18n();
           </ion-label>
         </ion-item>
       </ion-list>
+
+      <ion-button @click="captcha">Execute Captcha</ion-button>
     </ion-content>
   </ion-page>
 </template>
