@@ -17,7 +17,7 @@ declare global {
 		category: Category;
 		subCategories: SubCategory[];
 		images: string[];
-		comment: string | null;
+		comment: string | undefined;
 		status: Status;
 		geographicLocation: GeographicLocation;
 		createdAt: Date;

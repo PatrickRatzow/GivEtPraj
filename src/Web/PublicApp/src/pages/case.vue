@@ -46,39 +46,29 @@ const lastUpdatedAt = (): string => {
       <ion-title>{{ t("case.title") }} </ion-title>
     </ion-toolbar>
     <ion-content class="ion-padding">
-      <div class="flex flex-col">
-        <div class="flex flex-row">
+      <ion-list>
+        <ion-item class="flex flex-row">
           <status-indicator :status="currentCase!.status" />
           <ion-label>
             <h3>{{ currentCase!.status.name }}</h3>
             <p>{{ t("case.last-updated-at", { time: lastUpdatedAt() }) }}</p>
           </ion-label>
-        </div>
-        <div>
-          <ion-list>
-            <ion-list-header>{{ t("create-case.overview.category") }}</ion-list-header>
-            <category-row :category="currentCase!.category"></category-row>
-          </ion-list>
-          <ion-list>
-            <ion-list-header>{{ t("create-case.overview.sub-categories") }}</ion-list-header>
-            <ion-item v-for="(sub, idx) in currentCase!.subCategories" :key="idx">
-              <ion-label>{{ sub.name }}</ion-label>
-            </ion-item>
-          </ion-list>
-        </div>
-        <div>
-          <ion-list>
-            <ion-list-header>{{ t("create-case.overview.pictures") }}</ion-list-header>
-            <ion-img v-for="(picture, idx) in currentCase!.images" :key="idx" :src="picture"></ion-img>
-          </ion-list>
-        </div>
-        <div>
-          <ion-list>
-            <ion-list-header>{{ t("create-case.overview.comment.title") }}</ion-list-header>
-            <ion-item>{{currentCase!.comment}}</ion-item>
-          </ion-list>
-        </div>
-      </div>
+        </ion-item>
+
+        <ion-list-header>{{ t("create-case.overview.category") }}</ion-list-header>
+        <category-row :category="currentCase!.category"></category-row>
+
+        <ion-list-header>{{ t("create-case.overview.sub-categories") }}</ion-list-header>
+        <ion-item v-for="(sub, idx) in currentCase!.subCategories" :key="idx">
+          <ion-label>{{ sub.name }}</ion-label>
+        </ion-item>
+
+        <ion-list-header>{{ t("create-case.overview.pictures") }}</ion-list-header>
+        <ion-img v-for="(picture, idx) in currentCase!.images" :key="idx" :src="picture"></ion-img>
+
+        <ion-list-header>{{ t("create-case.overview.comment.title") }}</ion-list-header>
+        <ion-item>{{currentCase!.comment}}</ion-item>
+      </ion-list>
     </ion-content>
   </ion-page>
 </template>
