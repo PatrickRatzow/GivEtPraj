@@ -12,7 +12,7 @@ const messages = Object.fromEntries(
 	})
 );
 
-export const install: AppModule = async (app) => {
+export const install: AppModule = async ({ app }) => {
 	const languageCode = await locale.getLanguageCode();
 	const i18n = createI18n({
 		legacy: false,

@@ -7,7 +7,7 @@ const app = createApp(App);
 app.use(router);
 
 /* Load all modules */
-const modules = Object.values(import.meta.globEager("./modules/*.ts")).map((i) => i.install?.(app));
+const modules = Object.values(import.meta.globEager("./modules/*.ts")).map((i) => i.install?.({ app, router }));
 await Promise.all(modules);
 
 router.isReady().then(() => {

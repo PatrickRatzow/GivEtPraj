@@ -24,7 +24,7 @@ const { t } = useI18n();
       </ion-tabs>
     </ion-page>
 
-    <ReloadPWA />
+    <!-- <ReloadPWA /> -->
   </ion-app>
 </template>
 

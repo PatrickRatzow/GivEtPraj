@@ -1,5 +1,6 @@
 import { Photo } from "@capacitor/camera";
 import { App } from "vue";
+import { Router } from "vue-router";
 
 declare global {
 	interface SubCategory {
@@ -41,6 +42,11 @@ declare global {
 		longitude: number;
 	}
 
-	export type AppModule = (app: App) => Promise<void>;
+	interface ModuleOptions {
+		app: App<unknown>;
+		router: Router;
+	}
+
+	export type AppModule = (options: ModuleOptions) => Promise<void>;
 	export type Language = "en" | "da";
 }
