@@ -11,7 +11,7 @@ public class QueueKeyConfiguration : IEntityTypeConfiguration<QueueKey>
             .ValueGeneratedOnAdd();
 
         builder.Property(qk => qk.ExpiresAt)
-            .HasDefaultValue();
+            .IsRequired();
         
         builder.Property(qk => qk.CaptchaScore)
             .IsRequired();
