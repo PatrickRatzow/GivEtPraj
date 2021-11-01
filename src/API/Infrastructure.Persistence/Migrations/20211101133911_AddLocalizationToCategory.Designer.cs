@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211101123817_AddLocalizationToSubCategory")]
-    partial class AddLocalizationToSubCategory
+    [Migration("20211101133911_AddLocalizationToCategory")]
+    partial class AddLocalizationToCategory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -152,6 +152,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -259,33 +264,7 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Commentor.GivEtPraj.Domain.ValueObjects.LocalizedString", "Name", b1 =>
-                        {
-                            b1.Property<int>("SubCategoryId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("Danish")
-                                .IsRequired()
-                                .HasMaxLength(120)
-                                .HasColumnType("nvarchar(120)");
-
-                            b1.Property<string>("English")
-                                .IsRequired()
-                                .HasMaxLength(120)
-                                .HasColumnType("nvarchar(120)");
-
-                            b1.HasKey("SubCategoryId");
-
-                            b1.ToTable("SubCategories");
-
-                            b1.WithOwner()
-                                .HasForeignKey("SubCategoryId");
-                        });
-
                     b.Navigation("Category");
-
-                    b.Navigation("Name")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Case", b =>
