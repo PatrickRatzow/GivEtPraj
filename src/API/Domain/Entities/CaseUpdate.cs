@@ -11,7 +11,7 @@ namespace Commentor.GivEtPraj.Domain.Entities
     {
         public int Id {  get; set; }
         public int CaseId {  get; set; }
-        public Case Case { get; set; } = null!;
+        public BaseCase BaseCase { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public Status CurrentStatus { get; set; }
         public Employee Employee { get; set; } = null!;

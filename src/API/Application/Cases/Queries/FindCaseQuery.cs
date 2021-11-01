@@ -26,7 +26,7 @@ public class FindCaseQueryHandler : IRequestHandler<FindCaseQuery, OneOf<CaseDto
 
         if (@case is null) return new CaseNotFound(request.Id);
 
-        return _mapper.Map<Case, CaseDto>(@case);
+        return _mapper.Map<BaseCase, CaseDto>(@case);
     }
 }
 
