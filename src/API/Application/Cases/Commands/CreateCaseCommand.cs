@@ -51,7 +51,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         Handle(CreateCaseCommand request, CancellationToken cancellationToken)
     {
         var category = await _db.Categories
-            .FirstOrDefaultAsync(c => request.Category == c.Name, cancellationToken);
+            .FirstOrDefaultAsync(c => request.Category == c.Name.English, cancellationToken);
         if (category is null) return new InvalidCategory(request.Category);
 
         var images = await CreateImages(request);

@@ -4,9 +4,15 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder)
     {
-        builder.Property(category => category.Name)
-            .IsRequired()
-            .HasMaxLength(128);
+        builder.OwnsOne(category => category.Name, name =>
+        {
+            name.Property(x => x.Danish)
+                .IsRequired()
+                .HasMaxLength(120);
+            name.Property(x => x.English)
+                .IsRequired()
+                .HasMaxLength(120);
+        });
 
         builder.Property(category => category.Icon)
             .IsRequired()

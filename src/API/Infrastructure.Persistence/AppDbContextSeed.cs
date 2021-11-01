@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Commentor.GivEtPraj.Domain.ValueObjects;
 
@@ -23,7 +24,8 @@ public static class AppDbContextSeed
 
         context.Categories.Add(new()
         {
-            Name = "Vejskade"
+            Name = LocalizedString.From("Vejskade", "Road damage"),
+            Icon = "fas fa-road"
         });
     }
 
@@ -34,10 +36,10 @@ public static class AppDbContextSeed
 
         context.SubCategories.AddRange(new()
         {
-            Name = "Toilet"
+            Name = LocalizedString.From("Toilet", "Toilet")
         }, new()
         {
-            Name = "Vejskade"
+            Name = LocalizedString.From("Vejskade", "Road damage")
         });
     }
 
@@ -52,7 +54,8 @@ public static class AppDbContextSeed
             
             Description = "Der er et stor hul i vejen på arbejde",
             Category = category,
-            GeographicLocation = GeographicLocation.From(54, 54)
+            GeographicLocation = GeographicLocation.From(54, 54),
+            IpAddress = IPAddress.Parse("200.200.200.200")
         }, new()
         {
             
@@ -69,7 +72,8 @@ public static class AppDbContextSeed
                 {
                     Id = Guid.NewGuid()
                 }
-            }
+            },
+            IpAddress = IPAddress.Parse("200.200.200.200")
         });
     }
 }

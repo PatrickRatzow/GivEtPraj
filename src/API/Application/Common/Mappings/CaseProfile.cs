@@ -1,4 +1,6 @@
-﻿namespace Commentor.GivEtPraj.Application.Common.Mappings;
+﻿using Commentor.GivEtPraj.Domain.ValueObjects;
+
+namespace Commentor.GivEtPraj.Application.Common.Mappings;
 
 public class CaseProfile : Profile
 {
@@ -14,5 +16,7 @@ public class CaseProfile : Profile
             );
         CreateMap<Category, CategoryDto>();
         CreateMap<SubCategory, SubCategoryDto>();
+
+        CreateMap<LocalizedString, string>().ConvertUsing(new LocalizedStringConverter());
     }
 }
