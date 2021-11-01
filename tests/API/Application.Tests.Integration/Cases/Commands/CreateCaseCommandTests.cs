@@ -25,7 +25,7 @@ public class CreateCaseCommandTests : TestBase
         var latitude = 0;
         var priority = Priority.Low;
         var ipAddress = IPAddress.Parse("127.0.0.1");
-        var command = new CreateCaseCommand(description, images, category.Name, longitude, latitude, priority, ipAddress);
+        var command = new CreateCaseCommand(description, images, category.Name.English, longitude, latitude, priority, ipAddress);
 
         // Act
         var result = await Send(command);

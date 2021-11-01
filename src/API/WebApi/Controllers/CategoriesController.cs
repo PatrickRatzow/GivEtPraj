@@ -1,4 +1,5 @@
 ﻿using Commentor.GivEtPraj.Application.Categories.Queries;
+using Commentor.GivEtPraj.Application.Contracts;
 
 namespace Commentor.GivEtPraj.WebApi.Controllers;
 
@@ -14,9 +15,9 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> FindAllCategories(CancellationToken cancellationToken)
+    public async Task<IActionResult> FindAllCategories(Language language, CancellationToken cancellationToken)
     {
-        var query = new FindAllCategoriesQuery();
+        var query = new FindAllCategoriesQuery(language);
         var result = await _mediator.Send(query, cancellationToken);
 
         return Ok(result);

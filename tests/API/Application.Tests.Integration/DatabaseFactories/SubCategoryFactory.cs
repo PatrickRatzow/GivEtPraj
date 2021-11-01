@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Commentor.GivEtPraj.Domain.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration.DatabaseFactories;
@@ -44,7 +45,7 @@ public class SubCategoryFactory : DatabaseFactory
 
         return Add(new SubCategory
         {
-            Name = name,
+            Name = LocalizedString.From(name, name),
             Category = category
         });
     }
