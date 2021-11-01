@@ -68,8 +68,6 @@ public class Startup
             });
         });
 
-
-
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddFluentValidation();
         services.AddValidatorsFromAssembly(typeof(CreateCaseRequest).Assembly);
@@ -102,6 +100,8 @@ public class Startup
         app.UseHttpsRedirection();
 
         app.UseRouting();
+
+        app.UseLanguageService();
 
         app.UseAuthentication();
         app.UseAuthorization();

@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Commentor.GivEtPraj.Application.Common.Behaviors;
+using Commentor.GivEtPraj.Application.Common.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,14 @@ public static class DependencyInjection
     {
         services.AddMediatR(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        services.Remove(services.First(sp => sp.ServiceType == typeof(IMapper)));
+        services.AddScoped<IMapper>(sp =>
+            new LocalizedMapper(
+                sp.GetRequiredService<IConfigurationProvider>(),
+                sp.GetService!,
+                sp.GetRequiredService<ILanguageService>()
+            )
+        );
 
         services.AddFluentValidation();
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));

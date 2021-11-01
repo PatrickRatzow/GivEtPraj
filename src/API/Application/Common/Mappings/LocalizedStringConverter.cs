@@ -9,20 +9,21 @@ public class LocalizedStringConverter : ITypeConverter<LocalizedString, string>
         return context.GetLanguage() switch
         {
             Language.DK => source.Danish,
-            Language.EN => source.English
+            Language.EN => source.English,
+            _ => source.English
         };
     }
 }
 
 public static class LocalizedStringConversionExtensions
 {
-    static readonly string LanguageContextKey = "Language";
+    private const string LanguageContextKey = "Language";
 
     public static Language GetLanguage(this ResolutionContext context)
     {
         if (context.Items.TryGetValue(LanguageContextKey, out var language))
         {
-            return (Language)language;
+            return (Language)language!;
         }
 
         throw new InvalidOperationException("Language not set");
@@ -35,4 +36,3 @@ public static class LocalizedStringConversionExtensions
         return options;
     }
 }
-

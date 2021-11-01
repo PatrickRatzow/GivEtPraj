@@ -29,6 +29,7 @@ public static class DependencyInjection
         services.AddSingleton<IFileStorage, AzureBlobFileStorage>();
         services.AddSingleton<IImageStorage, ImageStorage>();
         services.AddSingleton<IImageCompression, BitmapImageCompression>();
+        services.AddScoped<ILanguageService, LanguageService>();
 
         return services;
     }

@@ -1,9 +1,8 @@
-﻿using Commentor.GivEtPraj.Application.Common.Mappings;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Commentor.GivEtPraj.Application.Categories.Queries;
 
-public record FindAllCategoriesQuery(Language Language) : IRequest<List<CategoryDto>>;
+public record FindAllCategoriesQuery : IRequest<List<CategoryDto>>;
 
 public class FindAllCategoriesQueryHandler : IRequestHandler<FindAllCategoriesQuery, List<CategoryDto>>
 {
@@ -23,6 +22,6 @@ public class FindAllCategoriesQueryHandler : IRequestHandler<FindAllCategoriesQu
             .Include(category => category.SubCategories)
             .ToListAsync(cancellationToken);
 
-        return _mapper.Map<List<Category>, List<CategoryDto>>(categories, opts => opts.SetLanguage(request.Language));
+        return _mapper.Map<List<Category>, List<CategoryDto>>(categories);
     }
 }

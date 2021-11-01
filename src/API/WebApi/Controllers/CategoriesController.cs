@@ -15,9 +15,9 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> FindAllCategories(Language language, CancellationToken cancellationToken)
+    public async Task<IActionResult> FindAllCategories(CancellationToken cancellationToken)
     {
-        var query = new FindAllCategoriesQuery(language);
+        var query = new FindAllCategoriesQuery();
         var result = await _mediator.Send(query, cancellationToken);
 
         return Ok(result);
