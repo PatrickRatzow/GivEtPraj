@@ -6,7 +6,7 @@ public class CaseProfile : Profile
 {
     public CaseProfile()
     {
-        CreateMap<Case, CaseDto>();
+        CreateMap<BaseCase, CaseDto>();
         CreateMap<Picture, PictureDto>()
             .ForMember(
                 c => c.Url,

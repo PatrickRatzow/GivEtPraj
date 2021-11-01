@@ -32,7 +32,7 @@ public class CreateCaseCommandTests : TestBase
 
         // Assert
         result.Value.Should().BeOfType<CaseDto>();
-        var dbResult = await Find<Case>(result.Value.As<CaseDto>().Id);
+        var dbResult = await Find<BaseCase>(result.Value.As<CaseDto>().Id);
         dbResult.Should().NotBeNull();
     }
 
@@ -54,7 +54,7 @@ public class CreateCaseCommandTests : TestBase
 
         // Assert
         result.Value.Should().BeOfType<InvalidCategory>();
-        var dbCount = await Count<Case>();
+        var dbCount = await Count<BaseCase>();
         dbCount.Should().Be(0);
     }
 }

@@ -22,7 +22,7 @@ namespace Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Case", b =>
+            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.BaseCase", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,9 +33,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasMaxLength(4096)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IpAddress")
@@ -50,6 +49,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Cases");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("BaseCase");
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.CaseUpdate", b =>
@@ -159,6 +160,30 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Case", b =>
                 {
+                    b.HasBaseType("Commentor.GivEtPraj.Domain.Entities.BaseCase");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Case");
+                });
+
+            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.MiscellaneousCase", b =>
+                {
+                    b.HasBaseType("Commentor.GivEtPraj.Domain.Entities.BaseCase");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("MiscellaneousCase");
+                });
+
+            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.BaseCase", b =>
+                {
                     b.HasOne("Commentor.GivEtPraj.Domain.Entities.Category", "Category")
                         .WithMany("Cases")
                         .HasForeignKey("CategoryId")
@@ -167,7 +192,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.OwnsOne("Commentor.GivEtPraj.Domain.ValueObjects.GeographicLocation", "GeographicLocation", b1 =>
                         {
-                            b1.Property<int>("CaseId")
+                            b1.Property<int>("BaseCaseId")
                                 .HasColumnType("int");
 
                             b1.Property<double>("Latitude")
@@ -176,12 +201,12 @@ namespace Infrastructure.Persistence.Migrations
                             b1.Property<double>("Longitude")
                                 .HasColumnType("float");
 
-                            b1.HasKey("CaseId");
+                            b1.HasKey("BaseCaseId");
 
                             b1.ToTable("Cases");
 
                             b1.WithOwner()
-                                .HasForeignKey("CaseId");
+                                .HasForeignKey("BaseCaseId");
                         });
 
                     b.Navigation("Category");
@@ -192,7 +217,7 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.CaseUpdate", b =>
                 {
-                    b.HasOne("Commentor.GivEtPraj.Domain.Entities.Case", "Case")
+                    b.HasOne("Commentor.GivEtPraj.Domain.Entities.BaseCase", "BaseCase")
                         .WithMany("CaseUpdates")
                         .HasForeignKey("CaseId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -204,7 +229,7 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Case");
+                    b.Navigation("BaseCase");
 
                     b.Navigation("Employee");
                 });
@@ -240,13 +265,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Picture", b =>
                 {
-                    b.HasOne("Commentor.GivEtPraj.Domain.Entities.Case", "Case")
+                    b.HasOne("Commentor.GivEtPraj.Domain.Entities.BaseCase", "BaseCase")
                         .WithMany("Pictures")
                         .HasForeignKey("CaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Case");
+                    b.Navigation("BaseCase");
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.SubCategory", b =>
@@ -286,7 +311,7 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Case", b =>
+            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.BaseCase", b =>
                 {
                     b.Navigation("CaseUpdates");
 

@@ -49,17 +49,18 @@ public static class AppDbContextSeed
         if (hasAny) return;
 
         var category = context.Categories.First();
-        context.Cases.AddRange(new()
+        context.Cases.AddRange(new Case()
         {
             
-            Description = "Der er et stor hul i vejen på arbejde",
+            Comment = "Der er et stor hul i vejen på arbejde",
             Category = category,
             GeographicLocation = GeographicLocation.From(54, 54),
             IpAddress = IPAddress.Parse("200.200.200.200")
-        }, new()
+
+        }, new Case()
         {
             
-            Description = "Hul vejen",
+            Comment = "Hul vejen",
             Category = category,
             GeographicLocation = GeographicLocation.From(53, 53.5),
             Pictures = new()

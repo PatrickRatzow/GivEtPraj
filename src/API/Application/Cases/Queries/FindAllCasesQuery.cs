@@ -22,6 +22,6 @@ public class FindAllCasesQueryHandler : IRequestHandler<FindAllCasesQuery, List<
             .Include(c => c.Category)
             .ToListAsync(cancellationToken);
 
-        return _mapper.Map<List<Case>, List<CaseDto>>(cases);
+        return _mapper.Map<List<BaseCase>, List<CaseDto>>(cases);
     }
 }
