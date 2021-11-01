@@ -9,6 +9,7 @@ namespace Infrastructure.Persistence
         public DbSet<Category> Categories { get; set; }
         public DbSet<SubCategory> SubCategories {  get; set; }
         public DbSet<Employee> Employees {  get; set; }
+        public DbSet<QueueKey> QueueKeys { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
