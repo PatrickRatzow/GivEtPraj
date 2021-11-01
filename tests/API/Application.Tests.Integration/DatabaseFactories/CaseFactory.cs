@@ -20,7 +20,7 @@ public class CaseFactory : DatabaseFactory
     {
     }
 
-    public Case Create(Category category, string? description = null, Priority? priority = null, 
+    public BaseCase Create(Category category, string? description = null, Priority? priority = null, 
         IPAddress? ipAddress = null)
     {
         lock (CreationLock)
@@ -29,7 +29,7 @@ public class CaseFactory : DatabaseFactory
         }
     }
 
-    public List<Case> CreateMany(Category category, int amount)
+    public List<BaseCase> CreateMany(Category category, int amount)
     {
         lock (CreationLock)
         {
@@ -39,7 +39,7 @@ public class CaseFactory : DatabaseFactory
         }
     }
 
-    private Case CreateCase(Category category, string? description = null, Priority? priority = null, 
+    private BaseCase CreateCase(Category category, string? description = null, Priority? priority = null, 
         IPAddress? ipAddress = null)
     {
         Created++;
@@ -50,7 +50,7 @@ public class CaseFactory : DatabaseFactory
 
         return Add(new Case
         {           
-            Description = description,
+            Comment = description,
             Category = category,
             Priority = (Priority)priority,
             IpAddress = ipAddress

@@ -58,7 +58,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
 
         var newCase = new Case
         {
-            Description = request.Description,
+            Comment = request.Description,
             Pictures = images,
             Category = category,
             GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude),
