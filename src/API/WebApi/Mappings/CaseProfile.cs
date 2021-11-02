@@ -15,5 +15,7 @@ public class CaseProfile : Profile
                     d => d.Images.Select(i => new MemoryStream(Convert.FromBase64String(i)))
                 )
             );
+
+        CreateMap<CreateQueueKeyRequest, CreateQueueKeyCommand>();
     }
 }

@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import { create, fileTrayFull } from "ionicons/icons";
+import { useQueueKeys } from "@/compositions/queueKeys";
 
 const { t } = useI18n();
+const { key, createKey } = useQueueKeys();
+
+onMounted(async () => {
+  if (key.value !== undefined) return;
+
+  await createKey();
+});
 </script>
 
 <template>

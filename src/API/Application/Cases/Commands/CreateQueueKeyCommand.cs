@@ -1,8 +1,22 @@
 ﻿namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
-public record CreateQueueKeyCommand(Guid DeviceId, float CaptchaScore) : IRequest<QueueKeyDto>;
+public class CreateQueueKeyCommand : IRequest<OneOf<QueueKeyDto>>
+{
+    public Guid DeviceId { get; }
+    public float CaptchaScore { get; }
 
-public class CreateQueueKeyCommandHandler : IRequestHandler<CreateQueueKeyCommand, QueueKeyDto>
+    public CreateQueueKeyCommand()
+    {
+    }
+    
+    public CreateQueueKeyCommand(Guid deviceId, float captchaScore)
+    {
+        DeviceId = deviceId;
+        captchaScore = captchaScore;
+    } 
+}
+
+public class CreateQueueKeyCommandHandler : IRequestHandler<CreateQueueKeyCommand, OneOf<QueueKeyDto>>
 {
     private readonly IAppDbContext _context;
     private readonly IMapper _mapper;
@@ -13,12 +27,13 @@ public class CreateQueueKeyCommandHandler : IRequestHandler<CreateQueueKeyComman
         _mapper = mapper;
     }
 
-    public async Task<QueueKeyDto> Handle(CreateQueueKeyCommand request, CancellationToken cancellationToken)
+    public async Task<OneOf<QueueKeyDto>> Handle(CreateQueueKeyCommand request, CancellationToken cancellationToken)
     {
         var queueKey = _context.QueueKeys.Add(new()
         {
             DeviceId = request.DeviceId,
             CaptchaScore = request.CaptchaScore,
+            CreatedAt = DateTimeOffset.UtcNow,
             ExpiresAt = DateTimeOffset.UtcNow.AddDays(30)
         });
 
