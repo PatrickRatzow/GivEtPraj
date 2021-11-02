@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { useLocalizedRoutes } from "@/compositions/localizedRoutes";
 import { useNetwork } from "@/compositions/network";
+import { useLocale } from "@/compositions/locale";
 import { useCreateCaseStore } from "@/stores/create-case";
 import { Geolocation } from "@capacitor/geolocation";
-import { map, tileLayer, marker, LeafletMouseEvent, Marker } from "leaflet";
+import { map, tileLayer, marker, LeafletMouseEvent, Marker, control, Control } from "leaflet";
 
 const localizedRoutes = useLocalizedRoutes();
 const router = useRouter();
 const createCase = useCreateCaseStore();
+const locale = useLocale();
 const { t } = useI18n();
 const network = useNetwork();
 
@@ -15,10 +17,44 @@ const loadMap = async () => {
   try {
     const pos = await Geolocation.getCurrentPosition();
 
-    const myMap = map("mapid").setView([pos.coords.latitude, pos.coords.longitude], 18);
-    tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(myMap);
+    let streets = tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+      attribution:
+        'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      id: "mapbox/streets-v11",
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: "pk.eyJ1Ijoic2ltb25uaWVzZSIsImEiOiJja3ZnZG9yZm0wMWxzMnVwM3Nlcjk3YmpiIn0.p1TDwifWqx1kcYFnBqI_fg",
+    });
+    const satellite = tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+      attribution:
+        'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      id: "mapbox/satellite-streets-v11",
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: "pk.eyJ1Ijoic2ltb25uaWVzZSIsImEiOiJja3ZnZG9yZm0wMWxzMnVwM3Nlcjk3YmpiIn0.p1TDwifWqx1kcYFnBqI_fg",
+    });
+
+    const myMap = map("mapid", { layers: [streets] }).setView([pos.coords.latitude, pos.coords.longitude], 18);
+
+    const addLayers = () => {
+      const baseMaps = {} as Control.LayersObject;
+      baseMaps[t("create-case.map.layers.street")] = streets;
+      baseMaps[t("create-case.map.layers.satellite")] = satellite;
+
+      control.layers(baseMaps).addTo(myMap);
+    };
+
+    addLayers();
+    watch(
+      () => locale.language,
+      () => {
+        myMap.eachLayer((layer) => myMap.removeLayer(layer));
+
+        addLayers();
+      }
+    );
 
     let m: Marker | undefined;
     const setLocation = (location: GeographicLocation) => {

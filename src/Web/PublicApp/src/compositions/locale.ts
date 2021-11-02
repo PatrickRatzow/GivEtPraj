@@ -1,6 +1,8 @@
 import { Device } from "@capacitor/device";
 
 export function useLocale() {
+	const language = ref<string>();
+	
 	async function getLanguageCode(): Promise<Language> {
 		const languageCode = await Device.getLanguageCode();
 		if (languageCode.value == "da") return "da";
@@ -8,5 +10,5 @@ export function useLocale() {
 		return "en";
 	}
 
-	return { getLanguageCode };
+	return { language, getLanguageCode };
 }
