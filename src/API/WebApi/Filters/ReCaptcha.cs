@@ -4,12 +4,14 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Commentor.GivEtPraj.WebApi.Filters;
 
 public class ReCaptcha : Attribute, IAsyncAuthorizationFilter
 {
     private readonly float _minimumScore;
+    private ILogger<ReCaptcha>? _logger;
     private ReCaptchaSecrets? _secrets;
 
     public ReCaptcha(float minimumScore = 0.6f)
@@ -46,6 +48,8 @@ public class ReCaptcha : Attribute, IAsyncAuthorizationFilter
 
     private void FetchSecretsFromConfig(AuthorizationFilterContext context)
     {
+        _logger ??= context.HttpContext.RequestServices.GetRequiredService<ILogger<ReCaptcha>>();
+        
         if (_secrets is not null) return;
 
         var configuration = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
@@ -63,6 +67,9 @@ public class ReCaptcha : Attribute, IAsyncAuthorizationFilter
         var content = await resp.Content.ReadAsStringAsync();
         var captcha = JsonSerializer.Deserialize<ReCaptchaV3Response>(content);
 
+        _logger?.LogInformation("ReCAPTCHA V3 score was {CaptchaScore} and it had to be at least {MinimumScore}", 
+            captcha?.Score ?? 0f, _minimumScore);
+        
         const float scoreEpsilon = 0.01f;
         if (captcha?.Score < _minimumScore - scoreEpsilon)
             context.Result = new ForbidResult();
@@ -80,6 +87,8 @@ public class ReCaptcha : Attribute, IAsyncAuthorizationFilter
         var content = await resp.Content.ReadAsStringAsync();
         var captcha = JsonSerializer.Deserialize<ReCaptchaV2Response>(content);
 
+        _logger?.LogInformation("ReCAPTCHA V2 result: {CaptchaResult}", captcha!.Success);
+        
         if (!captcha!.Success)
             context.Result = new ForbidResult();
 
