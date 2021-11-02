@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { useLocalizedRoutes } from "@/compositions/localizedRoutes";
 import { useCreateCaseStore } from "@/stores/create-case";
 import { useMainStore } from "@/stores/main";
 
 const router = useRouter();
 const createCase = useCreateCaseStore();
 const main = useMainStore();
-const localizedRoutes = useLocalizedRoutes();
 const { t } = useI18n();
 
 main.fetchCategories();
@@ -22,24 +20,13 @@ const selectCategory = (category: Category) => {
   createCase.category = category;
   createCase.subCategories = [];
 };
-
-const goToNext = async () => {
-  const route = await localizedRoutes.getPicturesUrl();
-
-  router.push(route);
-};
-
-const backUrl = ref<string>();
-onMounted(async () => {
-  backUrl.value = await localizedRoutes.getLocationUrl();
-});
 </script>
 
 <template>
   <ion-page>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <back-button :url="backUrl"></back-button>
+        <back-button url="/create-praj/location"></back-button>
       </ion-buttons>
       <ion-title>{{ t("create-case.category.title") }}</ion-title>
     </ion-toolbar>
@@ -66,7 +53,7 @@ onMounted(async () => {
             </ion-radio-group>
           </ion-list>
         </div>
-        <ion-button class="flex flex-row my-6 mx-12 float-bottom" @click="goToNext">
+        <ion-button class="flex flex-row my-6 mx-12 float-bottom" @click="router.push('/create-praj/pictures')">
           {{ t("navigation.next") }}
         </ion-button>
       </div>

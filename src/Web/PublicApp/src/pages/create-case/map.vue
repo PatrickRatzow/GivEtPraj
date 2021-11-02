@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { useLocalizedRoutes } from "@/compositions/localizedRoutes";
 import { useNetwork } from "@/compositions/network";
 import { useLocale } from "@/compositions/locale";
 import { useCreateCaseStore } from "@/stores/create-case";
 import { Geolocation } from "@capacitor/geolocation";
 import { map, tileLayer, marker, LeafletMouseEvent, Marker, control, Control, circle, point } from "leaflet";
 
-const localizedRoutes = useLocalizedRoutes();
 const router = useRouter();
 const createCase = useCreateCaseStore();
 const locale = useLocale();
@@ -101,12 +99,6 @@ const getStatus = () => network.status.value?.connected;
 watch(getStatus, loadMap);
 
 const isPositionValid = computed(() => createCase.geographicLocation);
-
-const nextPage = async () => {
-  if (!isPositionValid.value) return;
-
-  router.push(await localizedRoutes.getCategoryUrl());
-};
 </script>
 
 <template>
@@ -136,7 +128,7 @@ const nextPage = async () => {
         "
         type="button"
         :class="[isPositionValid ? ['bg-green-500 text-white'] : ['bg-gray-200 text-black border-red-500 opacity-90']]"
-        @click="nextPage"
+        @click="router.push('/create-praj/category')"
       >
         {{ isPositionValid ? t("create-case.map.confirm-button.valid") : t("create-case.map.confirm-button.invalid") }}
       </button>
