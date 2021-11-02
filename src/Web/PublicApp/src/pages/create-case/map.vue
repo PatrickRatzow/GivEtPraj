@@ -4,7 +4,7 @@ import { useNetwork } from "@/compositions/network";
 import { useLocale } from "@/compositions/locale";
 import { useCreateCaseStore } from "@/stores/create-case";
 import { Geolocation } from "@capacitor/geolocation";
-import { map, tileLayer, marker, LeafletMouseEvent, Marker, control, Control } from "leaflet";
+import { map, tileLayer, marker, LeafletMouseEvent, Marker, control, Control, circle, point } from "leaflet";
 
 const localizedRoutes = useLocalizedRoutes();
 const router = useRouter();
@@ -55,6 +55,23 @@ const loadMap = async () => {
         addLayers();
       }
     );
+
+    circle([pos.coords.latitude, pos.coords.longitude], {
+      color: "blue",
+      opacity: 1,
+      weight: 0.5,
+      fillColor: "#96c3eb",
+      fillOpacity: 0.6,
+      radius: pos.coords.accuracy,
+    }).addTo(myMap);
+
+    circle([pos.coords.latitude, pos.coords.longitude], {
+      color: "white",
+      fillColor: "blue",
+      weight: 2,
+      fillOpacity: 1,
+      radius: 1.5,
+    }).addTo(myMap);
 
     let m: Marker | undefined;
     const setLocation = (location: GeographicLocation) => {

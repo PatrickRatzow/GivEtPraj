@@ -27,8 +27,8 @@ public class CreateCaseCommandTests : TestBase
         var latitude = 0;
         var priority = Priority.Low;
         var ipAddress = IPAddress.Parse("127.0.0.1");
-        var command = new CreateCaseCommand(deviceId, description, images, category.Name.English, longitude, latitude,
-            priority, ipAddress);
+
+        var command = new CreateBaseCaseCommand(new Case(), deviceId, images, category.Name.English, longitude, latitude, priority, ipAddress, description);
 
         // Act
         var result = await Send(command);
@@ -37,6 +37,11 @@ public class CreateCaseCommandTests : TestBase
         result.Value.Should().BeOfType<int>();
         var dbResult = await Find<BaseCase>(result.Value.As<int>());
         dbResult.Should().NotBeNull();
+    }
+
+    public async Task ShouldCreateMiscellaneousCase()
+    {
+        
     }
 
     [Test]
@@ -51,8 +56,8 @@ public class CreateCaseCommandTests : TestBase
         var latitude = 0;
         var priority = Priority.Low;
         var ipAddress = IPAddress.Parse("127.0.0.1");
-        var command = new CreateCaseCommand(deviceId, description, images, categoryName, longitude, latitude, priority,
-            ipAddress);
+        
+        var command = new CreateBaseCaseCommand(new Case(), deviceId, images, categoryName, longitude, latitude, priority, ipAddress, description);
 
         // Act
         var result = await Send(command);
