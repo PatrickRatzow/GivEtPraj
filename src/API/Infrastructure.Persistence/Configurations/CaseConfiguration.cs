@@ -8,6 +8,9 @@ public class BaseCaseConfiguration : IEntityTypeConfiguration<BaseCase>
             .WithOne(cp => cp.BaseCase)
             .HasForeignKey(cp => cp.CaseId);
 
+        builder.Property(c => c.DeviceId)
+            .IsRequired();
+
         builder.Property(c => c.Priority);
 
         builder.Property(c => c.IpAddress);

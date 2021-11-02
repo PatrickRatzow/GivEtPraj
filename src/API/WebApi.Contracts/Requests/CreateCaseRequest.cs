@@ -4,13 +4,12 @@ namespace Commentor.GivEtPraj.WebApi.Contracts.Requests;
 
 public class CreateCaseRequest
 {
-
     public CreateCaseRequest()
     {
     }
 
     public CreateCaseRequest(string title, string description, List<string> images, string category, double longitude,
-        double latitude)
+        double latitude, Guid deviceId)
     {
         Title = title;
         Description = description;
@@ -18,9 +17,11 @@ public class CreateCaseRequest
         Category = category;
         Longitude = longitude;
         Latitude = latitude;
+        DeviceId = deviceId;
     }
 
     public string Title { get; set; }
+    public Guid DeviceId { get; set; }
     public string Description { get; set; }
     public List<string> Images { get; set; } = new List<string>();
     public string Category { get; set; }
@@ -55,5 +56,8 @@ public class CreateCaseRequestValidator : AbstractValidator<CreateCaseRequest>
 
         RuleFor(c => c.Category)
             .NotEmpty().WithMessage("Der mangler en kategori");
+
+        RuleFor(d => d.DeviceId)
+            .NotNull();
     }
 }

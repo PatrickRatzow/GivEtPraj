@@ -1,4 +1,6 @@
-﻿namespace Commentor.GivEtPraj.Application.Common.Behaviors;
+﻿using System.Linq;
+
+namespace Commentor.GivEtPraj.Application.Common.Behaviors;
 
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>

@@ -1,23 +1,23 @@
-﻿using Commentor.GivEtPraj.Domain.Enums;
+﻿using System.Linq;
+using Commentor.GivEtPraj.Domain.Enums;
 using Commentor.GivEtPraj.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
-using Commentor.GivEtPraj.Application.Common.Security;
+using FluentValidation;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
-[ReCaptcha]
-public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory>>
+public class CreateBaseCaseCommand : IRequest<OneOf<int, InvalidCategory>>
 {
-    public CreateCaseCommand()
-    {
-    }
-
-    public CreateCaseCommand(Guid deviceId, string description, List<Stream> images, string category, double longitude,
+    
+public CreateBaseCaseCommand(BaseCase caseType, Guid deviceId, List<Stream> images, string category, double longitude,
         double latitude,
-        Priority priority, IPAddress ipAddress)
+        Priority priority, IPAddress ipAddress,
+        string description = "", string comment = "")
     {
         DeviceId = deviceId;
+        CaseType = caseType;
+        Comment = comment;
         Description = description;
         Images = images;
         Category = category;
@@ -27,7 +27,9 @@ public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory>>
         IpAddress = ipAddress;
     }
 
-    public string Description { get; set; }
+    public BaseCase CaseType { get; set; }
+    public string Comment { get; set; }
+    public string? Description { get; set; }
     public List<Stream> Images { get; set; } = new();
     public string Category { get; set; }
     public double Longitude { get; set; }
@@ -37,13 +39,14 @@ public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory>>
     public Guid DeviceId { get; set; }
 }
 
-public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<int, InvalidCategory>>
+
+public class CreateBaseCaseCommandHandler : IRequestHandler<CreateBaseCaseCommand, OneOf<int, InvalidCategory>>
 {
     private readonly IAppDbContext _db;
     private readonly IImageStorage _imageStorage;
     private readonly IMapper _mapper;
 
-    public CreateCaseCommandHandler(IAppDbContext db, IMapper mapper, IImageStorage imageStorage)
+    public CreateBaseCaseCommandHandler(IAppDbContext db, IMapper mapper, IImageStorage imageStorage)
     {
         _db = db;
         _mapper = mapper;
@@ -51,7 +54,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
     }
 
     public async Task<OneOf<int, InvalidCategory>>
-        Handle(CreateCaseCommand request, CancellationToken cancellationToken)
+        Handle(CreateBaseCaseCommand request, CancellationToken cancellationToken)
     {
         var category = await _db.Categories
             .FirstOrDefaultAsync(c => request.Category == c.Name.English, cancellationToken);
@@ -76,7 +79,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         return newCase.Id;
     }
 
-    private async Task<List<Picture>> CreateImages(CreateCaseCommand request)
+    private async Task<List<Picture>> CreateImages(CreateBaseCaseCommand request)
     {
         var pictures = new List<Picture>();
         var list = new List<(Stream Image, Guid Id)>();
@@ -105,7 +108,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
     }
 }
 
-public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
+public class CreateCaseCommandValidator : AbstractValidator<CreateBaseCaseCommand>
 {
     public CreateCaseCommandValidator()
     {

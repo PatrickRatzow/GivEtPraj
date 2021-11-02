@@ -4,6 +4,9 @@ tabs:
 create-case:
   map:
     title: "Choose Location"
+    layers:
+      street: "Streets"
+      satellite: "Satellite"
     confirm-button:
       valid: "Accept Location"
       invalid: "Select Location"
