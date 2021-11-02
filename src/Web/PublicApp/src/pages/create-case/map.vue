@@ -57,17 +57,18 @@ const loadMap = async () => {
     );
 
     circle([pos.coords.latitude, pos.coords.longitude], {
-      color: "#96c3eb",
-      opacity: 0.2,
+      color: "blue",
+      opacity: 1,
+      weight: 0.5,
       fillColor: "#96c3eb",
       fillOpacity: 0.6,
       radius: pos.coords.accuracy,
     }).addTo(myMap);
 
     circle([pos.coords.latitude, pos.coords.longitude], {
-      color: "#578dbd",
-      fillColor: "#96c3eb",
-      weight: 0.5,
+      color: "white",
+      fillColor: "blue",
+      weight: 2,
       fillOpacity: 1,
       radius: 1.5,
     }).addTo(myMap);
