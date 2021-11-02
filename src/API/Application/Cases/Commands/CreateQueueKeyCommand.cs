@@ -1,18 +1,19 @@
-﻿namespace Commentor.GivEtPraj.Application.Cases.Commands;
+﻿using Commentor.GivEtPraj.Application.Common.Security;
 
+namespace Commentor.GivEtPraj.Application.Cases.Commands;
+
+[ReCaptcha]
 public class CreateQueueKeyCommand : IRequest<OneOf<QueueKeyDto>>
 {
     public Guid DeviceId { get; }
-    public float CaptchaScore { get; }
 
     public CreateQueueKeyCommand()
     {
     }
     
-    public CreateQueueKeyCommand(Guid deviceId, float captchaScore)
+    public CreateQueueKeyCommand(Guid deviceId)
     {
         DeviceId = deviceId;
-        captchaScore = captchaScore;
     } 
 }
 
@@ -32,7 +33,7 @@ public class CreateQueueKeyCommandHandler : IRequestHandler<CreateQueueKeyComman
         var queueKey = _context.QueueKeys.Add(new()
         {
             DeviceId = request.DeviceId,
-            CaptchaScore = request.CaptchaScore,
+            CaptchaScore = 1,
             CreatedAt = DateTimeOffset.UtcNow,
             ExpiresAt = DateTimeOffset.UtcNow.AddDays(30)
         });

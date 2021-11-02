@@ -2,12 +2,13 @@
 using Commentor.GivEtPraj.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using Commentor.GivEtPraj.Application.Common.Security;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
+[ReCaptcha]
 public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory>>
 {
-
     public CreateCaseCommand()
     {
     }

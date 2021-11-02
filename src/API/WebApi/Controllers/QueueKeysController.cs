@@ -1,5 +1,4 @@
 ﻿using Commentor.GivEtPraj.Application.Cases.Commands;
-using Commentor.GivEtPraj.WebApi.Filters;
 
 namespace Commentor.GivEtPraj.WebApi.Controllers;
 
@@ -17,7 +16,6 @@ public class QueueKeysController : ControllerBase
     }
 
     [HttpPost]
-    [ReCaptcha]
     public async Task<IActionResult> CreateQueueKey([FromBody] CreateQueueKeyRequest request, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<CreateQueueKeyRequest, CreateQueueKeyCommand>(request);

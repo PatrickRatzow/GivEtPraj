@@ -10,6 +10,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        services.AddHttpClient();
+        
         services.AddMediatR(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.Remove(services.First(sp => sp.ServiceType == typeof(IMapper)));
@@ -23,6 +25,7 @@ public static class DependencyInjection
 
         services.AddFluentValidation();
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ReCaptchaBehavior<,>));
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         return services;
