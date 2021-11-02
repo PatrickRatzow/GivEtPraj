@@ -47,6 +47,12 @@ declare global {
 		router: Router;
 	}
 
+	interface QueueKey {
+		id: string;
+		createdAt: Date;
+		expiresAt: Date;
+	}
+
 	export type AppModule = (options: ModuleOptions) => Promise<void>;
 	export type Language = "en" | "da";
 }

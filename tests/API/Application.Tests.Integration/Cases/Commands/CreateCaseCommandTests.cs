@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -19,20 +20,22 @@ public class CreateCaseCommandTests : TestBase
 
         await Database.Save();
 
+        var deviceId = Guid.NewGuid();
         var description = "An example description";
         var images = new List<Stream>();
         var longitude = 0;
         var latitude = 0;
         var priority = Priority.Low;
         var ipAddress = IPAddress.Parse("127.0.0.1");
-        var command = new CreateCaseCommand(description, images, category.Name.English, longitude, latitude, priority, ipAddress);
+        var command = new CreateCaseCommand(deviceId, description, images, category.Name.English, longitude, latitude,
+            priority, ipAddress);
 
         // Act
         var result = await Send(command);
 
         // Assert
-        result.Value.Should().BeOfType<CaseDto>();
-        var dbResult = await Find<BaseCase>(result.Value.As<CaseDto>().Id);
+        result.Value.Should().BeOfType<int>();
+        var dbResult = await Find<BaseCase>(result.Value.As<int>());
         dbResult.Should().NotBeNull();
     }
 
@@ -40,6 +43,7 @@ public class CreateCaseCommandTests : TestBase
     public async Task ShouldNotCreateCaseIfCategoryDoesNotExist()
     {
         // Arrange
+        var deviceId = Guid.Empty;
         var description = "An example description";
         var images = new List<Stream>();
         var categoryName = "Some category";
@@ -47,7 +51,8 @@ public class CreateCaseCommandTests : TestBase
         var latitude = 0;
         var priority = Priority.Low;
         var ipAddress = IPAddress.Parse("127.0.0.1");
-        var command = new CreateCaseCommand(description, images, categoryName, longitude, latitude, priority, ipAddress);
+        var command = new CreateCaseCommand(deviceId, description, images, categoryName, longitude, latitude, priority,
+            ipAddress);
 
         // Act
         var result = await Send(command);

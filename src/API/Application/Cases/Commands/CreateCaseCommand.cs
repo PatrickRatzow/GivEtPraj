@@ -1,21 +1,23 @@
-﻿using Commentor.GivEtPraj.Domain.Enums;
+﻿using System.Linq;
+using Commentor.GivEtPraj.Domain.Enums;
 using Commentor.GivEtPraj.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using FluentValidation;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
 public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory>>
 {
-
     public CreateCaseCommand()
     {
     }
 
-    public CreateCaseCommand(string description, List<Stream> images, string category, double longitude,
+    public CreateCaseCommand(Guid deviceId, string description, List<Stream> images, string category, double longitude,
         double latitude,
         Priority priority, IPAddress ipAddress)
     {
+        DeviceId = deviceId;
         Description = description;
         Images = images;
         Category = category;
@@ -32,6 +34,7 @@ public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory>>
     public double Latitude { get; set; }
     public Priority Priority { get; set; }
     public IPAddress IpAddress { get; set; }
+    public Guid DeviceId { get; set; }
 }
 
 public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<int, InvalidCategory>>
@@ -63,7 +66,8 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
             Category = category,
             GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude),
             Priority = request.Priority,
-            IpAddress = request.IpAddress
+            IpAddress = request.IpAddress,
+            DeviceId = request.DeviceId
         };
 
         _db.Cases.Add(newCase);
@@ -129,6 +133,9 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
         RuleFor(x => x.IpAddress)
             .NotNull()
             .Must(x => ValidateIP(x.ToString()));
+
+        RuleFor(x => x.DeviceId)
+            .NotNull();
     }
 
     private bool ValidateIP(string ipString) => IPAddress.TryParse(ipString, out _);
