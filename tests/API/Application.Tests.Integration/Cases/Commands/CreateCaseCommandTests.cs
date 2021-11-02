@@ -28,7 +28,8 @@ public class CreateCaseCommandTests : TestBase
         var priority = Priority.Low;
         var ipAddress = IPAddress.Parse("127.0.0.1");
 
-        var command = new CreateBaseCaseCommand(new Case(), deviceId, images, category.Name.English, longitude, latitude, priority, ipAddress, description);
+        var command = new CreateCaseCommand(deviceId, images, category.Name.English,
+            longitude, latitude, priority, ipAddress, description);
 
         // Act
         var result = await Send(command);
@@ -39,9 +40,33 @@ public class CreateCaseCommandTests : TestBase
         dbResult.Should().NotBeNull();
     }
 
+    [Test]
     public async Task ShouldCreateMiscellaneousCase()
     {
-        
+        // Arrange
+        var category = Database.Factory<CategoryFactory>().Create();
+
+        await Database.Save();
+
+        var deviceId = Guid.NewGuid();
+        var comment = "An example Comment";
+        var images = new List<Stream>();
+        var subCategories = new string[2];
+        var longitude = 0;
+        var latitude = 0;
+        var priority = Priority.Low;
+        var ipAddress = IPAddress.Parse("127.0.0.1");
+
+        var command = new CreateCaseCommand( deviceId, images, category.Name.English, 
+            longitude, latitude, priority, ipAddress, comment, "", subCategories);
+
+        // Act
+        var result = await Send(command);
+
+        // Assert
+        result.Value.Should().BeOfType<int>();
+        var dbResult = await Find<BaseCase>(result.Value.As<int>());
+        dbResult.Should().NotBeNull();
     }
 
     [Test]
@@ -57,7 +82,7 @@ public class CreateCaseCommandTests : TestBase
         var priority = Priority.Low;
         var ipAddress = IPAddress.Parse("127.0.0.1");
         
-        var command = new CreateBaseCaseCommand(new Case(), deviceId, images, categoryName, longitude, latitude, priority, ipAddress, description);
+        var command = new CreateCaseCommand( deviceId, images, categoryName, longitude, latitude, priority, ipAddress, description);
 
         // Act
         var result = await Send(command);
