@@ -55,4 +55,13 @@ public class CasesController : ControllerBase
 
         return result.MatchResponse();
     }
+
+    [HttpGet("{deviceId:Guid}")]
+    public async Task<IActionResult> FindCasesByDeviceId(Guid deviceId, CancellationToken cancellationToken)
+    {
+        var query = new FindCasesByDeviceIdQuery(deviceId);
+        var result = await _mediator.Send(query, cancellationToken);
+
+        return result.MatchResponse();
+    }
 }
