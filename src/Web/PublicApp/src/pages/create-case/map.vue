@@ -2,8 +2,19 @@
 import { useNetwork } from "@/compositions/network";
 import { useLocale } from "@/compositions/locale";
 import { useCreateCaseStore } from "@/stores/create-case";
-import { Geolocation } from "@capacitor/geolocation";
-import { map, tileLayer, marker, LeafletMouseEvent, Marker, control, Control, circle, point } from "leaflet";
+import { Geolocation, WatchPositionCallback } from "@capacitor/geolocation";
+import {
+  map,
+  tileLayer,
+  marker,
+  LeafletMouseEvent,
+  Marker,
+  control,
+  Control,
+  circle,
+  point,
+  LeafletEvent,
+} from "leaflet";
 
 const router = useRouter();
 const createCase = useCreateCaseStore();
@@ -19,19 +30,29 @@ const loadMap = async () => {
       attribution:
         'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 18,
+      minZoom: 10,
       id: "mapbox/streets-v11",
       tileSize: 512,
       zoomOffset: -1,
       accessToken: "pk.eyJ1Ijoic2ltb25uaWVzZSIsImEiOiJja3ZnZG9yZm0wMWxzMnVwM3Nlcjk3YmpiIn0.p1TDwifWqx1kcYFnBqI_fg",
+      bounds: [
+        [57.765923, 7.482181],
+        [54.546490, 15.455954],
+      ],
     });
     const satellite = tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
       attribution:
         'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 18,
+      minZoom: 10,
       id: "mapbox/satellite-streets-v11",
       tileSize: 512,
       zoomOffset: -1,
       accessToken: "pk.eyJ1Ijoic2ltb25uaWVzZSIsImEiOiJja3ZnZG9yZm0wMWxzMnVwM3Nlcjk3YmpiIn0.p1TDwifWqx1kcYFnBqI_fg",
+      bounds: [
+        [57.765923, 7.482181],
+        [54.546490, 15.455954],
+      ],
     });
 
     const myMap = map("mapid", { layers: [streets] }).setView([pos.coords.latitude, pos.coords.longitude], 18);
@@ -54,7 +75,7 @@ const loadMap = async () => {
       }
     );
 
-    circle([pos.coords.latitude, pos.coords.longitude], {
+    let userAccuracy = circle([pos.coords.latitude, pos.coords.longitude], {
       color: "blue",
       opacity: 1,
       weight: 0.5,
@@ -63,13 +84,15 @@ const loadMap = async () => {
       radius: pos.coords.accuracy,
     }).addTo(myMap);
 
-    circle([pos.coords.latitude, pos.coords.longitude], {
+    let userPoint = circle([pos.coords.latitude, pos.coords.longitude], {
       color: "white",
       fillColor: "blue",
-      weight: 2,
+      weight: 4,
       fillOpacity: 1,
-      radius: 1.5,
+      radius: 21 - myMap.getZoom(),
     }).addTo(myMap);
+
+    myMap.on("zoom", () => userPoint.setRadius(Math.pow(2, 20 - myMap.getZoom())));
 
     let m: Marker | undefined;
     const setLocation = (location: GeographicLocation) => {
