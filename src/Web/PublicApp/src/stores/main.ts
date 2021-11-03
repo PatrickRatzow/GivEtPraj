@@ -12,6 +12,7 @@ export const useMainStore = defineStore("main", () => {
 			status: { color: "#00ff00", name: "Færdig" },
 			geographicLocation: { latitude: 0, longitude: 0 },
 			createdAt: new Date(),
+			deviceId: "0001",
 		},
 		{
 			id: 2,
@@ -22,6 +23,7 @@ export const useMainStore = defineStore("main", () => {
 			status: { color: "#00ff00", name: "Færdig" },
 			geographicLocation: { latitude: 0, longitude: 0 },
 			createdAt: new Date(2018, 11, 15),
+			deviceId: "001",
 		},
 	]);
 	const categories = ref<Category[]>([]);

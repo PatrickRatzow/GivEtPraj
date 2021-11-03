@@ -1,5 +1,6 @@
 import { Photo } from "@capacitor/camera";
 import { defineStore } from "pinia";
+import { Device } from "@capacitor/device";
 
 export const useCreateCaseStore = defineStore("createCase", () => {
 	const category = ref<Category | null>(null);
@@ -7,6 +8,7 @@ export const useCreateCaseStore = defineStore("createCase", () => {
 	const images = ref<Photo[]>([]);
 	const comment = ref<string | undefined>();
 	const geographicLocation = ref<GeographicLocation>();
+	const deviceId = Device.getId();
 
-	return { category, subCategories, images, comment, geographicLocation };
+	return { category, subCategories, images, comment, geographicLocation, deviceId };
 });
