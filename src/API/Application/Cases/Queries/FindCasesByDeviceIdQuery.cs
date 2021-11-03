@@ -30,7 +30,7 @@ public class FindAllCasesByDeviceIdQueryHandler : IRequestHandler<FindCasesByDev
 
 public class FindCasesByDeviceQueryByValidator : AbstractValidator<FindCasesByDeviceIdQuery>
 {
-    public FindCaseByDeviceIdQueryValidator()
+    public FindCasesByDeviceQueryByValidator()
     {
         RuleFor(x => x.DeviceId)
             .NotEmpty();
