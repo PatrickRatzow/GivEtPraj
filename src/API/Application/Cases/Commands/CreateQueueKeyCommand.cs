@@ -43,3 +43,12 @@ public class CreateQueueKeyCommandHandler : IRequestHandler<CreateQueueKeyComman
         return _mapper.Map<QueueKey, QueueKeyDto>(queueKey.Entity);
     }
 }
+
+public class CreateQueueKeyCommandValidator : AbstractValidator<CreateQueueKeyCommand>
+{
+    public CreateQueueKeyCommandValidator()
+    {
+        RuleFor(x => x.DeviceId)
+            .NotEmpty();
+    }
+}
