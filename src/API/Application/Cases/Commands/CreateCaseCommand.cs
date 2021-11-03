@@ -163,6 +163,7 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 
         RuleFor(x => x.DeviceId)
             .NotNull();
+        
         RuleFor(x => x.SubCategories.Length)
             .LessThanOrEqualTo(3)
             .NotNull()
