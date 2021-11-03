@@ -18,7 +18,6 @@ public class CasesController : ControllerBase
     }
 
     [HttpPost]
-    [ReCaptcha]
     public async Task<IActionResult> CreateCase([FromBody] CreateCaseRequest request,
         CancellationToken cancellationToken)
     {

@@ -16,7 +16,7 @@ const { t } = useI18n();
   <ion-page>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-back-button default-href="/opret-praj/billeder"></ion-back-button>
+        <ion-back-button default-href="/create-praj/pictures"></ion-back-button>
       </ion-buttons>
       <ion-title>{{ t("create-case.overview.title") }}</ion-title>
     </ion-toolbar>
