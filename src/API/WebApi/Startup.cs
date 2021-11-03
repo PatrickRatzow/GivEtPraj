@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Commentor.GivEtPraj.Application;
+using Commentor.GivEtPraj.Application.Common.Options;
 using Commentor.GivEtPraj.Infrastructure;
 using Commentor.GivEtPraj.WebApi.Filters;
 using FluentValidation;
@@ -17,8 +18,6 @@ namespace Commentor.GivEtPraj.WebApi;
 
 public class Startup
 {
-    private static readonly ILoggerFactory Logger = LoggerFactory.Create(builder => { builder.AddConsole(); });
-
     private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _env;
 
@@ -31,6 +30,8 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+        services.Configure<ReCaptchaOptions>(_configuration.GetSection(ReCaptchaOptions.ReCaptcha));
+        
         services.AddApplication();
         services.AddInfrastructure(_configuration, _env);
         services.AddCors();
@@ -39,7 +40,7 @@ public class Startup
         {
             c.SwaggerDoc("v1", new()
             {
-                Title = "Despawn.API",
+                Title = "GivEtPraj.API",
                 Version = "v1"
             });
             c.AddSecurityDefinition("Bearer", new()
@@ -95,8 +96,9 @@ public class Startup
             // Handle CORS for prod
         }
 
+        app.UseCustomExceptionHandler();
         app.UseFluentValidationExceptionHandler();
-
+        
         app.UseHttpsRedirection();
 
         app.UseRouting();

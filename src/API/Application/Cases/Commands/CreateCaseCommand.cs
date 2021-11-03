@@ -1,35 +1,35 @@
-﻿using System.Linq;
-using Commentor.GivEtPraj.Domain.Enums;
+﻿using Commentor.GivEtPraj.Domain.Enums;
 using Commentor.GivEtPraj.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
-using FluentValidation;
+using Commentor.GivEtPraj.Application.Common.Security;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
-public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory>>
+[ReCaptcha]
+public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory, InvalidSubCategories>>
 {
-    public CreateCaseCommand()
-    {
-    }
-
-    public CreateCaseCommand(Guid deviceId, string description, List<Stream> images, string category, double longitude,
-        double latitude,
-        Priority priority, IPAddress ipAddress)
+    public CreateCaseCommand(Guid deviceId, List<Stream> images, string category, double longitude,
+        double latitude, Priority priority, IPAddress ipAddress, string description = "", string comment = "",
+        string?[] subCategories = null)
     {
         DeviceId = deviceId;
+        Comment = comment;
         Description = description;
         Images = images;
         Category = category;
+        SubCategories = subCategories;
         Longitude = longitude;
         Latitude = latitude;
         Priority = priority;
         IpAddress = ipAddress;
     }
 
-    public string Description { get; set; }
-    public List<Stream> Images { get; set; } = new();
+    public string? Comment { get; }
+    public string? Description { get; }
+    public List<Stream> Images { get; set; }
     public string Category { get; set; }
+    public string?[] SubCategories { get; }
     public double Longitude { get; set; }
     public double Latitude { get; set; }
     public Priority Priority { get; set; }
@@ -37,7 +37,8 @@ public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory>>
     public Guid DeviceId { get; set; }
 }
 
-public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<int, InvalidCategory>>
+
+public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<int, InvalidCategory, InvalidSubCategories>>
 {
     private readonly IAppDbContext _db;
     private readonly IImageStorage _imageStorage;
@@ -50,7 +51,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         _imageStorage = imageStorage;
     }
 
-    public async Task<OneOf<int, InvalidCategory>>
+    public async Task<OneOf<int, InvalidCategory, InvalidSubCategories>>
         Handle(CreateCaseCommand request, CancellationToken cancellationToken)
     {
         var category = await _db.Categories
@@ -58,18 +59,41 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         if (category is null) return new InvalidCategory(request.Category);
 
         var images = await CreateImages(request);
-
-        var newCase = new Case
+        BaseCase newCase;
+        if (request.Description is not null)
         {
-            Comment = request.Description,
-            Pictures = images,
-            Category = category,
-            GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude),
-            Priority = request.Priority,
-            IpAddress = request.IpAddress,
-            DeviceId = request.DeviceId
-        };
-
+            var subCategories = await _db.SubCategories
+                .Where(sc => sc.Category.Id == category.Id && request.SubCategories.Contains(sc.Name.English))
+                .ToListAsync(cancellationToken);
+            
+            if (subCategories.Count != request.SubCategories.Length) return new InvalidSubCategories(request.SubCategories);
+            
+            newCase = new Case
+            {
+                Comment = request.Comment!,
+                SubCategories =  subCategories,
+                Pictures = images,
+                Category = category,
+                GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude),
+                Priority = request.Priority,
+                IpAddress = request.IpAddress,
+                DeviceId = request.DeviceId
+            };
+        }
+        else
+        {
+            newCase = new MiscellaneousCase
+            {
+                Description = request.Description!,
+                Pictures = images,
+                Category = category,
+                GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude),
+                Priority = request.Priority,
+                IpAddress = request.IpAddress,
+                DeviceId = request.DeviceId
+            };
+        }
+        
         _db.Cases.Add(newCase);
         await _db.SaveChangesAsync(cancellationToken);
 
@@ -107,10 +131,12 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
 
 public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 {
-    public CreateCaseCommandValidator()
+    public CreateCaseCommandValidator() 
     {
+        RuleFor(x => x.Comment)
+            .MaximumLength(4096);
+        
         RuleFor(x => x.Description)
-            .NotEmpty()
             .MaximumLength(4096);
 
         RuleFor(x => x.Longitude)

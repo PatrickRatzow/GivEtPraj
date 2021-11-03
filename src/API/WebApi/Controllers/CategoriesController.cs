@@ -1,5 +1,4 @@
 ﻿using Commentor.GivEtPraj.Application.Categories.Queries;
-using Commentor.GivEtPraj.Application.Contracts;
 
 namespace Commentor.GivEtPraj.WebApi.Controllers;
 

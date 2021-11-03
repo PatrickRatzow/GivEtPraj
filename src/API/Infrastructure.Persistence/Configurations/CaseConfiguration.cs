@@ -4,6 +4,8 @@ public class BaseCaseConfiguration : IEntityTypeConfiguration<BaseCase>
 {
     public void Configure(EntityTypeBuilder<BaseCase> builder)
     {
+        builder.HasIndex(c => c.DeviceId);
+
         builder.HasMany(c => c.Pictures)
             .WithOne(cp => cp.BaseCase)
             .HasForeignKey(cp => cp.CaseId);

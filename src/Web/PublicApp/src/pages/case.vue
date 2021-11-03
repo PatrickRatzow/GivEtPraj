@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { useLocalizedRoutes } from "@/compositions/localizedRoutes";
 import { useMainStore } from "@/stores/main";
 
 const route = useRoute();
 const router = useRouter();
-const localizedRoutes = useLocalizedRoutes();
 const main = useMainStore();
 const { t } = useI18n();
 
@@ -25,11 +23,6 @@ const fetchCase = (id: string | string[]) => {
 watch(() => route.params.id, fetchCase);
 fetchCase(route.params.id);
 
-const backUrl = ref<string>();
-onMounted(async () => {
-  backUrl.value = await localizedRoutes.getCasesUrl();
-});
-
 const lastUpdatedAt = (): string => {
   if (currentCase.value?.updatedAt != undefined) return currentCase.value.updatedAt.toLocaleString();
 
@@ -41,7 +34,7 @@ const lastUpdatedAt = (): string => {
   <ion-page>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <back-button :url="backUrl"></back-button>
+        <back-button url="/my-praj"></back-button>
       </ion-buttons>
       <ion-title>{{ t("case.title") }} </ion-title>
     </ion-toolbar>

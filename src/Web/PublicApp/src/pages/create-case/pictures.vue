@@ -1,37 +1,18 @@
 <script setup lang="ts">
 import { useImages } from "@/compositions/images";
-import { useLocalizedRoutes } from "@/compositions/localizedRoutes";
 import { useCreateCaseStore } from "@/stores/create-case";
 
-const localizedRoutes = useLocalizedRoutes();
 const createCase = useCreateCaseStore();
 const router = useRouter();
 const images = useImages();
 const { t } = useI18n();
-
-const backUrl = ref<string>();
-onMounted(async () => {
-  backUrl.value = await localizedRoutes.getCategoryUrl();
-});
-
-const goToPicturePreview = async (id: number) => {
-  const route = await localizedRoutes.getPicturePreviewUrl(id);
-
-  router.push(route);
-};
-
-const goToNextPage = async () => {
-  const route = await localizedRoutes.getCheckoutUrl();
-
-  router.push(route);
-};
 </script>
 
 <template>
   <ion-page>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <back-button :url="backUrl"></back-button>
+        <back-button url="/create-praj/category"></back-button>
       </ion-buttons>
       <ion-title>{{ t("create-case.pictures.title") }} </ion-title>
     </ion-toolbar>
@@ -45,13 +26,15 @@ const goToNextPage = async () => {
                 v-if="createCase.images[idx - 1]"
                 class="absolute inset-0 w-full h-full"
                 :src="images.getImageAsDataUrl(idx - 1)"
-                @click="goToPicturePreview(idx)"
+                @click="router.push(`/create-praj/pictures/${idx}`)"
               />
             </div>
           </template>
         </div>
         <div class="w-full">
-          <ion-button expand="block" @click="goToNextPage">{{ t("navigation.next") }}</ion-button>
+          <ion-button expand="block" @click="router.push('/create-praj/checkout')">{{
+            t("navigation.next")
+          }}</ion-button>
         </div>
       </div>
     </ion-content>
