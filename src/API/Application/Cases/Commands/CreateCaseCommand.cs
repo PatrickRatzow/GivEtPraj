@@ -59,6 +59,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         if (category is null) return new InvalidCategory(request.Category);
 
         var images = await CreateImages(request);
+        
         BaseCase newCase;
         if (request.Description is not null)
         {
@@ -162,6 +163,10 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 
         RuleFor(x => x.DeviceId)
             .NotNull();
+        RuleFor(x => x.SubCategories.Length)
+            .LessThanOrEqualTo(3)
+            .NotNull()
+            .When(x => x.Comment != null);
     }
 
     private bool ValidateIP(string ipString) => IPAddress.TryParse(ipString, out _);
