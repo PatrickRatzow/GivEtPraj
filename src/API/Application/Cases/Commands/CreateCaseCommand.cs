@@ -11,7 +11,7 @@ public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory, InvalidSub
 {
     public CreateCaseCommand(Guid deviceId, List<Stream> images, string category, double longitude,
         double latitude, Priority priority, IPAddress ipAddress, string description = "", string comment = "",
-        string?[] subCategories = null)
+        string[]? subCategories = null)
     {
         DeviceId = deviceId;
         Comment = comment;
@@ -29,7 +29,7 @@ public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory, InvalidSub
     public string? Description { get; }
     public List<Stream> Images { get; set; }
     public string Category { get; set; }
-    public string?[] SubCategories { get; }
+    public string[]? SubCategories { get; }
     public double Longitude { get; set; }
     public double Latitude { get; set; }
     public Priority Priority { get; set; }
@@ -61,13 +61,13 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         var images = await CreateImages(request);
         
         BaseCase newCase;
-        if (request.Description is not null)
+        if (request.Description is null)
         {
             var subCategories = await _db.SubCategories
-                .Where(sc => sc.Category.Id == category.Id && request.SubCategories.Contains(sc.Name.English))
+                .Where(sc => sc.Category.Id == category.Id && request.SubCategories!.Contains(sc.Name.English))
                 .ToListAsync(cancellationToken);
             
-            if (subCategories.Count != request.SubCategories.Length) return new InvalidSubCategories(request.SubCategories);
+            if (subCategories.Count != request.SubCategories!.Length) return new InvalidSubCategories(request.SubCategories);
             
             newCase = new Case
             {
@@ -134,12 +134,6 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 {
     public CreateCaseCommandValidator() 
     {
-        RuleFor(x => x.Comment)
-            .MaximumLength(4096);
-        
-        RuleFor(x => x.Description)
-            .MaximumLength(4096);
-
         RuleFor(x => x.Longitude)
             .LessThanOrEqualTo(180)
             .GreaterThanOrEqualTo(-180);
@@ -163,11 +157,20 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 
         RuleFor(x => x.DeviceId)
             .NotNull();
-        
-        RuleFor(x => x.SubCategories.Length)
-            .LessThanOrEqualTo(3)
-            .NotNull()
-            .When(x => x.Comment != null);
+
+        When(x => x.SubCategories != null, () =>
+        {
+            RuleFor(x => x.SubCategories!.Length)
+                .NotNull()
+                .LessThanOrEqualTo(3);
+            
+            RuleFor(x => x.Comment)
+                .MaximumLength(4096);
+        }).Otherwise(() =>
+        {
+            RuleFor(x => x.Description)
+                .MaximumLength(4096);
+        });
     }
 
     private bool ValidateIP(string ipString) => IPAddress.TryParse(ipString, out _);
