@@ -7,7 +7,7 @@ using Commentor.GivEtPraj.Application.Common.Security;
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
 [ReCaptcha]
-public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory>>
+public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory, InvalidSubCategories>>
 {
     public CreateCaseCommand(Guid deviceId, List<Stream> images, string category, double longitude,
         double latitude, Priority priority, IPAddress ipAddress, string description = "", string comment = "",
@@ -38,7 +38,7 @@ public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory>>
 }
 
 
-public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<int, InvalidCategory>>
+public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<int, InvalidCategory, InvalidSubCategories>>
 {
     private readonly IAppDbContext _db;
     private readonly IImageStorage _imageStorage;
@@ -51,7 +51,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         _imageStorage = imageStorage;
     }
 
-    public async Task<OneOf<int, InvalidCategory>>
+    public async Task<OneOf<int, InvalidCategory, InvalidSubCategories>>
         Handle(CreateCaseCommand request, CancellationToken cancellationToken)
     {
         var category = await _db.Categories
@@ -59,14 +59,15 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         if (category is null) return new InvalidCategory(request.Category);
 
         var images = await CreateImages(request);
+        
         BaseCase newCase;
         if (request.Description is not null)
         {
             var subCategories = await _db.SubCategories
                 .Where(sc => sc.Category.Id == category.Id && request.SubCategories.Contains(sc.Name.English))
                 .ToListAsync(cancellationToken);
-            //Does not work for now because of oneof?
-            //if (subCategories.Count != request.SubCategories.Length) return new InvalidSubCategories(request.SubCategories);
+            
+            if (subCategories.Count != request.SubCategories.Length) return new InvalidSubCategories(request.SubCategories);
             
             newCase = new Case
             {
@@ -162,6 +163,11 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 
         RuleFor(x => x.DeviceId)
             .NotNull();
+        
+        RuleFor(x => x.SubCategories.Length)
+            .LessThanOrEqualTo(3)
+            .NotNull()
+            .When(x => x.Comment != null);
     }
 
     private bool ValidateIP(string ipString) => IPAddress.TryParse(ipString, out _);

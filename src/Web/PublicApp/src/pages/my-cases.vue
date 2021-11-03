@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useMainStore } from "@/stores/main";
+import { useCaseHistory } from "@/compositions/case-history";
 
-const main = useMainStore();
+const caseHistory = useCaseHistory();
 const router = useRouter();
 const { t } = useI18n();
 </script>
@@ -17,7 +17,7 @@ const { t } = useI18n();
     <ion-content class="ion-padding">
       <ion-list>
         <ion-item
-          v-for="currentCase in main.cases"
+          v-for="currentCase in caseHistory.cases"
           :key="currentCase.id"
           @click="router.push(`/praj/${currentCase.id}`)"
         >
@@ -28,6 +28,7 @@ const { t } = useI18n();
           </ion-label>
         </ion-item>
       </ion-list>
+      <ion-button @click="caseHistory.syncWithAPI()">Sync</ion-button>
     </ion-content>
   </ion-page>
 </template>

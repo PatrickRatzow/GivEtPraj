@@ -12,7 +12,7 @@ const cfgRoutes: RouteRecordRaw[] = [
 		children: [
 			{
 				path: "",
-				redirect: "/create-praj/lokation",
+				redirect: "/create-praj/location",
 			},
 			{
 				name: "location",

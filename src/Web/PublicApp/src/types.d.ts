@@ -23,6 +23,7 @@ declare global {
 		geographicLocation: GeographicLocation;
 		createdAt: Date;
 		updatedAt?: Date;
+		deviceId: string;
 	}
 
 	interface Status {
