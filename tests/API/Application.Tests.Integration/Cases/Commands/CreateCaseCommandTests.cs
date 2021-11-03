@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Commentor.GivEtPraj.Application.Cases.Commands;
@@ -17,12 +18,13 @@ public class CreateCaseCommandTests : TestBase
     {
         // Arrange
         var category = Database.Factory<CategoryFactory>().Create();
-
+        var subCats = Database.Factory<SubCategoryFactory>().CreateMany(category, 2);
+        
         await Database.Save();
 
         var deviceId = Guid.NewGuid();
         var comment = "An example Comment";
-        var subCategories = new string[2];
+        var subCategories = subCats.Select(s => s.Name.English).ToArray();
         var images = new List<Stream>();
         var longitude = 0;
         var latitude = 0;
