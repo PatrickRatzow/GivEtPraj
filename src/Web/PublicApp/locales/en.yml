@@ -43,3 +43,5 @@ my-cases:
 case:
   title: "Praj"
   last-updated-at: "Last updated {time}"
+settings:
+  title: "Settings"
