@@ -27,3 +27,12 @@ public class FindAllCasesByDeviceIdQueryHandler : IRequestHandler<FindCasesByDev
         return _mapper.Map<List<BaseCase>, List<CaseDto>>(cases);
     }
 }
+
+public class FindCasesByDeviceQueryByValidator : AbstractValidator<FindCasesByDeviceIdQuery>
+{
+    public FindCasesByDeviceQueryByValidator()
+    {
+        RuleFor(x => x.DeviceId)
+            .NotEmpty();
+    }
+}

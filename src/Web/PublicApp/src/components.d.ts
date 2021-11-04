@@ -2,44 +2,39 @@
 // We suggest you to commit this file into source control
 // Read more: https://github.com/vuejs/vue-next/pull/3399
 
-declare module 'vue' {
-  export interface GlobalComponents {
-    BackButton: typeof import('./components/BackButton.vue')['default']
-    CategoryRow: typeof import('./components/CategoryRow.vue')['default']
-    Comment: typeof import('./components/Comment.vue')['default']
-    HelloWorld: typeof import('./components/HelloWorld.vue')['default']
-    IonApp: typeof import('@ionic/vue')['IonApp']
-    IonBackButton: typeof import('@ionic/vue')['IonBackButton']
-    IonButton: typeof import('@ionic/vue')['IonButton']
-    IonButtons: typeof import('@ionic/vue')['IonButtons']
-    IonCheckbox: typeof import('@ionic/vue')['IonCheckbox']
-    IonContent: typeof import('@ionic/vue')['IonContent']
-    IonIcon: typeof import('@ionic/vue')['IonIcon']
-    IonItem: typeof import('@ionic/vue')['IonItem']
-    IonLabel: typeof import('@ionic/vue')['IonLabel']
-    IonList: typeof import('@ionic/vue')['IonList']
-    IonPage: typeof import('@ionic/vue')['IonPage']
-    IonRadio: typeof import('@ionic/vue')['IonRadio']
-    IonRadioGroup: typeof import('@ionic/vue')['IonRadioGroup']
-    IonRouterOutlet: typeof import('@ionic/vue')['IonRouterOutlet']
-    IonSearchbar: typeof import('@ionic/vue')['IonSearchbar']
-    IonTabBar: typeof import('@ionic/vue')['IonTabBar']
-    IonTabButton: typeof import('@ionic/vue')['IonTabButton']
-    IonTabs: typeof import('@ionic/vue')['IonTabs']
-    IonTitle: typeof import('@ionic/vue')['IonTitle']
-    IonToggle: typeof import('@ionic/vue')['IonToggle']
-    IonToolbar: typeof import('@ionic/vue')['IonToolbar']
-    ItemRow: typeof import('./components/ItemRow.vue')['default']
-    Offline: typeof import('./components/Offline.vue')['default']
-    Pictures: typeof import('./components/Pictures.vue')['default']
-    ReloadPWA: typeof import('./components/ReloadPWA.vue')['default']
-    SettingsRow: typeof import('./components/SettingsRow.vue')['default']
-    StatusIndicator: typeof import('./components/StatusIndicator.vue')['default']
-    SubCategories: typeof import('./components/SubCategories.vue')['default']
-    Tabs: typeof import('./components/Tabs.vue')['default']
-    TextField: typeof import('./components/TextField.vue')['default']
-    Toggle: typeof import('./components/Toggle.vue')['default']
-  }
+declare module "vue" {
+	export interface GlobalComponents {
+		BackButton: typeof import("./components/BackButton.vue")["default"];
+		CategoryRow: typeof import("./components/CategoryRow.vue")["default"];
+		Comment: typeof import("./components/Comment.vue")["default"];
+		HelloWorld: typeof import("./components/HelloWorld.vue")["default"];
+		IonApp: typeof import("@ionic/vue")["IonApp"];
+		IonButton: typeof import("@ionic/vue")["IonButton"];
+		IonContent: typeof import("@ionic/vue")["IonContent"];
+		IonIcon: typeof import("@ionic/vue")["IonIcon"];
+		IonLabel: typeof import("@ionic/vue")["IonLabel"];
+		IonPage: typeof import("@ionic/vue")["IonPage"];
+		IonRadio: typeof import("@ionic/vue")["IonRadio"];
+		IonRadioGroup: typeof import("@ionic/vue")["IonRadioGroup"];
+		IonRouterOutlet: typeof import("@ionic/vue")["IonRouterOutlet"];
+		IonSearchbar: typeof import("@ionic/vue")["IonSearchbar"];
+		IonTabBar: typeof import("@ionic/vue")["IonTabBar"];
+		IonTabButton: typeof import("@ionic/vue")["IonTabButton"];
+		IonTabs: typeof import("@ionic/vue")["IonTabs"];
+		IonTitle: typeof import("@ionic/vue")["IonTitle"];
+		IonToggle: typeof import("@ionic/vue")["IonToggle"];
+		IonToolbar: typeof import("@ionic/vue")["IonToolbar"];
+		ItemRow: typeof import("./components/ItemRow.vue")["default"];
+		Offline: typeof import("./components/Offline.vue")["default"];
+		Pictures: typeof import("./components/Pictures.vue")["default"];
+		ReloadPWA: typeof import("./components/ReloadPWA.vue")["default"];
+		SettingsRow: typeof import("./components/SettingsRow.vue")["default"];
+		StatusIndicator: typeof import("./components/StatusIndicator.vue")["default"];
+		SubCategories: typeof import("./components/SubCategories.vue")["default"];
+		Tabs: typeof import("./components/Tabs.vue")["default"];
+		TextField: typeof import("./components/TextField.vue")["default"];
+		Toggle: typeof import("./components/Toggle.vue")["default"];
+	}
 }
 
-export { }
+export {};
