@@ -3,7 +3,7 @@ import { Device } from "@capacitor/device";
 import { useReCaptcha } from "vue-recaptcha-v3";
 
 interface CreateQueueKeyRequest {
-	id: string;
+	deviceId: string;
 }
 
 export function useQueueKeys() {
@@ -16,8 +16,8 @@ export function useQueueKeys() {
 
 		const reCaptchaToken = await executeRecaptcha("queue_key");
 
-		const id = (await Device.getId()).uuid;
-		const data: CreateQueueKeyRequest = { id };
+		const id = await Device.getId();
+		const data: CreateQueueKeyRequest = { deviceId: id.uuid };
 		const resp = await axios.post("queue-keys", data, {
 			headers: {
 				["X-ReCAPTCHA-V3"]: reCaptchaToken,
