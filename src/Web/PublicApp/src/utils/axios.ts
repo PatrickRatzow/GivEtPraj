@@ -5,10 +5,13 @@ const conn = axios.create({
 	baseURL: "https://localhost:5001/v1/",
 });
 
+const locale = useLocale();
+
 conn.interceptors.request.use(async (config) => {
-	config.headers = {
-		"x-language": await useLocale().getLanguageCode().toString(),
-	};
+	const languageCode = await locale.getLanguageCode();
+
+	config.headers ??= {};
+	config.headers["X-Language"] = languageCode;
 
 	return config;
 });
