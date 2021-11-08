@@ -13,9 +13,11 @@ const loading = ref(true);
 onMounted(async () => {
   cases.value = await Promise.all(
     caseHistory.cases.map(async (c) => {
+      const address = await locationLookup.fetchAddress(c.geographicLocation);
+
       return {
         ...c,
-        nearestCity: (await locationLookup.fetchAddress(c.geographicLocation))?.zipCodeName,
+        nearestCity: address?.zipCodeName,
       } as SavedCase;
     })
   );
