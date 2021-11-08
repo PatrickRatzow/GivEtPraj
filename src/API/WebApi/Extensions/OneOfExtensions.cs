@@ -2,8 +2,9 @@
 
 public static partial class OneOfExtensions
 {
-    private static IActionResult MatchErrorResponse<TResponse>(TResponse response) =>
-        response switch
+    private static IActionResult MatchErrorResponse<TResponse>(TResponse response)
+    {
+        return response switch
         {
             INotFoundError notFound =>
                 GetResult(typeof(NotFoundResult), typeof(NotFoundObjectResult), notFound),
@@ -28,14 +29,18 @@ public static partial class OneOfExtensions
             var data =>
                 GetResult(typeof(OkResult), typeof(OkObjectResult), data)
         };
+    }
 
     private static IActionResult GetResult<TData>(Type status, Type @object, TData data)
     {
         object? msg = data;
         if (data is IError err)
-        {
-            msg = err.ErrorMessage is not null ? new { Error = err.ErrorMessage } : err.ErrorMessage;
-        }
+            msg = err.ErrorMessage is not null
+                ? new
+                {
+                    Error = err.ErrorMessage
+                }
+                : err.ErrorMessage;
 
         var result = msg is null
             ? Activator.CreateInstance(status) as IActionResult

@@ -5,16 +5,17 @@ namespace Commentor.GivEtPraj.Application.Cases.Commands;
 [ReCaptcha]
 public class CreateQueueKeyCommand : IRequest<OneOf<QueueKeyDto>>
 {
-    public Guid DeviceId { get; }
 
     public CreateQueueKeyCommand()
     {
     }
-    
+
     public CreateQueueKeyCommand(Guid deviceId)
     {
         DeviceId = deviceId;
-    } 
+    }
+
+    public Guid DeviceId { get; }
 }
 
 public class CreateQueueKeyCommandHandler : IRequestHandler<CreateQueueKeyCommand, OneOf<QueueKeyDto>>

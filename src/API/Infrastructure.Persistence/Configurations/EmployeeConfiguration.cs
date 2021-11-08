@@ -10,10 +10,9 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
 
         builder.Property(c => c.FirstName)
             .IsRequired();
-            
+
 
         builder.Property(c => c.LastName)
             .IsRequired();
     }
 }
-

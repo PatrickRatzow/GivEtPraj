@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Commentor.GivEtPraj.Application.Cases.Queries;
 

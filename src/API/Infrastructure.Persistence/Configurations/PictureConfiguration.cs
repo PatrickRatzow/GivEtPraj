@@ -1,10 +1,9 @@
-﻿namespace Infrastructure.Persistence.Configurations
+﻿namespace Infrastructure.Persistence.Configurations;
+
+public class PictureConfiguration : IEntityTypeConfiguration<CaseImage>
 {
-    public class PictureConfiguration : IEntityTypeConfiguration<CaseImage>
+    public void Configure(EntityTypeBuilder<CaseImage> builder)
     {
-        public void Configure(EntityTypeBuilder<CaseImage> builder)
-        {
-            builder.HasKey(cp => cp.Id);
-        }
+        builder.HasKey(cp => cp.Id);
     }
 }

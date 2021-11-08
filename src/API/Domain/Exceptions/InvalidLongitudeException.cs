@@ -1,9 +1,8 @@
-﻿namespace Commentor.GivEtPraj.Domain.Exceptions
+﻿namespace Commentor.GivEtPraj.Domain.Exceptions;
+
+public class InvalidLongitudeException : Exception
 {
-    public class InvalidLongitudeException : Exception
+    public InvalidLongitudeException(string? message) : base(message)
     {
-        public InvalidLongitudeException(string? message) : base(message)
-        {
-        }
     }
 }

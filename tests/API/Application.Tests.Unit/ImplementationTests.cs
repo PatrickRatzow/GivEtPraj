@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using AutoMapper.Internal;
 using Commentor.GivEtPraj.Application.Errors.Interfaces;
 using FluentAssertions;
@@ -36,10 +35,7 @@ public class ImplementationTests
         foreach (var handler in handlers)
         {
             var methods = handler.GetDeclaredMethods().Where(m => m.Name == "Handle");
-            foreach (var method in methods)
-            {
-                yield return method;
-            }
+            foreach (var method in methods) yield return method;
         }
     }
 
@@ -55,16 +51,10 @@ public class ImplementationTests
 
             var models = returnType.GenericTypeArguments;
             var errorModels = models.Skip(1);
-            foreach (var errorModel in errorModels)
-            {
-                returnModels.Add(errorModel);
-            }
+            foreach (var errorModel in errorModels) returnModels.Add(errorModel);
         }
 
-        foreach (var model in returnModels)
-        {
-            yield return model;
-        }
+        foreach (var model in returnModels) yield return model;
     }
 
     [TestCaseSource(nameof(GetAllErrorModels))]
@@ -79,10 +69,7 @@ public class ImplementationTests
 
     private static bool IsDerivedOfGenericType(Type type, Type genericType)
     {
-        if (type.IsGenericType && type.GetGenericTypeDefinition() == genericType)
-        {
-            return true;
-        }
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == genericType) return true;
 
         return type.BaseType is not null && IsDerivedOfGenericType(type.BaseType, genericType);
     }
@@ -140,12 +127,8 @@ public class ImplementationTests
                 .ToList();
 
             foreach (var validator in validators)
-            {
-                foreach (var propertyName in propertyNames)
-                {
-                    yield return (validator, propertyName);
-                }
-            }
+            foreach (var propertyName in propertyNames)
+                yield return (validator, propertyName);
         }
     }
 

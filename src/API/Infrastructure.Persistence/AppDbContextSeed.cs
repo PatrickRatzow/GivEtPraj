@@ -12,11 +12,14 @@ public static class AppDbContextSeed
     {
         SeedCategories(context);
         await context.SaveChangesAsync();
+        
+        SeedSubCategories(context);
+        await context.SaveChangesAsync();
 
         SeedCases(context);
         await context.SaveChangesAsync();
     }
-    
+
     private static void SeedCategories(AppDbContext context)
     {
         var hasAny = context.Categories.Any();
@@ -49,17 +52,17 @@ public static class AppDbContextSeed
         if (hasAny) return;
 
         var category = context.Categories.First();
-        context.Cases.AddRange(new Case()
+        context.Cases.AddRange(new Case
         {
-            
+
             Comment = "Der er et stor hul i vejen på arbejde",
             Category = category,
             GeographicLocation = GeographicLocation.From(54, 54),
             IpAddress = IPAddress.Parse("200.200.200.200")
 
-        }, new Case()
+        }, new Case
         {
-            
+
             Comment = "Hul vejen",
             Category = category,
             GeographicLocation = GeographicLocation.From(53, 53.5),

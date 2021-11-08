@@ -9,7 +9,7 @@ namespace Commentor.GivEtPraj.WebApi.SourceGenerator
         private readonly GeneratorExecutionContext _context;
 
         protected readonly List<string> Using = new List<string>();
-        private int _currentIndent = 0;
+        private int _currentIndent;
         protected StringBuilder StringBuilder;
 
         public CodeBuilder(GeneratorExecutionContext context)
@@ -30,7 +30,10 @@ namespace Commentor.GivEtPraj.WebApi.SourceGenerator
         {
         }
 
-        protected string PrintIndent() => new string(' ', _currentIndent * 4);
+        protected string PrintIndent()
+        {
+            return new string(' ', _currentIndent * 4);
+        }
 
         protected void Indent()
         {
@@ -56,10 +59,7 @@ namespace Commentor.GivEtPraj.WebApi.SourceGenerator
         {
             if (Using.Count <= 0) return;
 
-            foreach (var name in Using)
-            {
-                AppendLine($"using {name};");
-            }
+            foreach (var name in Using) AppendLine($"using {name};");
 
             AppendLine();
         }

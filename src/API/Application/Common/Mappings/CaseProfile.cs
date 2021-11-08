@@ -12,7 +12,7 @@ public class CaseProfile : Profile
                 c => c.Url,
                 opts => opts.MapFrom(
                     m => $"https://givetpraj.blob.core.windows.net/cases/{m.Id}.jpg"
-                    )
+                )
             );
         CreateMap<Category, CategoryDto>();
         CreateMap<SubCategory, SubCategoryDto>();

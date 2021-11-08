@@ -6,12 +6,13 @@ namespace Commentor.GivEtPraj.Application.Tests.Integration.DatabaseFactories;
 public abstract class DatabaseFactory
 {
     protected readonly IServiceScope ServiceScope;
-    protected abstract int Created { get; set; }
-        
+
     protected DatabaseFactory(IServiceScope serviceScope)
     {
         ServiceScope = serviceScope;
     }
+
+    protected abstract int Created { get; set; }
 
     private AppDbContext Context
         => ServiceScope.ServiceProvider.GetRequiredService<AppDbContext>();

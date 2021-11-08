@@ -38,12 +38,12 @@ namespace Commentor.GivEtPraj.WebApi.SourceGenerator.MatchResponse
         private void Save()
         {
             var descriptor = new DiagnosticDescriptor(nameof(MatchResponseGenerator), "Result",
-                $"Finished MatchResponseGenerator", "Compilation", DiagnosticSeverity.Warning,
-                isEnabledByDefault: true);
+                "Finished MatchResponseGenerator", "Compilation", DiagnosticSeverity.Warning,
+                true);
             _context.ReportDiagnostic(Diagnostic.Create(descriptor, null));
 
             // inject the created source into the users compilation
-            _context.AddSource($"MatchResponse", SourceText.From(_code, Encoding.UTF8));
+            _context.AddSource("MatchResponse", SourceText.From(_code, Encoding.UTF8));
         }
     }
 }

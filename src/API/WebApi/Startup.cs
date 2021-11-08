@@ -9,9 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace Commentor.GivEtPraj.WebApi;
@@ -31,7 +29,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.Configure<ReCaptchaOptions>(_configuration.GetSection(ReCaptchaOptions.ReCaptcha));
-        
+
         services.AddApplication();
         services.AddInfrastructure(_configuration, _env);
         services.AddCors();
@@ -91,14 +89,10 @@ public class Startup
                     .AllowAnyMethod()
             );
         }
-        else
-        {
-            // Handle CORS for prod
-        }
 
         app.UseCustomExceptionHandler();
         app.UseFluentValidationExceptionHandler();
-        
+
         app.UseHttpsRedirection();
 
         app.UseRouting();

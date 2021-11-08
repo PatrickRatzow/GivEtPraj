@@ -10,7 +10,7 @@ public class CaseProfile : Profile
     {
         CreateMap<CreateCaseRequest, CreateCaseCommand>()
             .ForMember(
-                m => m.Images, 
+                m => m.Images,
                 opts => opts.MapFrom(
                     d => d.Images.Select(i => new MemoryStream(Convert.FromBase64String(i)))
                 )

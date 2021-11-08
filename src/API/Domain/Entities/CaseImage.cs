@@ -2,7 +2,7 @@
 
 public class CaseImage
 {
-    public Guid Id { get; set; } 
+    public Guid Id { get; set; }
     public int CaseId { get; set; }
     public BaseCase Case { get; set; }
 }

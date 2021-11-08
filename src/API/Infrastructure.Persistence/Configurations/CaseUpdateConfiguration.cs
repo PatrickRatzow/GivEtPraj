@@ -1,4 +1,5 @@
 ﻿namespace Infrastructure.Persistence.Configurations;
+
 internal class CaseUpdateConfiguration : IEntityTypeConfiguration<CaseUpdate>
 {
     public void Configure(EntityTypeBuilder<CaseUpdate> builder)
@@ -16,4 +17,3 @@ internal class CaseUpdateConfiguration : IEntityTypeConfiguration<CaseUpdate>
 
     }
 }
-

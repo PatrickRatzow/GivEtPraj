@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace Commentor.GivEtPraj.WebApi.Contracts.Requests;
+﻿namespace Commentor.GivEtPraj.WebApi.Contracts.Requests;
 
 public class CreateCaseRequest
 {
@@ -14,7 +12,7 @@ public class CreateCaseRequest
         Title = title;
         Description = description;
         Comment = comment;
-        SubCategories = subCategories;  
+        SubCategories = subCategories;
         Images = images;
         Category = category;
         Longitude = longitude;
@@ -27,7 +25,7 @@ public class CreateCaseRequest
     public string Description { get; set; }
     public string Comment { get; set; }
     public string?[] SubCategories { get; set; }
-    public List<string> Images { get; set; } = new List<string>();
+    public List<string> Images { get; set; } = new();
     public string Category { get; set; }
     public double Longitude { get; set; }
     public double Latitude { get; set; }

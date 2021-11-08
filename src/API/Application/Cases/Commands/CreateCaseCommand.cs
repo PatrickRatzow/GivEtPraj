@@ -1,8 +1,8 @@
-﻿using Commentor.GivEtPraj.Domain.Enums;
+﻿using System.Net;
+using Commentor.GivEtPraj.Application.Common.Security;
+using Commentor.GivEtPraj.Domain.Enums;
 using Commentor.GivEtPraj.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
-using Commentor.GivEtPraj.Application.Common.Security;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
@@ -37,8 +37,8 @@ public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory, InvalidSub
     public Guid DeviceId { get; set; }
 }
 
-
-public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<int, InvalidCategory, InvalidSubCategories>>
+public class
+    CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<int, InvalidCategory, InvalidSubCategories>>
 {
     private readonly IAppDbContext _db;
     private readonly IImageStorage _imageStorage;
@@ -59,20 +59,21 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         if (category is null) return new InvalidCategory(request.Category);
 
         var images = await CreateImages(request);
-        
+
         BaseCase newCase;
         if (request.Description is null)
         {
             var subCategories = await _db.SubCategories
                 .Where(sc => sc.Category.Id == category.Id && request.SubCategories!.Contains(sc.Name.English))
                 .ToListAsync(cancellationToken);
-            
-            if (subCategories.Count != request.SubCategories!.Length) return new InvalidSubCategories(request.SubCategories);
-            
+
+            if (subCategories.Count != request.SubCategories!.Length)
+                return new InvalidSubCategories(request.SubCategories);
+
             newCase = new Case
             {
                 Comment = request.Comment!,
-                SubCategories =  subCategories,
+                SubCategories = subCategories,
                 Images = images,
                 Category = category,
                 GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude),
@@ -94,7 +95,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
                 DeviceId = request.DeviceId
             };
         }
-        
+
         _db.Cases.Add(newCase);
         await _db.SaveChangesAsync(cancellationToken);
 
@@ -132,7 +133,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
 
 public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 {
-    public CreateCaseCommandValidator() 
+    public CreateCaseCommandValidator()
     {
         RuleFor(x => x.Longitude)
             .LessThanOrEqualTo(180)
@@ -163,7 +164,7 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
             RuleFor(x => x.SubCategories!.Length)
                 .NotNull()
                 .LessThanOrEqualTo(3);
-            
+
             RuleFor(x => x.Comment)
                 .MaximumLength(4096);
         }).Otherwise(() =>
@@ -173,5 +174,8 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
         });
     }
 
-    private bool ValidateIP(string ipString) => IPAddress.TryParse(ipString, out _);
+    private bool ValidateIP(string ipString)
+    {
+        return IPAddress.TryParse(ipString, out _);
+    }
 }

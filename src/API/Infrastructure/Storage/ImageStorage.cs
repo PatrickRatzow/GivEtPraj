@@ -18,7 +18,9 @@ public class ImageStorage : IImageStorage
     }
 
     public async Task<Stream?> FindImage(string name)
-        => await _fileStorage.FindFile(FullPath(name));
+    {
+        return await _fileStorage.FindFile(FullPath(name));
+    }
 
     public async Task<bool> UploadImage(string name, Stream content)
     {
@@ -36,5 +38,8 @@ public class ImageStorage : IImageStorage
         return await _fileStorage.UploadFile(FullPath(name), compressedImage, contentType);
     }
 
-    private static string FullPath(string name) => $"cases/{name}";
+    private static string FullPath(string name)
+    {
+        return $"cases/{name}";
+    }
 }

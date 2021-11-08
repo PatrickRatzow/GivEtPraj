@@ -17,8 +17,10 @@ public class LocalizedMapper : Mapper, IMapper
         _languageService = languageService;
     }
 
-    public new TDestination Map<TSource, TDestination>(TSource source) =>
-        base.Map<TSource, TDestination>(source, opts => opts.SetLanguage(_languageService.Language));
+    public new TDestination Map<TSource, TDestination>(TSource source)
+    {
+        return base.Map<TSource, TDestination>(source, opts => opts.SetLanguage(_languageService.Language));
+    }
 
     public new TDestination Map<TSource, TDestination>(TSource source,
         Action<IMappingOperationOptions<TSource, TDestination>> opts)
@@ -30,8 +32,10 @@ public class LocalizedMapper : Mapper, IMapper
         });
     }
 
-    public new TDestination Map<TSource, TDestination>(TSource source, TDestination destination) =>
-        base.Map(source, destination, opts => opts.SetLanguage(_languageService.Language));
+    public new TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
+    {
+        return base.Map(source, destination, opts => opts.SetLanguage(_languageService.Language));
+    }
 
     public new TDestination Map<TSource, TDestination>(TSource source, TDestination destination,
         Action<IMappingOperationOptions<TSource, TDestination>> opts)

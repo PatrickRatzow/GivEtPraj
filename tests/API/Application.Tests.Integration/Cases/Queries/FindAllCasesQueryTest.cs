@@ -13,7 +13,7 @@ public class FindAllCasesQueryTest : TestBase
         // Arrange
         var category = Database.Factory<CategoryFactory>().Create();
         var cases = Database.Factory<CaseFactory>().CreateMany(category, 2);
-        
+
         await Database.Save();
 
         var query = new FindAllCasesQuery();

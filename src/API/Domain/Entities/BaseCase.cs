@@ -1,6 +1,6 @@
-﻿using Commentor.GivEtPraj.Domain.Enums;
+﻿using System.Net;
+using Commentor.GivEtPraj.Domain.Enums;
 using Commentor.GivEtPraj.Domain.ValueObjects;
-using System.Net;
 
 namespace Commentor.GivEtPraj.Domain.Entities;
 

@@ -6,7 +6,6 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Commentor.GivEtPraj.Application.Common.Behaviors;
-using Commentor.GivEtPraj.Application.Common.Security;
 using Commentor.GivEtPraj.WebApi;
 using Infrastructure.Persistence;
 using MediatR;
@@ -44,7 +43,7 @@ public class Testing
 
         services.AddSingleton<IConfiguration>(_configuration);
         services.AddSingleton(hostEnvironment);
-        
+
         services.AddLogging();
 
         startup.ConfigureServices(services);
@@ -52,7 +51,7 @@ public class Testing
         var reCaptchaBehavior = services.First(sp => sp.ImplementationType == typeof(ReCaptchaBehavior<,>));
         services.Remove(reCaptchaBehavior);
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TestReCaptchaBehavior<,>));
-        
+
         _scopeFactory = services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
 
         _checkpoint = new()
@@ -80,7 +79,10 @@ public class Testing
         context.Database.Migrate();
     }
 
-    public static IServiceScope CreateScope() => _scopeFactory.CreateScope();
+    public static IServiceScope CreateScope()
+    {
+        return _scopeFactory.CreateScope();
+    }
 
     public static async Task<TResponse> Send<TResponse>(IRequest<TResponse> request)
     {
@@ -186,11 +188,12 @@ public class Testing
     public void RunAfterAnyTests()
     {
     }
-    
+
     private class TestReCaptchaBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+            RequestHandlerDelegate<TResponse> next)
         {
             return await next();
         }

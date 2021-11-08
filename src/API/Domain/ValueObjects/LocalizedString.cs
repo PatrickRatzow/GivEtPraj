@@ -1,8 +1,7 @@
 ﻿namespace Commentor.GivEtPraj.Domain.ValueObjects;
+
 public class LocalizedString : ValueObject
 {
-    public string Danish { get; private set; } = null!;
-    public string English { get; private set; } = null!;
 
     private LocalizedString()
     {
@@ -15,9 +14,12 @@ public class LocalizedString : ValueObject
         English = english;
     }
 
+    public string Danish { get; } = null!;
+    public string English { get; } = null!;
+
     public static LocalizedString From(string danish, string english)
     {
-        return new LocalizedString(danish, english);
+        return new(danish, english);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

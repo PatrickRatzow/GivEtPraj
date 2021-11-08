@@ -9,14 +9,15 @@ public class SubCategoryFactory : DatabaseFactory
 {
     private static readonly object CreationLock = new();
     private static int _created;
-    protected override int Created
-    {
-        get => _created; 
-        set => _created = value;
-    }
-    
+
     public SubCategoryFactory(IServiceScope serviceScope) : base(serviceScope)
     {
+    }
+
+    protected override int Created
+    {
+        get => _created;
+        set => _created = value;
     }
 
     public SubCategory Create(Category category, string? name = null)

@@ -1,6 +1,5 @@
 ﻿using Commentor.GivEtPraj.Application.Cases.Commands;
 using Commentor.GivEtPraj.Application.Cases.Queries;
-using Commentor.GivEtPraj.WebApi.Filters;
 
 namespace Commentor.GivEtPraj.WebApi.Controllers;
 

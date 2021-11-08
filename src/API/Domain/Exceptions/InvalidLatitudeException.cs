@@ -1,9 +1,8 @@
-﻿namespace Commentor.GivEtPraj.Domain.Exceptions
+﻿namespace Commentor.GivEtPraj.Domain.Exceptions;
+
+public class InvalidLatitudeException : Exception
 {
-    public class InvalidLatitudeException : Exception
+    public InvalidLatitudeException(string? message) : base(message)
     {
-        public InvalidLatitudeException(string? message) : base(message)
-        {
-        }
     }
 }

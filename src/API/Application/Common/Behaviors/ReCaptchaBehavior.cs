@@ -14,13 +14,13 @@ namespace Commentor.GivEtPraj.Application.Common.Behaviors;
 public class ReCaptchaBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    private readonly ILogger<ReCaptchaBehavior<TRequest, TResponse>> _logger;
-    private readonly ReCaptchaOptions _options;
+    private readonly IAppDbContext _context;
     private readonly HttpClient _httpClient;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IAppDbContext _context;
-    
-    public ReCaptchaBehavior(IOptions<ReCaptchaOptions> options, ILogger<ReCaptchaBehavior<TRequest, TResponse>> logger, 
+    private readonly ILogger<ReCaptchaBehavior<TRequest, TResponse>> _logger;
+    private readonly ReCaptchaOptions _options;
+
+    public ReCaptchaBehavior(IOptions<ReCaptchaOptions> options, ILogger<ReCaptchaBehavior<TRequest, TResponse>> logger,
         HttpClient httpClient, IHttpContextAccessor httpContextAccessor, IAppDbContext context)
     {
         _options = options.Value;
@@ -30,7 +30,8 @@ public class ReCaptchaBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
         _context = context;
     }
 
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+        RequestHandlerDelegate<TResponse> next)
     {
         var reCaptchaAttribute = request.GetType().GetCustomAttribute<ReCaptchaAttribute>();
         if (reCaptchaAttribute is null) return await next();
@@ -38,11 +39,11 @@ public class ReCaptchaBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
         if (reCaptchaAttribute.AllowQueue)
         {
             var result = await VerifyQueue();
-            
+
             if (result)
                 return await next();
         }
-        
+
         bool? v3Result = null;
         bool? v2Result = null;
 
@@ -66,16 +67,16 @@ public class ReCaptchaBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
         var content = await resp.Content.ReadAsStringAsync();
         var captcha = JsonSerializer.Deserialize<ReCaptchaV3Response>(content);
 
-        _logger.LogInformation("ReCAPTCHA V3 score was {CaptchaScore} and it had to be at least {MinimumScore}", 
+        _logger.LogInformation("ReCAPTCHA V3 score was {CaptchaScore} and it had to be at least {MinimumScore}",
             captcha?.Score ?? 0f, minimumScore);
-        
+
         const float scoreEpsilon = 0.01f;
         if (captcha?.Score < minimumScore - scoreEpsilon)
             throw new ForbiddenAccessException();
 
         return true;
     }
-    
+
     private async Task<bool?> VerifyV2()
     {
         var userInput = _httpContextAccessor.HttpContext?.Request.Headers["X-ReCAPTCHA-V2"];
@@ -103,7 +104,7 @@ public class ReCaptchaBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
         var queueKey = await _context.QueueKeys
             .FirstOrDefaultAsync(qk => qk.Id == guid && qk.ExpiresAt > DateTimeOffset.UtcNow);
         if (queueKey is null) return false;
-        
+
         _context.QueueKeys.Remove(queueKey);
         await _context.SaveChangesAsync();
 

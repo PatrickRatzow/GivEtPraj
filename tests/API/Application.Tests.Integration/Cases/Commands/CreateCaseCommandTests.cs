@@ -19,7 +19,7 @@ public class CreateCaseCommandTests : TestBase
         // Arrange
         var category = Database.Factory<CategoryFactory>().Create();
         var subCats = Database.Factory<SubCategoryFactory>().CreateMany(category, 2);
-        
+
         await Database.Save();
 
         var deviceId = Guid.NewGuid();
@@ -59,7 +59,7 @@ public class CreateCaseCommandTests : TestBase
         var priority = Priority.Low;
         var ipAddress = IPAddress.Parse("127.0.0.1");
 
-        var command = new CreateCaseCommand( deviceId, images, category.Name.English, 
+        var command = new CreateCaseCommand(deviceId, images, category.Name.English,
             longitude, latitude, priority, ipAddress, description);
 
         // Act
@@ -83,8 +83,9 @@ public class CreateCaseCommandTests : TestBase
         var latitude = 0;
         var priority = Priority.Low;
         var ipAddress = IPAddress.Parse("127.0.0.1");
-        
-        var command = new CreateCaseCommand( deviceId, images, categoryName, longitude, latitude, priority, ipAddress, description);
+
+        var command = new CreateCaseCommand(deviceId, images, categoryName, longitude, latitude, priority, ipAddress,
+            description);
 
         // Act
         var result = await Send(command);

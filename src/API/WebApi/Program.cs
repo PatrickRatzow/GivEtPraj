@@ -21,11 +21,8 @@ public class Program
             {
                 var context = services.GetRequiredService<AppDbContext>();
 
-                if (context.Database.IsSqlServer())
-                {
-                    await context.Database.MigrateAsync();
-                }
-                
+                if (context.Database.IsSqlServer()) await context.Database.MigrateAsync();
+
                 await AppDbContextSeed.SeedSampleData(context);
             }
             catch (Exception ex)
@@ -41,10 +38,12 @@ public class Program
         await host.RunAsync();
     }
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
+    public static IHostBuilder CreateHostBuilder(string[] args)
+    {
+        return Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
             });
+    }
 }

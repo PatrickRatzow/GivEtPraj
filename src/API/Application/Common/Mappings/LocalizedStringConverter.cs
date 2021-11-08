@@ -21,10 +21,7 @@ public static class LocalizedStringConversionExtensions
 
     public static Language GetLanguage(this ResolutionContext context)
     {
-        if (context.Items.TryGetValue(LanguageContextKey, out var language))
-        {
-            return (Language)language!;
-        }
+        if (context.Items.TryGetValue(LanguageContextKey, out var language)) return (Language)language!;
 
         throw new InvalidOperationException("Language not set");
     }

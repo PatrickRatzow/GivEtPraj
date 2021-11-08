@@ -12,7 +12,7 @@ public class QueueKeyConfiguration : IEntityTypeConfiguration<QueueKey>
 
         builder.Property(qk => qk.ExpiresAt)
             .IsRequired();
-        
+
         builder.Property(qk => qk.CaptchaScore)
             .IsRequired();
     }

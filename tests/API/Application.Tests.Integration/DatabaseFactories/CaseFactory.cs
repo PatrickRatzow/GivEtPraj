@@ -13,14 +13,14 @@ public class CaseFactory : DatabaseFactory
     private static readonly object CreationLock = new();
     private static int _created;
 
+    public CaseFactory(IServiceScope serviceScope) : base(serviceScope)
+    {
+    }
+
     protected override int Created
     {
         get => _created;
         set => _created = value;
-    }
-
-    public CaseFactory(IServiceScope serviceScope) : base(serviceScope)
-    {
     }
 
     public BaseCase Create(Category category, string? description = null, Priority? priority = null,

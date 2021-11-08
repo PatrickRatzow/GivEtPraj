@@ -22,10 +22,7 @@ public static class ValidationFilter
                 var exception = errorFeature?.Error;
                 if (exception is null) return;
 
-                if (exception is not ValidationException validationException)
-                {
-                    throw exception;
-                }
+                if (exception is not ValidationException validationException) throw exception;
 
                 var errors = validationException.Errors.Select(err => new
                 {
@@ -43,7 +40,7 @@ public static class ValidationFilter
             });
         });
     }
-    
+
     public static void UseCustomExceptionHandler(this IApplicationBuilder app)
     {
         app.UseExceptionHandler(x =>
