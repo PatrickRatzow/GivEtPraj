@@ -33,7 +33,8 @@ onMounted(async () => {
       <ion-title>{{ t("my-cases.title") }} </ion-title>
     </ion-toolbar>
     <ion-content class="ion-padding">
-      <ion-list>
+      <ion-label v-if="loading">Loading...</ion-label>
+      <ion-list v-else>
         <ion-item v-for="currentCase in cases" :key="currentCase.id" @click="router.push(`/praj/${currentCase.id}`)">
           <status-indicator :status="currentCase.status"> </status-indicator>
           <ion-label>
