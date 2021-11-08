@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Commentor.GivEtPraj.Domain.Enums;
 using Commentor.GivEtPraj.Domain.ValueObjects;
 
 namespace Infrastructure.Persistence;
@@ -49,16 +51,19 @@ public static class AppDbContextSeed
         var category = context.Categories.First();
         context.Cases.AddRange(new()
         {
-            
             Description = "Der er et stor hul i vejen på arbejde",
             Category = category,
-            GeographicLocation = GeographicLocation.From(54, 54)
+            GeographicLocation = GeographicLocation.From(54, 54),
+            IpAddress = IPAddress.Parse("127.0.0.1"),
+            Priority = Priority.Low
         }, new()
         {
             
             Description = "Hul vejen",
             Category = category,
             GeographicLocation = GeographicLocation.From(53, 53.5),
+            IpAddress = IPAddress.Parse("127.0.0.1"),
+            Priority = Priority.Low,
             Pictures = new()
             {
                 new()
