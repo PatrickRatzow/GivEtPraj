@@ -2,7 +2,7 @@
 import { useNetwork } from "@/compositions/network";
 import { useLocale } from "@/compositions/locale";
 import { useCreateCaseStore } from "@/stores/create-case";
-import { Geolocation, WatchPositionCallback } from "@capacitor/geolocation";
+import {Geolocation, WatchPositionCallback} from "@capacitor/geolocation";
 import { presentAlert } from "@/compositions/GeolocationErrorAlert";
 import * as turf from "@turf/turf";
 import {
@@ -17,6 +17,7 @@ import {
   point,
   LeafletEvent,
 } from "leaflet";
+import {Position} from "@capacitor/geolocation/dist/esm/definitions";
 
 const router = useRouter();
 const createCase = useCreateCaseStore();
@@ -26,13 +27,13 @@ const network = useNetwork();
 
 const loadMap = async () => {
   try {
-    const pos = await Geolocation.getCurrentPosition();
+    var pos = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
 
     let streets = tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
       attribution:
         'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 18,
-      minZoom: 10,
+      minZoom: 6,
       id: "mapbox/streets-v11",
       tileSize: 512,
       zoomOffset: -1,
@@ -46,7 +47,7 @@ const loadMap = async () => {
       attribution:
         'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 18,
-      minZoom: 10,
+      minZoom: 6,
       id: "mapbox/satellite-streets-v11",
       tileSize: 512,
       zoomOffset: -1,
@@ -77,31 +78,35 @@ const loadMap = async () => {
       }
     );
 
-    let bounderies = turf.multiPolygon([[
+    let bounderies = turf.multiPolygon([
       [
-        [54.783554, 8.025203],
-        [56.7008, 7.94616],
-        [57.209392, 8.586408],
-        [57.286365, 9.297795],
-        [57.950948, 10.293736],
-        [57.799633, 11.31339],
-        [56.031885, 12.661413],
-        [55.803497, 12.838052],
-        [55.50243, 12.822007],
-        [55.324403, 12.712139],
-        [54.5551, 12.744531],
-        [54.506417, 11.522005],
-        [54.805709, 9.818059],
-        [54.783554, 8.025203],
-      ]],
-      [[
-        [55.319725, 14.763668],
-        [55.145379, 15.20082],
-        [54.962571, 15.098907],
-        [55.096303, 14.630914],
-        [55.319725, 14.763668],
+        [
+          [54.783554, 8.025203],
+          [56.7008, 7.94616],
+          [57.209392, 8.586408],
+          [57.286365, 9.297795],
+          [57.950948, 10.293736],
+          [57.799633, 11.31339],
+          [56.031885, 12.661413],
+          [55.803497, 12.838052],
+          [55.50243, 12.822007],
+          [55.324403, 12.712139],
+          [54.5551, 12.744531],
+          [54.506417, 11.522005],
+          [54.805709, 9.818059],
+          [54.783554, 8.025203],
+        ],
       ],
-    ]]);
+      [
+        [
+          [55.319725, 14.763668],
+          [55.145379, 15.20082],
+          [54.962571, 15.098907],
+          [55.096303, 14.630914],
+          [55.319725, 14.763668],
+        ],
+      ],
+    ]);
 
     let userAccuracy = circle([pos.coords.latitude, pos.coords.longitude], {
       color: "blue",
@@ -119,6 +124,17 @@ const loadMap = async () => {
       fillOpacity: 1,
       radius: 21 - myMap.getZoom(),
     }).addTo(myMap);
+
+    const watchPos = (newPos: Position | null, err?: any) => {
+      if (!newPos) return;
+      
+      console.log(newPos);
+      userPoint.setLatLng([newPos.coords.latitude, newPos.coords.longitude]);
+      userAccuracy.setLatLng([newPos.coords.latitude, newPos.coords.longitude]);
+      userAccuracy.setRadius(newPos.coords.accuracy);
+    };
+
+    const wait = Geolocation.watchPosition({ enableHighAccuracy: true, timeout: 10000 }, watchPos);
 
     myMap.on("zoom", () => userPoint.setRadius(Math.pow(2, 20 - myMap.getZoom())));
 
