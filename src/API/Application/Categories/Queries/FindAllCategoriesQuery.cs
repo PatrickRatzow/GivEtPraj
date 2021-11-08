@@ -22,7 +22,6 @@ public class FindAllCategoriesQueryHandler : IRequestHandler<FindAllCategoriesQu
             .Include(category => category.SubCategories)
             .ToListAsync(cancellationToken);
 
-
         return _mapper.Map<List<Category>, List<CategoryDto>>(categories);
     }
 }

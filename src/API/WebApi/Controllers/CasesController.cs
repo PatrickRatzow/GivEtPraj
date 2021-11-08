@@ -18,7 +18,6 @@ public class CasesController : ControllerBase
     }
 
     [HttpPost]
-    [CaptchaVerification]
     public async Task<IActionResult> CreateCase([FromBody] CreateCaseRequest request,
         CancellationToken cancellationToken)
     {
@@ -52,6 +51,15 @@ public class CasesController : ControllerBase
     public async Task<IActionResult> FindCase(int id, CancellationToken cancellationToken)
     {
         var query = new FindCaseQuery(id);
+        var result = await _mediator.Send(query, cancellationToken);
+
+        return result.MatchResponse();
+    }
+
+    [HttpGet("{deviceId:Guid}")]
+    public async Task<IActionResult> FindCasesByDeviceId(Guid deviceId, CancellationToken cancellationToken)
+    {
+        var query = new FindCasesByDeviceIdQuery(deviceId);
         var result = await _mediator.Send(query, cancellationToken);
 
         return result.MatchResponse();

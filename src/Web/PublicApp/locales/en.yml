@@ -1,0 +1,47 @@
+tabs:
+  create-case: "Create Praj"
+  my-cases: "My Prajs"
+create-case:
+  map:
+    title: "Choose Location"
+    layers:
+      street: "Streets"
+      satellite: "Satellite"
+    confirm-button:
+      valid: "Accept Location"
+      invalid: "Select Location"
+    confirm-button-offline: 
+      valid: "Send in current location"
+    internet-error:
+      no-internet: "No internet"
+      internet-msg: "Take pictures of your Praj case, and upload them later"
+      no-internet-explanation: |
+        There is no internet connection so the map cant be loaded, you can send in your current location. 
+        Make sure your current location equals to where the error is.
+  category:
+    title: "Choose Category"
+    search-placeholder: "Search"
+  pictures:
+    title: "Choose Pictures"
+  overview:
+    title: "Overview"
+    category: "Category"
+    sub-categories: "Sub categories"
+    pictures: "Pictures"
+    comment:
+      title: "Comment"
+      placeholder: "Type here"
+    finish: "Send"
+navigation:
+  back: "Back"
+  delete: "Delete"
+  next: "Next"
+not-found:
+  text: "Ain't nothing here"
+my-cases:
+  title: "Your Prajs"
+case:
+  title: "Praj"
+  last-updated-at: "Last updated {time}"
+settings:
+  title: "Settings"

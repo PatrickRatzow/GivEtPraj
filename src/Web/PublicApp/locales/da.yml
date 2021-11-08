@@ -1,0 +1,5 @@
+title-bar:
+  back: "Tilbage"
+  delete: "Slet"
+error-message:
+  no-internet: ""

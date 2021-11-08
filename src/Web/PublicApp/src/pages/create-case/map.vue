@@ -1,0 +1,228 @@
+<script setup lang="ts">
+import { useNetwork } from "@/compositions/network";
+import { useLocale } from "@/compositions/locale";
+import { useCreateCaseStore } from "@/stores/create-case";
+import { Geolocation, WatchPositionCallback } from "@capacitor/geolocation";
+import { presentAlert } from "@/compositions/GeolocationErrorAlert";
+import * as turf from "@turf/turf";
+import {
+  map,
+  tileLayer,
+  marker,
+  LeafletMouseEvent,
+  Marker,
+  control,
+  Control,
+  circle,
+  point,
+  LeafletEvent,
+} from "leaflet";
+
+const router = useRouter();
+const createCase = useCreateCaseStore();
+const locale = useLocale();
+const { t } = useI18n();
+const network = useNetwork();
+
+const loadMap = async () => {
+  try {
+    const pos = await Geolocation.getCurrentPosition();
+
+    let streets = tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+      attribution:
+        'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      minZoom: 10,
+      id: "mapbox/streets-v11",
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: "pk.eyJ1Ijoic2ltb25uaWVzZSIsImEiOiJja3ZnZG9yZm0wMWxzMnVwM3Nlcjk3YmpiIn0.p1TDwifWqx1kcYFnBqI_fg",
+      bounds: [
+        [57.765923, 7.482181],
+        [54.54649, 15.455954],
+      ],
+    });
+    const satellite = tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+      attribution:
+        'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      minZoom: 10,
+      id: "mapbox/satellite-streets-v11",
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: "pk.eyJ1Ijoic2ltb25uaWVzZSIsImEiOiJja3ZnZG9yZm0wMWxzMnVwM3Nlcjk3YmpiIn0.p1TDwifWqx1kcYFnBqI_fg",
+      bounds: [
+        [57.765923, 7.482181],
+        [54.54649, 15.455954],
+      ],
+    });
+
+    const myMap = map("mapid", { layers: [streets] }).setView([pos.coords.latitude, pos.coords.longitude], 18);
+
+    const addLayers = () => {
+      const baseMaps = {} as Control.LayersObject;
+      baseMaps[t("create-case.map.layers.street")] = streets;
+      baseMaps[t("create-case.map.layers.satellite")] = satellite;
+
+      control.layers(baseMaps).addTo(myMap);
+    };
+
+    addLayers();
+    watch(
+      () => locale.language,
+      () => {
+        myMap.eachLayer((layer) => myMap.removeLayer(layer));
+
+        addLayers();
+      }
+    );
+
+    let bounderies = turf.multiPolygon([[
+      [
+        [54.783554, 8.025203],
+        [56.7008, 7.94616],
+        [57.209392, 8.586408],
+        [57.286365, 9.297795],
+        [57.950948, 10.293736],
+        [57.799633, 11.31339],
+        [56.031885, 12.661413],
+        [55.803497, 12.838052],
+        [55.50243, 12.822007],
+        [55.324403, 12.712139],
+        [54.5551, 12.744531],
+        [54.506417, 11.522005],
+        [54.805709, 9.818059],
+        [54.783554, 8.025203],
+      ]],
+      [[
+        [55.319725, 14.763668],
+        [55.145379, 15.20082],
+        [54.962571, 15.098907],
+        [55.096303, 14.630914],
+        [55.319725, 14.763668],
+      ],
+    ]]);
+
+    let userAccuracy = circle([pos.coords.latitude, pos.coords.longitude], {
+      color: "blue",
+      opacity: 1,
+      weight: 0.5,
+      fillColor: "#96c3eb",
+      fillOpacity: 0.6,
+      radius: pos.coords.accuracy,
+    }).addTo(myMap);
+
+    let userPoint = circle([pos.coords.latitude, pos.coords.longitude], {
+      color: "white",
+      fillColor: "blue",
+      weight: 4,
+      fillOpacity: 1,
+      radius: 21 - myMap.getZoom(),
+    }).addTo(myMap);
+
+    myMap.on("zoom", () => userPoint.setRadius(Math.pow(2, 20 - myMap.getZoom())));
+
+    let m: Marker | undefined;
+    const setLocation = (location: GeographicLocation) => {
+      m ??= marker([location.latitude, location.longitude]).addTo(myMap);
+      m.setLatLng({
+        lat: location.latitude,
+        lng: location.longitude,
+      });
+
+      createCase.geographicLocation = location;
+    };
+    myMap.on("click", (e: LeafletMouseEvent) => {
+      if (turf.booleanWithin(turf.point([e.latlng.lat, e.latlng.lng]), bounderies)) {
+        setLocation({ latitude: e.latlng.lat, longitude: e.latlng.lng });
+      }
+    });
+  } catch (e: unknown) {
+    const permissions = await Geolocation.checkPermissions();
+    if (permissions.location == "denied") {
+      alert("We needed permission :(");
+    }
+  }
+};
+
+onMounted(loadMap);
+
+const getStatus = () => network.status.value?.connected;
+
+watch(getStatus, loadMap);
+
+const isPositionValid = computed(() => createCase.geographicLocation);
+
+const sendInCurrentLocation = async () => {
+  try {
+    console.log("Start");
+    var pos = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
+    createCase.geographicLocation = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
+    router.push("/create-praj/category");
+  } catch (e: unknown) {
+    if (e instanceof GeolocationPositionError) {
+      if (e.code == 1) {
+        presentAlert(e.code);
+      } else if (e.code == 2) {
+        presentAlert(e.code);
+      } else if (e.code == 3) {
+        presentAlert(e.code);
+      }
+    }
+
+    console.log("Unknown error occurred");
+  }
+};
+</script>
+
+<template>
+  <ion-page>
+    <ion-toolbar>
+      <ion-title>{{ t("create-case.map.title") }}</ion-title>
+    </ion-toolbar>
+    <ion-content>
+      <template v-if="!getStatus()">
+        <div class="flex flex-col justify-between items-center text-black dark:text-white text-center h-full">
+          <div class="flex flex-col items-center mt-8">
+            <i class="fas fa-exclamation-circle text-red-500 text-6xl mb-4"></i>
+            <h1 class="text-2xl">{{ t("create-case.map.internet-error.no-internet") }}</h1>
+            <p class="mx-8">{{ t("create-case.map.internet-error.no-internet-explanation") }}</p>
+          </div>
+
+          <ion-button class="mb-8" @click="sendInCurrentLocation">
+            {{ t("create-case.map.confirm-button-offline.valid") }}
+          </ion-button>
+        </div>
+      </template>
+      <template v-else>
+        <div id="mapid" class="h-full"></div>
+        <button
+          class="
+            absolute
+            bottom-4
+            left-1/2
+            right-1/2
+            transform
+            -translate-x-1/2
+            py-2
+            px-4
+            z-[99999]
+            rounded-md
+            w-max
+            text-lg
+            transition-all
+          "
+          type="button"
+          :class="[
+            isPositionValid ? ['bg-green-500 text-white'] : ['bg-gray-200 text-black border-red-500 opacity-90'],
+          ]"
+          @click="router.push('/create-praj/category')"
+        >
+          {{
+            isPositionValid ? t("create-case.map.confirm-button.valid") : t("create-case.map.confirm-button.invalid")
+          }}
+        </button>
+      </template>
+    </ion-content>
+  </ion-page>
+</template>
