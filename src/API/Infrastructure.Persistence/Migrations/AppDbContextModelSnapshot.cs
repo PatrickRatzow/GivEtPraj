@@ -53,7 +53,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("DeviceId");
 
-                    b.ToTable("Cases");
+                    b.ToTable("Cases", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("BaseCase");
                 });
@@ -71,7 +71,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CaseId");
 
-                    b.ToTable("Images");
+                    b.ToTable("Images", (string)null);
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.CaseUpdate", b =>
@@ -103,7 +103,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("CaseUpdate");
+                    b.ToTable("CaseUpdate", (string)null);
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Category", b =>
@@ -121,7 +121,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Employee", b =>
@@ -142,7 +142,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.QueueKey", b =>
@@ -166,7 +166,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("QueueKeys");
+                    b.ToTable("QueueKeys", (string)null);
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.SubCategory", b =>
@@ -184,7 +184,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("SubCategories");
+                    b.ToTable("SubCategories", (string)null);
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Case", b =>
@@ -219,7 +219,7 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Commentor.GivEtPraj.Domain.ValueObjects.GeographicLocation", "GeographicLocation", b1 =>
+                    b.OwnsOne("Commentor.GivEtPraj.Domain.Entities.BaseCase.GeographicLocation#Commentor.GivEtPraj.Domain.ValueObjects.GeographicLocation", "GeographicLocation", b1 =>
                         {
                             b1.Property<int>("BaseCaseId")
                                 .HasColumnType("int");
@@ -232,7 +232,7 @@ namespace Infrastructure.Persistence.Migrations
 
                             b1.HasKey("BaseCaseId");
 
-                            b1.ToTable("Cases");
+                            b1.ToTable("Cases", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("BaseCaseId");
@@ -276,7 +276,7 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Category", b =>
                 {
-                    b.OwnsOne("Commentor.GivEtPraj.Domain.ValueObjects.LocalizedString", "Name", b1 =>
+                    b.OwnsOne("Commentor.GivEtPraj.Domain.Entities.Category.Name#Commentor.GivEtPraj.Domain.ValueObjects.LocalizedString", "Name", b1 =>
                         {
                             b1.Property<int>("CategoryId")
                                 .HasColumnType("int");
@@ -293,7 +293,7 @@ namespace Infrastructure.Persistence.Migrations
 
                             b1.HasKey("CategoryId");
 
-                            b1.ToTable("Categories");
+                            b1.ToTable("Categories", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CategoryId");
@@ -311,7 +311,7 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Commentor.GivEtPraj.Domain.ValueObjects.LocalizedString", "Name", b1 =>
+                    b.OwnsOne("Commentor.GivEtPraj.Domain.Entities.SubCategory.Name#Commentor.GivEtPraj.Domain.ValueObjects.LocalizedString", "Name", b1 =>
                         {
                             b1.Property<int>("SubCategoryId")
                                 .HasColumnType("int");
@@ -328,7 +328,7 @@ namespace Infrastructure.Persistence.Migrations
 
                             b1.HasKey("SubCategoryId");
 
-                            b1.ToTable("SubCategories");
+                            b1.ToTable("SubCategories", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("SubCategoryId");
