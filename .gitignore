@@ -351,3 +351,4 @@ MigrationBackup/
 
 # Build & Project stuff from Rider.
 .idea/
+src/Web/PublicApp/package-lock.json
