@@ -26,6 +26,10 @@ declare global {
 		deviceId: string;
 	}
 
+	interface SavedCase extends Case {
+		nearestCity?: string;
+	}
+
 	interface Status {
 		color: string;
 		name: string;

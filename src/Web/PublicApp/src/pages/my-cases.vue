@@ -1,9 +1,27 @@
 <script setup lang="ts">
 import { useCaseHistory } from "@/compositions/case-history";
+import { useLocationLookup } from "@/compositions/location-lookup";
 
 const caseHistory = useCaseHistory();
 const router = useRouter();
 const { t } = useI18n();
+const locationLookup = useLocationLookup();
+
+const cases = ref<SavedCase[]>([]);
+
+const loading = ref(true);
+onMounted(async () => {
+  cases.value = await Promise.all(
+    caseHistory.cases.map(async (c) => {
+      return {
+        ...c,
+        nearestCity: (await locationLookup.fetchAddress(c.geographicLocation))?.zipCodeName,
+      } as SavedCase;
+    })
+  );
+
+  loading.value = false;
+});
 </script>
 
 <template>
@@ -16,14 +34,10 @@ const { t } = useI18n();
     </ion-toolbar>
     <ion-content class="ion-padding">
       <ion-list>
-        <ion-item
-          v-for="currentCase in caseHistory.cases"
-          :key="currentCase.id"
-          @click="router.push(`/praj/${currentCase.id}`)"
-        >
+        <ion-item v-for="currentCase in cases" :key="currentCase.id" @click="router.push(`/praj/${currentCase.id}`)">
           <status-indicator :status="currentCase.status"> </status-indicator>
           <ion-label>
-            <h3>{{ currentCase.id }}</h3>
+            <h3>{{ currentCase.nearestCity ?? t("my-cases.unable-to-fetch-closest-city-name") }}</h3>
             <p>{{ currentCase.category.name }}</p>
           </ion-label>
         </ion-item>
