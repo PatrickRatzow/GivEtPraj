@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { useCaseHistory } from "@/compositions/case-history";
 import { useLocationLookup } from "@/compositions/location-lookup";
+import { useNetwork } from "@/compositions/network";
 
 const caseHistory = useCaseHistory();
 const router = useRouter();
 const { t } = useI18n();
 const locationLookup = useLocationLookup();
+const network = useNetwork();
 
 const cases = ref<SavedCase[]>([]);
 
-const loading = ref(true);
-onMounted(async () => {
+const fetchAddressNames = async () => {
   cases.value = await Promise.all(
     caseHistory.cases.map(async (c) => {
       const address = await locationLookup.fetchAddress(c.geographicLocation);
@@ -21,9 +22,23 @@ onMounted(async () => {
       } as SavedCase;
     })
   );
+};
+
+const loading = ref(true);
+onMounted(async () => {
+  await fetchAddressNames();
 
   loading.value = false;
 });
+
+watch(
+  () => network.status.value?.connected,
+  (newValue: boolean | undefined, oldValue: boolean | undefined) => {
+    if (!oldValue && newValue) {
+      fetchAddressNames();
+    }
+  }
+);
 </script>
 
 <template>
