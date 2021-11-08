@@ -1,7 +1,10 @@
-﻿using Commentor.GivEtPraj.Domain.Exceptions;
+﻿using System.Diagnostics.CodeAnalysis;
+using Commentor.GivEtPraj.Domain.Exceptions;
 
 namespace Commentor.GivEtPraj.Domain.ValueObjects;
 
+// Don't let ReSharper remove the private set because EF Core needs it
+[SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Local")]
 public class GeographicLocation : ValueObject
 {
 
@@ -15,8 +18,8 @@ public class GeographicLocation : ValueObject
         Longitude = longitude;
     }
 
-    public double Latitude { get; }
-    public double Longitude { get; }
+    public double Latitude { get; private set; }
+    public double Longitude { get; private set; }
 
     public static GeographicLocation From(double latitude, double longitude)
     {
