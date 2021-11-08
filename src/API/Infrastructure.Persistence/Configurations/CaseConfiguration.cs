@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace Infrastructure.Persistence.Configurations;
+﻿namespace Infrastructure.Persistence.Configurations;
 
 public class CaseConfiguration : IEntityTypeConfiguration<Case>
 {
@@ -15,15 +13,14 @@ public class CaseConfiguration : IEntityTypeConfiguration<Case>
             .WithOne(cp => cp.Case)
             .HasForeignKey(cp => cp.CaseId);
 
-        builder.OwnsOne(c => c.GeographicLocation);
-
-        builder.Property(c => c.IpAddress)
-            .IsRequired()
-            .HasConversion(
-                c => c.ToString(),
-                c => IPAddress.Parse(c));
-
         builder.Property(c => c.Priority);
 
+        builder.Property(c => c.IpAddress);
+
+        builder.OwnsOne(c => c.GeographicLocation);
+
+        builder.HasMany(c => c.CaseUpdates)
+            .WithOne(cu => cu.Case)
+            .HasForeignKey(cu => cu.CaseId);
     }
 }

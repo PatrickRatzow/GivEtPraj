@@ -4,9 +4,14 @@ public class CaseProfile : Profile
 {
     public CaseProfile()
     {
-        CreateMap<Case, CaseSummaryDto>()
-            .ForMember(c => c.AmountOfPictures, 
-                opts => opts.MapFrom(m => m.Pictures.Count));
+        CreateMap<Case, CaseDto>();
+        CreateMap<CaseImage, PictureDto>()
+            .ForMember(
+                c => c.Url,
+                opts => opts.MapFrom(
+                    m => $"https://givetpraj.blob.core.windows.net/cases/{m.Id}.jpg"
+                    )
+            );
         CreateMap<Category, CategoryDto>();
         CreateMap<SubCategory, SubCategoryDto>();
     }

@@ -1,0 +1,28 @@
+﻿@page "/create-case"
+@using Commentor.GivEtPraj.Blazor.Services
+@using Commentor.GivEtPraj.WebApi.Contracts.Requests
+@using Commentor.GivEtPraj.Blazor.Components
+@inject ICategoryService _categoryService
+
+<EditForm Model="_model" class="w-max h-full">
+    <LoadingSpinner Loading="_loading">
+        <StepHandler>
+            <ChooseCategoryStep Model="@_model"/>
+            <ChooseElementStep Model="@_model"/>
+            <CameraStep Model="@_model"/>
+            <CaseOverview Model="@_model" Hidden="true"/>
+        </StepHandler>
+    </LoadingSpinner>
+</EditForm>
+
+@code {
+    private readonly CreateCaseRequest _model = new();
+    private bool _loading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _loading = true;
+        await _categoryService.GetAllCategories();
+        _loading = false;
+    }
+}

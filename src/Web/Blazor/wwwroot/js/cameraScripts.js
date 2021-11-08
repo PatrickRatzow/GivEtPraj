@@ -1,5 +1,5 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
-    let video = document.getElementById('video');
+    var video = document.getElementById('video');
     let flipBtn = document.querySelector('#camFlip-btn');
 });
 
@@ -8,24 +8,34 @@ let shouldFaceUser = true;
 let defaultsOpts = { audio: false, video: true }
 defaultsOpts.video = { facingMode: shouldFaceUser ? 'user' : 'environment' }
 let stream = null;
+let videoSettings;
 
-function startVideo() {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia(defaultsOpts)
-            .then(function (_stream) {
-                stream = _stream;
-                video.srcObject = stream;
-                video.play();
-            })
-            .catch(function (error) {
-                console.log(error)
-            });
+async function startVideo() {
+    if (navigator.mediaDevices?.getUserMedia) {
+        const _stream = await navigator.mediaDevices.getUserMedia(defaultsOpts);
+
+        stream = _stream;
+
+        const videoTracks = stream.getVideoTracks();
+        console.log({ videoTracks})
+        const videoTrack = videoTracks[videoTracks.length - 1];
+        console.log({ videoTrack })
+        videoSettings = videoTrack.getSettings();
+        console.log({ videoSettings })
+         
+        video.srcObject = stream;
+        video.play();
     }
 }
 
 
 function takePhoto() {
+    let video = document.getElementById('video');
     let canvas = document.createElement('canvas');
+
+
+    canvas.height = videoSettings.height;
+    canvas.width = videoSettings.width;
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
     let image_data_url = canvas.toDataURL('image/png');
 

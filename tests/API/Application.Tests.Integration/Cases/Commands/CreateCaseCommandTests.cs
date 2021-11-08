@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Commentor.GivEtPraj.Application.Cases.Commands;
@@ -19,7 +20,7 @@ public class CreateCaseCommandTests : TestBase
         await Database.Save();
 
         var description = "An example description";
-        var images = new List<string>();
+        var images = new List<Stream>();
         var longitude = 0;
         var latitude = 0;
         var priority = Priority.Low;
@@ -30,8 +31,8 @@ public class CreateCaseCommandTests : TestBase
         var result = await Send(command);
 
         // Assert
-        result.Value.Should().BeOfType<CaseSummaryDto>();
-        var dbResult = await Find<Case>(result.Value.As<CaseSummaryDto>().Id);
+        result.Value.Should().BeOfType<CaseDto>();
+        var dbResult = await Find<Case>(result.Value.As<CaseDto>().Id);
         dbResult.Should().NotBeNull();
     }
 
@@ -40,7 +41,7 @@ public class CreateCaseCommandTests : TestBase
     {
         // Arrange
         var description = "An example description";
-        var images = new List<string>();
+        var images = new List<Stream>();
         var categoryName = "Some category";
         var longitude = 0;
         var latitude = 0;

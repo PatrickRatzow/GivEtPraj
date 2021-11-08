@@ -1,0 +1,15 @@
+﻿@code {
+
+    [Parameter] public string Title { get; set; } = "Title";
+
+    [Parameter] public string? Icon { get; set; }
+
+    [Parameter] public string Offset { get; set; } = "";
+
+    [CascadingParameter] protected StepHandler Parent { get; set; } = null!;
+    [Parameter] public bool Hidden { get; set; } 
+
+    protected override void OnInitialized()
+        => Parent.AddStep(this);
+
+}

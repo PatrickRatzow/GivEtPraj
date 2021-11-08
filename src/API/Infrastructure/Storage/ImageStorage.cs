@@ -20,7 +20,7 @@ public class ImageStorage : IImageStorage
     public async Task<Stream?> FindImage(string name)
         => await _fileStorage.FindFile(FullPath(name));
 
-    public async Task<bool> UploadImage(string name, string base64String)
+    public async Task<bool> UploadImage(string name, Stream content)
     {
         var extension = Path.GetExtension(name);
         var contentType = extension switch
@@ -31,7 +31,7 @@ public class ImageStorage : IImageStorage
             _ => throw new ArgumentException($"{name} is not an allowed file extension")
         };
 
-        var compressedImage = _imageCompression.CompressImage(base64String);
+        var compressedImage = _imageCompression.CompressImage(content);
 
         return await _fileStorage.UploadFile(FullPath(name), compressedImage, contentType);
     }

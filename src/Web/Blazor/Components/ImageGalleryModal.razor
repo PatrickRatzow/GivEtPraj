@@ -1,0 +1,46 @@
+﻿<div class="@CssClass">
+    <div class="flex flex-col justify-between h-[calc(100vh-1rem)]">
+        <div class="flex flex-row justify-end mx-3 my-3">
+            <button class="flex flex-row justify-between bg-white" @onclick="Toggle">
+                <i class="fas fa-times text-4xl mx-1"></i>
+            </button>
+        </div>
+        <div class="flex flex-row justify-center mx-2 items-center relative">
+            <div class="relative">
+                <Base64Img  Src="@Images[imageCount]" CssClass=""></Base64Img>
+            </div>
+            <button class="absolute bg-gray-100 rounded-full w-8 h-8 opacity-75 left-2">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="absolute bg-gray-100 rounded-full w-8 h-8 opacity-75 right-2">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <div class="flex flex-col justify-items-center my-14">
+            <button @onclick="RemoveImage" class="bg-white rounded-full w-13 h-13">
+                <i class="fas fa-trash text-3xl" ></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public string? CssClass { get; set; }
+    [Parameter] public EventCallback<string> OnImageRemoved { get; set; }
+    [Parameter] public EventCallback<string> ToggleModal { get; set; }
+    [Parameter] public List<string> Images { get; set; }
+    int imageCount = 0;
+
+    private async void RemoveImage()
+    {
+
+        await OnImageRemoved.InvokeAsync(Images[imageCount]);
+    }
+
+    private async void Toggle()
+    {
+        await ToggleModal.InvokeAsync();
+    }
+}

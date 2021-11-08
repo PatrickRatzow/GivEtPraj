@@ -8,6 +8,10 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .IsRequired()
             .HasMaxLength(128);
 
+        builder.Property(category => category.Icon)
+            .IsRequired()
+            .HasMaxLength(64);
+
         builder.HasMany(category => category.Cases)
             .WithOne(@case => @case.Category);
 

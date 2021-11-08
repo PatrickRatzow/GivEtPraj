@@ -5,21 +5,15 @@ using System.Net;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
-public class CreateCaseCommand : IRequest<OneOf<CaseSummaryDto, InvalidCategory>>
+public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory>>
 {
-    public string Description { get; set; }
-    public IList<string> Images { get; set;  }
-    public string Category { get; set;  }
-    public double Longitude { get; set;  }
-    public double Latitude { get; set; }
-    public Priority Priority { get; set; }
-    public IPAddress IpAddress { get; set; }
 
     public CreateCaseCommand()
     {
     }
 
-    public CreateCaseCommand(string description, IList<string> images, string category, double longitude, double latitude, 
+    public CreateCaseCommand(string description, List<Stream> images, string category, double longitude,
+        double latitude,
         Priority priority, IPAddress ipAddress)
     {
         Description = description;
@@ -30,14 +24,21 @@ public class CreateCaseCommand : IRequest<OneOf<CaseSummaryDto, InvalidCategory>
         Priority = priority;
         IpAddress = ipAddress;
     }
+
+    public string Description { get; set; }
+    public List<Stream> Images { get; set; } = new();
+    public string Category { get; set; }
+    public double Longitude { get; set; }
+    public double Latitude { get; set; }
+    public Priority Priority { get; set; }
+    public IPAddress IpAddress { get; set; }
 }
 
-
-public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<CaseSummaryDto, InvalidCategory>>
+public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<int, InvalidCategory>>
 {
     private readonly IAppDbContext _db;
-    private readonly IMapper _mapper;
     private readonly IImageStorage _imageStorage;
+    private readonly IMapper _mapper;
 
     public CreateCaseCommandHandler(IAppDbContext db, IMapper mapper, IImageStorage imageStorage)
     {
@@ -46,7 +47,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         _imageStorage = imageStorage;
     }
 
-    public async Task<OneOf<CaseSummaryDto, InvalidCategory>>
+    public async Task<OneOf<int, InvalidCategory>>
         Handle(CreateCaseCommand request, CancellationToken cancellationToken)
     {
         var category = await _db.Categories
@@ -68,19 +69,18 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
         _db.Cases.Add(newCase);
         await _db.SaveChangesAsync(cancellationToken);
 
-        var summaryDto = _mapper.Map<Case, CaseSummaryDto>(newCase);
-        return summaryDto;
+        return newCase.Id;
     }
 
-    private async Task<List<Picture>> CreateImages(CreateCaseCommand request)
+    private async Task<List<CaseImage>> CreateImages(CreateCaseCommand request)
     {
-        var pictures = new List<Picture>();
-        var list = new List<(string Image, Guid Id)>();
+        var images = new List<CaseImage>();
+        var list = new List<(Stream Image, Guid Id)>();
         foreach (var image in request.Images)
         {
             var guid = Guid.NewGuid();
             list.Add((image, guid));
-            pictures.Add(new()
+            images.Add(new()
             {
                 Id = guid
             });
@@ -88,10 +88,10 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
 
         await UploadImages(list);
 
-        return pictures;
+        return images;
     }
 
-    private async ValueTask UploadImages(IReadOnlyCollection<(string Image, Guid Id)> images)
+    private async ValueTask UploadImages(IReadOnlyCollection<(Stream Image, Guid Id)> images)
     {
         if (images.Count == 0) return;
 
@@ -128,25 +128,8 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 
         RuleFor(x => x.IpAddress)
             .NotNull()
-            .Must(x => ValidateIPv4(x.ToString()));
+            .Must(x => ValidateIP(x.ToString()));
     }
 
-    private bool ValidateIPv4(string ipString)
-    {
-        if (String.IsNullOrWhiteSpace(ipString))
-        {
-            return false;
-        }
-
-        string[] splitValues = ipString.Split('.');
-        if (splitValues.Length != 4)
-        {
-            return false;
-        }
-
-        byte tempForParsing;
-
-        return splitValues.All(r => byte.TryParse(r, out tempForParsing));
-    }
-
+    private bool ValidateIP(string ipString) => IPAddress.TryParse(ipString, out _);
 }

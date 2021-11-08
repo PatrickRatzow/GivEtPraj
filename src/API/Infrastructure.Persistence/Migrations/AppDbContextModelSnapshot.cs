@@ -40,7 +40,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("IpAddress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(45)");
 
                     b.Property<int>("Priority")
                         .HasColumnType("int");
@@ -52,25 +52,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Cases");
                 });
 
-            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Picture", b =>
+            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.CaseImage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -84,6 +66,82 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("CaseId");
 
                     b.ToTable("Pictures");
+                });
+
+            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.CaseUpdate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CaseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CurrentStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("SendToReporter")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CaseId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("CaseUpdate");
+                });
+
+            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Employee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.SubCategory", b =>
@@ -142,7 +200,7 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Picture", b =>
+            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.CaseImage", b =>
                 {
                     b.HasOne("Commentor.GivEtPraj.Domain.Entities.Case", "Case")
                         .WithMany("Pictures")
@@ -151,6 +209,25 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Case");
+                });
+
+            modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.CaseUpdate", b =>
+                {
+                    b.HasOne("Commentor.GivEtPraj.Domain.Entities.Case", "Case")
+                        .WithMany("CaseUpdates")
+                        .HasForeignKey("CaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Commentor.GivEtPraj.Domain.Entities.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Case");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.SubCategory", b =>
@@ -166,6 +243,8 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Case", b =>
                 {
+                    b.Navigation("CaseUpdates");
+
                     b.Navigation("Pictures");
                 });
 
