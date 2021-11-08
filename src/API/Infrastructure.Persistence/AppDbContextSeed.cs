@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Commentor.GivEtPraj.Domain.Enums;
 using Commentor.GivEtPraj.Domain.ValueObjects;
 
 namespace Infrastructure.Persistence;
@@ -12,14 +13,11 @@ public static class AppDbContextSeed
     {
         SeedCategories(context);
         await context.SaveChangesAsync();
-        
-        SeedSubCategories(context);
-        await context.SaveChangesAsync();
 
         SeedCases(context);
         await context.SaveChangesAsync();
     }
-
+    
     private static void SeedCategories(AppDbContext context)
     {
         var hasAny = context.Categories.Any();
@@ -27,8 +25,7 @@ public static class AppDbContextSeed
 
         context.Categories.Add(new()
         {
-            Name = LocalizedString.From("Vejskade", "Road damage"),
-            Icon = "fas fa-road"
+            Name = "Vejskade"
         });
     }
 
@@ -39,10 +36,10 @@ public static class AppDbContextSeed
 
         context.SubCategories.AddRange(new()
         {
-            Name = LocalizedString.From("Toilet", "Toilet")
+            Name = "Toilet"
         }, new()
         {
-            Name = LocalizedString.From("Vejskade", "Road damage")
+            Name = "Vejskade"
         });
     }
 
@@ -52,21 +49,22 @@ public static class AppDbContextSeed
         if (hasAny) return;
 
         var category = context.Categories.First();
-        context.Cases.AddRange(new Case
+        context.Cases.AddRange(new()
         {
-
-            Comment = "Der er et stor hul i vejen på arbejde",
+            Description = "Der er et stor hul i vejen på arbejde",
             Category = category,
             GeographicLocation = GeographicLocation.From(54, 54),
-            IpAddress = IPAddress.Parse("200.200.200.200")
-
-        }, new Case
+            IpAddress = IPAddress.Parse("127.0.0.1"),
+            Priority = Priority.Low
+        }, new()
         {
-
-            Comment = "Hul vejen",
+            
+            Description = "Hul vejen",
             Category = category,
             GeographicLocation = GeographicLocation.From(53, 53.5),
-            Images = new()
+            IpAddress = IPAddress.Parse("127.0.0.1"),
+            Priority = Priority.Low,
+            Pictures = new()
             {
                 new()
                 {
@@ -76,8 +74,7 @@ public static class AppDbContextSeed
                 {
                     Id = Guid.NewGuid()
                 }
-            },
-            IpAddress = IPAddress.Parse("200.200.200.200")
+            }
         });
     }
 }
