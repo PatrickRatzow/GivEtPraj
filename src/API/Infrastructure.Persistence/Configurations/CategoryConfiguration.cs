@@ -14,6 +14,9 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 .HasMaxLength(120);
         });
 
+        builder.Property(category => category.Miscellaneous)
+            .HasDefaultValue(false);
+        
         builder.Property(category => category.Icon)
             .IsRequired()
             .HasMaxLength(64);

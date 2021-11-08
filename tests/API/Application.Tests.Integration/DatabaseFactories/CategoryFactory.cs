@@ -47,7 +47,8 @@ public class CategoryFactory : DatabaseFactory
         return Add(new Category
         {
             Name = LocalizedString.From(name, name),
-            Icon = "fas fa-road"
+            Icon = "fas fa-road",
+            Miscellaneous = false
         });
     }
 }

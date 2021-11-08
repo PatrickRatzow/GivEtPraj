@@ -6,5 +6,6 @@ public class CategoryDto
 {
     public string Name { get; set; }
     public string Icon { get; set; }
+    public bool Miscellaneous { get; set; }
     public IList<SubCategoryDto> SubCategories { get; set; } = new List<SubCategoryDto>();
 }
