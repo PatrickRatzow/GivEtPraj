@@ -28,6 +28,8 @@ const lastUpdatedAt = (): string => {
 
   return currentCase.value?.createdAt.toLocaleString() as string;
 };
+
+//onBeforeMount();
 </script>
 
 <template>

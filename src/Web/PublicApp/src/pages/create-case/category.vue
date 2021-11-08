@@ -11,14 +11,19 @@ main.fetchCategories();
 
 const searchQuery = ref("");
 const categories = computed(() =>
-  main.categories.filter(
-    (c) => searchQuery.value.length == 0 || c.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
+  main.categories
+    .filter((c) => searchQuery.value.length == 0 || c.name.toLowerCase().includes(searchQuery.value.toLowerCase()))
+    .sort((a) => (a.miscellaneous ? 1 : -1))
 );
 
 const selectCategory = (category: Category) => {
   createCase.category = category;
   createCase.subCategories = [];
+};
+
+const area = () => {
+  createCase.description = document.getElementById("description")?.textContent;
+  console.log("area value:" + createCase.description);
 };
 </script>
 
@@ -48,13 +53,24 @@ const selectCategory = (category: Category) => {
                   <ion-radio slot="end" color="success" :value="cat.name"> </ion-radio>
                 </ion-item>
 
-                <sub-categories v-if="createCase.category == cat"></sub-categories>
+                <template v-if="createCase.category == cat">
+                  <ion-textarea
+                    v-if="createCase.category?.miscellaneous"
+                    id="description"
+                    placeholder="Enter your concern here"
+                    maxlength="200"
+                    class="description"
+                  ></ion-textarea>
+                  <sub-categories v-else></sub-categories>
+                </template>
               </template>
             </ion-radio-group>
           </ion-list>
+          <div></div>
         </div>
         <ion-button class="flex flex-row my-6 mx-12 float-bottom" @click="router.push('/create-praj/pictures')">
           {{ t("navigation.next") }}
+          {{ area() }}
         </ion-button>
       </div>
     </ion-content>

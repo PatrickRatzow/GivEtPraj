@@ -26,7 +26,8 @@ const { t } = useI18n();
           <ion-list-header>{{ t("create-case.overview.category") }}</ion-list-header>
           <category-row :category="createCase.category!"></category-row>
         </ion-list>
-        <ion-list>
+
+        <ion-list v-if="createCase.subCategories.length >= 1">
           <ion-list-header>{{ t("create-case.overview.sub-categories") }}</ion-list-header>
           <ion-item v-for="(sub, idx) in createCase.subCategories" :key="idx">
             <ion-label>{{ sub.name }}</ion-label>
@@ -36,12 +37,19 @@ const { t } = useI18n();
           <ion-list-header>{{ t("create-case.overview.pictures") }}</ion-list-header>
           <ion-item></ion-item>
         </ion-list>
-        <ion-list>
+        <ion-list v-if="createCase.description === undefined">
           <ion-list-header>{{ t("create-case.overview.comment.title") }}</ion-list-header>
           <ion-item>
             <ion-textarea :placeholder="t('create-case.overview.comment.placeholder')"></ion-textarea>
           </ion-item>
-          <p class="float-right">0/200</p>
+          <p class="float-right">{{ createCase.comment?.length }}/200</p>
+        </ion-list>
+        <ion-list v-else>
+          <ion-list-header>{{ t("create-case.overview.description.title") }}</ion-list-header>
+          <ion-item>
+            <ion-textarea readonly :placeholder="createCase.description"></ion-textarea>
+          </ion-item>
+          <p class="float-right">{{ createCase.description?.length }}/200</p>
         </ion-list>
         <div class="w-full ion-padding">
           <ion-button expand="block">{{ t("create-case.overview.finish") }}</ion-button>
