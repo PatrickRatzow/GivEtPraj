@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { create, fileTrayFull } from "ionicons/icons";
-import { useQueueKeys } from "@/compositions/queueKeys";
+import { useQueueKeys } from "@/compositions/queue-keys";
 
 const { t } = useI18n();
 const { key, createKey } = useQueueKeys();
