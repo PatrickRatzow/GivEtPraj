@@ -4,5 +4,5 @@ public class CaseImage
 {
     public Guid Id { get; set; } 
     public int CaseId { get; set; }
-    public BaseCase BaseCase { get; set; }
+    public BaseCase Case { get; set; }
 }

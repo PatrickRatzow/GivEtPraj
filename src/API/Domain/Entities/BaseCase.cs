@@ -9,7 +9,7 @@ public abstract class BaseCase
     public int Id { get; set; }
     public Guid DeviceId { get; set; }
     public Category Category { get; set; } = null!;
-    public List<Picture> Pictures { get; set; } = new();
+    public List<CaseImage> Images { get; set; } = new();
     public GeographicLocation GeographicLocation { get; set; } = null!;
     public Priority Priority { get; set; }
     public IPAddress IpAddress { get; set; } = null!;

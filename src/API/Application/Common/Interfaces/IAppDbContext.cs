@@ -6,7 +6,7 @@ namespace Commentor.GivEtPraj.Application.Common.Interfaces;
 public interface IAppDbContext
 {
     DbSet<BaseCase> Cases { get; set; }
-    DbSet<Picture> Pictures { get; set; }
+    DbSet<CaseImage> Images { get; set; }
     DbSet<Category> Categories { get; set; }
     DbSet<Employee> Employees {  get; set; }
     DbSet<SubCategory> SubCategories { get; set; } 

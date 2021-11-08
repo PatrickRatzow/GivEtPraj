@@ -1,6 +1,6 @@
 ﻿namespace Commentor.GivEtPraj.Application.Contracts;
 
-public class PictureDto
+public class CaseImageDto
 {
     public string Url { get; set; }
 }

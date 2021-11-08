@@ -19,7 +19,7 @@ public class FindAllCasesByDeviceIdQueryHandler : IRequestHandler<FindCasesByDev
         CancellationToken cancellationToken)
     {
         var cases = await _db.Cases
-            .Include(c => c.Pictures)
+            .Include(c => c.Images)
             .Include(c => c.Category)
             .Where(c => c.DeviceId == request.DeviceId)
             .ToListAsync(cancellationToken);

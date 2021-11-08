@@ -63,7 +63,7 @@ public static class AppDbContextSeed
             Comment = "Hul vejen",
             Category = category,
             GeographicLocation = GeographicLocation.From(53, 53.5),
-            Pictures = new()
+            Images = new()
             {
                 new()
                 {

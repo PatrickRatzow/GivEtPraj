@@ -6,6 +6,6 @@ public class CaseDto
 {
     public int Id { get; set; }
     public string Description { get; set; }
-    public List<PictureDto> Pictures { get; set; } = new();
+    public List<CaseImageDto> Pictures { get; set; } = new();
     public CategoryDto Category { get; set; }
 }

@@ -73,7 +73,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
             {
                 Comment = request.Comment!,
                 SubCategories =  subCategories,
-                Pictures = images,
+                Images = images,
                 Category = category,
                 GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude),
                 Priority = request.Priority,
@@ -86,7 +86,7 @@ public class CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf
             newCase = new MiscellaneousCase
             {
                 Description = request.Description!,
-                Pictures = images,
+                Images = images,
                 Category = category,
                 GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude),
                 Priority = request.Priority,
