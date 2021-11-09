@@ -125,42 +125,39 @@ const loadMap = (): Map => {
   return myMap;
 };
 
-const drawPosition = async (myMap: Map) => {
-  try {
-    const pos = await Geolocation.getCurrentPosition();
-    myMap.setView([pos.coords.latitude, pos.coords.longitude], 18);
+const getUserPosition = async (map: Map): Promise<Position> => {
+  const pos = await Geolocation.getCurrentPosition();
 
-    const userPoint = circle([pos.coords.latitude, pos.coords.longitude], {
-      color: "white",
-      fillColor: "blue",
-      weight: 4,
-      fillOpacity: 1,
-      radius: 21 - myMap.getZoom(),
-    }).addTo(myMap);
+  const userPoint = circle([pos.coords.latitude, pos.coords.longitude], {
+    color: "white",
+    fillColor: "blue",
+    weight: 4,
+    fillOpacity: 1,
+    radius: 21 - map.getZoom(),
+  }).addTo(map);
 
-    let userAccuracy = circle([pos.coords.latitude, pos.coords.longitude], {
-      color: "blue",
-      opacity: 1,
-      weight: 0.5,
-      fillColor: "#96c3eb",
-      fillOpacity: 0.6,
-      radius: pos.coords.accuracy,
-    }).addTo(myMap);
+  let userAccuracy = circle([pos.coords.latitude, pos.coords.longitude], {
+    color: "blue",
+    opacity: 1,
+    weight: 0.5,
+    fillColor: "#96c3eb",
+    fillOpacity: 0.6,
+    radius: pos.coords.accuracy,
+  }).addTo(map);
 
-    const watchPos = (newPos: Position | null, err?: any) => {
-      if (!newPos) return;
+  const watchPos = (newPos: Position | null) => {
+    if (!newPos) return;
 
-      userPoint.setLatLng([newPos.coords.latitude, newPos.coords.longitude]);
-      userAccuracy.setLatLng([newPos.coords.latitude, newPos.coords.longitude]);
-      userAccuracy.setRadius(newPos.coords.accuracy);
-    };
+    userPoint.setLatLng([newPos.coords.latitude, newPos.coords.longitude]);
+    userAccuracy.setLatLng([newPos.coords.latitude, newPos.coords.longitude]);
+    userAccuracy.setRadius(newPos.coords.accuracy);
+  };
 
-    const wait = Geolocation.watchPosition({ enableHighAccuracy: true, timeout: 10000 }, watchPos);
+  const wait = Geolocation.watchPosition({ enableHighAccuracy: true, timeout: 10000 }, watchPos);
 
-    myMap.on("zoom", () => userPoint.setRadius(Math.pow(2, 20 - myMap.getZoom())));
-  } catch {
-    //If user denies to share their location
-  }
+  map.on("zoom", () => userPoint.setRadius(Math.pow(2, 20 - map.getZoom())));
+
+  return pos;
 };
 
 onMounted(async () => {
@@ -168,8 +165,10 @@ onMounted(async () => {
   //ake map fill whole div
   setInterval(async function () {
     map.invalidateSize();
-    await drawPosition(map);
   }, 100);
+
+  const pos: Position = await getUserPosition(map);
+  map.setView([pos.coords.latitude, pos.coords.longitude], 18);
 });
 
 const getStatus = () => network.status.value?.connected;
