@@ -2,8 +2,10 @@
 import { create, fileTrayFull, settings } from "ionicons/icons";
 import { useQueueKeys } from "@/compositions/queue-keys";
 import { useThemes } from "@/compositions/themes";
+import { useMainStore } from "@/stores/main";
 
 const themes = useThemes();
+const main = useMainStore();
 const { t } = useI18n();
 const { hasKey, createKey } = useQueueKeys();
 
@@ -17,32 +19,34 @@ onMounted(async () => {
 </script>
 
 <template>
-  <ion-app>
-    <ion-page>
-      <ion-tabs>
-        <ion-router-outlet />
+  <main :class="{ dark: main.activeTheme }">
+    <ion-app>
+      <ion-page>
+        <ion-tabs>
+          <ion-router-outlet />
 
-        <ion-tab-bar slot="bottom">
-          <ion-tab-button tab="create-praj" href="/create-praj">
-            <ion-icon :icon="create"></ion-icon>
-            <ion-label>{{ t("tabs.create-case") }}</ion-label>
-          </ion-tab-button>
+          <ion-tab-bar slot="bottom">
+            <ion-tab-button tab="create-praj" href="/create-praj">
+              <ion-icon :icon="create"></ion-icon>
+              <ion-label>{{ t("tabs.create-case") }}</ion-label>
+            </ion-tab-button>
 
-          <ion-tab-button tab="history" href="/my-prajs">
-            <ion-icon :icon="fileTrayFull"></ion-icon>
-            <ion-label>{{ t("tabs.my-cases") }}</ion-label>
-          </ion-tab-button>
+            <ion-tab-button tab="history" href="/my-prajs">
+              <ion-icon :icon="fileTrayFull"></ion-icon>
+              <ion-label>{{ t("tabs.my-cases") }}</ion-label>
+            </ion-tab-button>
 
-          <ion-tab-button tab="settings" href="/settings">
-            <ion-icon :icon="settings"></ion-icon>
-            <ion-label>{{ t("tabs.settings") }}</ion-label>
-          </ion-tab-button>
-        </ion-tab-bar>
-      </ion-tabs>
-    </ion-page>
+            <ion-tab-button tab="settings" href="/settings">
+              <ion-icon :icon="settings"></ion-icon>
+              <ion-label>{{ t("tabs.settings") }}</ion-label>
+            </ion-tab-button>
+          </ion-tab-bar>
+        </ion-tabs>
+      </ion-page>
 
-    <!-- <ReloadPWA /> -->
-  </ion-app>
+      <!-- <ReloadPWA /> -->
+    </ion-app>
+  </main>
 </template>
 
 <style>

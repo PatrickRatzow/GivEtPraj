@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { useThemes } from "../compositions/themes";
+import { useMainStore } from "@/stores/main";
+import { useThemes } from "@/compositions/themes";
 
 const themes = useThemes();
+const main = useMainStore();
 </script>
 
 <template>
@@ -11,8 +13,8 @@ const themes = useThemes();
       slot="start"
       color="success"
       class="w-15 h-7.2"
-      :checked="themes.activeTheme.value"
-      @ionChange="themes.toggleTheme"
+      :checked="main.activeTheme"
+      @ionChange="themes.setTheme($event.target.checked)"
     >
     </ion-toggle>
   </ion-item>

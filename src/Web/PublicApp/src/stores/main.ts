@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import axios from "@/utils/axios";
 
+type Theme = true | false;
+
 export const useMainStore = defineStore("main", () => {
 	const cases = ref<Case[]>([
 		{
@@ -29,6 +31,7 @@ export const useMainStore = defineStore("main", () => {
 		},
 	]);
 	const categories = ref<Category[]>([]);
+	const activeTheme = ref<Theme>(false);
 
 	const fetchCategories = async () => {
 		if (categories.value.length > 0) return;
@@ -38,5 +41,5 @@ export const useMainStore = defineStore("main", () => {
 		categories.value = resp.data;
 	};
 
-	return { cases, categories, fetchCategories };
+	return { cases, categories, activeTheme, fetchCategories };
 });

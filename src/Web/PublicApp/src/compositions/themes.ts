@@ -1,40 +1,36 @@
+import { useMainStore } from "@/stores/main";
 import { Storage } from "@capacitor/storage";
 
-type Theme = true | false;
-
 export function useThemes() {
-	const activeTheme = ref<Theme>(false);
+	const main = useMainStore();
 
 	async function saveTheme() {
 		await Storage.set({
 			key: "theme",
-			value: activeTheme.value.toString(),
+			value: main.activeTheme.toString(),
 		});
 	}
 
 	async function loadTheme() {
 		const { value } = await Storage.get({ key: "theme" });
-		if (value !== null) return setTheme(value == "true");
+		if (value !== null) return (main.activeTheme = value == "true");
 
 		// Use matchMedia to check the user preference
 		const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
 
-		setTheme(prefersDark.matches);
+		main.activeTheme = prefersDark.matches;
 
 		// Listen for changes to the prefers-color-scheme media query
-		prefersDark.addListener((mediaQuery) => setTheme(mediaQuery.matches));
+		prefersDark.addEventListener("change", (mediaQuery) => {
+			main.activeTheme = mediaQuery.matches;
+		});
 	}
 
-	function setTheme(theme: Theme) {
-		activeTheme.value = theme;
+	function setTheme(theme: boolean) {
+		main.activeTheme = theme;
 
-		document.body.classList.toggle("dark", theme);
+		saveTheme();
 	}
 
-	async function toggleTheme() {
-		setTheme(!activeTheme.value);
-		await saveTheme();
-	}
-
-	return { activeTheme, loadTheme, toggleTheme };
+	return { loadTheme, setTheme };
 }
