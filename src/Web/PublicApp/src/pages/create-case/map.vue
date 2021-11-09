@@ -2,7 +2,7 @@
 import { useNetwork } from "@/compositions/network";
 import { useLocale } from "@/compositions/locale";
 import { useCreateCaseStore } from "@/stores/create-case";
-import { Geolocation, WatchPositionCallback } from "@capacitor/geolocation";
+import {Geolocation, WatchPositionCallback} from "@capacitor/geolocation";
 import { presentAlert } from "@/compositions/GeolocationErrorAlert";
 import * as turf from "@turf/turf";
 import {
@@ -19,12 +19,14 @@ import {
   LayerGroup,
   Map,
 } from "leaflet";
+import {Position} from "@capacitor/geolocation/dist/esm/definitions";
 
 const router = useRouter();
 const createCase = useCreateCaseStore();
 const locale = useLocale();
 const { t } = useI18n();
 const network = useNetwork();
+
 
 const loadMap = () => {
   let streets = tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
@@ -82,13 +84,43 @@ const loadMap = () => {
     m.setLatLng({
       lat: location.latitude,
       lng: location.longitude,
-    });
 
     createCase.geographicLocation = location;
   };
   myMap.on("click", (e: LeafletMouseEvent) => {
-    setLocation({ latitude: e.latlng.lat, longitude: e.latlng.lng });
+  if (turf.booleanWithin(turf.point([e.latlng.lat, e.latlng.lng]), bounderies)) {
+        setLocation({ latitude: e.latlng.lat, longitude: e.latlng.lng });
   });
+
+  let bounderies = turf.multiPolygon([
+      [
+        [
+          [54.783554, 8.025203],
+          [56.7008, 7.94616],
+          [57.209392, 8.586408],
+          [57.286365, 9.297795],
+          [57.950948, 10.293736],
+          [57.799633, 11.31339],
+          [56.031885, 12.661413],
+          [55.803497, 12.838052],
+          [55.50243, 12.822007],
+          [55.324403, 12.712139],
+          [54.5551, 12.744531],
+          [54.506417, 11.522005],
+          [54.805709, 9.818059],
+          [54.783554, 8.025203],
+        ],
+      ],
+      [
+        [
+          [55.319725, 14.763668],
+          [55.145379, 15.20082],
+          [54.962571, 15.098907],
+          [55.096303, 14.630914],
+          [55.319725, 14.763668],
+        ],
+      ],
+    ]);
 
   return myMap;
 };
@@ -97,6 +129,7 @@ const drawPosition = async (myMap: Map) => {
   try {
     const pos = await Geolocation.getCurrentPosition();
     myMap.setView([pos.coords.latitude, pos.coords.longitude], 18);
+
     const userPoint = circle([pos.coords.latitude, pos.coords.longitude], {
       color: "white",
       fillColor: "blue",
@@ -104,6 +137,25 @@ const drawPosition = async (myMap: Map) => {
       fillOpacity: 1,
       radius: 21 - myMap.getZoom(),
     }).addTo(myMap);
+
+    let userAccuracy = circle([pos.coords.latitude, pos.coords.longitude], {
+      color: "blue",
+      opacity: 1,
+      weight: 0.5,
+      fillColor: "#96c3eb",
+      fillOpacity: 0.6,
+      radius: pos.coords.accuracy,
+    }).addTo(myMap);
+
+    const watchPos = (newPos: Position | null, err?: any) => {
+      if (!newPos) return;
+
+      userPoint.setLatLng([newPos.coords.latitude, newPos.coords.longitude]);
+      userAccuracy.setLatLng([newPos.coords.latitude, newPos.coords.longitude]);
+      userAccuracy.setRadius(newPos.coords.accuracy);
+    };
+
+    const wait = Geolocation.watchPosition({ enableHighAccuracy: true, timeout: 10000 }, watchPos);
 
     myMap.on("zoom", () => userPoint.setRadius(Math.pow(2, 20 - myMap.getZoom())));
   } catch {
@@ -117,8 +169,8 @@ onMounted(async () => {
   //ake map fill whole div
   setInterval(function () {
     map.invalidateSize();
+    await drawPosition(map);
   }, 100);
-  const pos = await drawPosition(map);
 });
 
 const getStatus = () => network.status.value?.connected;

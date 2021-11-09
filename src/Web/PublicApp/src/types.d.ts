@@ -10,6 +10,7 @@ declare global {
 	interface Category {
 		name: string;
 		icon: string;
+		miscellaneous: boolean;
 		subCategories: SubCategory[];
 	}
 
@@ -19,6 +20,7 @@ declare global {
 		subCategories: SubCategory[];
 		images: string[];
 		comment: string | undefined;
+		description: string | null;
 		status: Status;
 		geographicLocation: GeographicLocation;
 		createdAt: Date;

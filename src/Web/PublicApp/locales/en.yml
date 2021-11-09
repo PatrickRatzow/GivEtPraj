@@ -31,6 +31,9 @@ create-case:
     comment:
       title: "Comment"
       placeholder: "Type here"
+    description:
+      title: "Description"
+      placeholder: "Type your concern here"
     finish: "Send"
 navigation:
   back: "Back"

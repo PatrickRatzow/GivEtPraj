@@ -23,10 +23,22 @@ public static class AppDbContextSeed
         var hasAny = context.Categories.Any();
         if (hasAny) return;
 
-        context.Categories.Add(new()
+        context.Categories.AddRange(new()
         {
             Name = LocalizedString.From("Vejskade", "Road damage"),
             Icon = "fas fa-road"
+        }, new()
+        {
+            Name = LocalizedString.From("Vejskiltning", "Road signs"),
+            Icon = "fas fa-sign"
+        }, new ()
+        {
+            Name = LocalizedString.From("Andet", "Other"),
+            Icon = "fas fa-comment-alt",
+            Miscellaneous = true
+        }, new() {
+            Name = LocalizedString.From("Toilet", "Toilet"),
+            Icon = "fas fa-toilet"
         });
     }
 

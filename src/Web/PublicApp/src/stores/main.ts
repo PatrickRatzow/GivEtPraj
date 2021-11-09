@@ -5,10 +5,11 @@ export const useMainStore = defineStore("main", () => {
 	const cases = ref<Case[]>([
 		{
 			id: 1,
-			category: { name: "Vejskade", icon: "fas fa-road", subCategories: [] },
+			category: { name: "Vejskade", icon: "fas fa-road", miscellaneous: false, subCategories: [] },
 			subCategories: [{ name: "Hul" }],
 			images: [],
 			comment: undefined,
+			description: null,
 			status: { color: "#00ff00", name: "Færdig" },
 			geographicLocation: { longitude: 9.34, latitude: 52.0 },
 			createdAt: new Date(),
@@ -16,10 +17,11 @@ export const useMainStore = defineStore("main", () => {
 		},
 		{
 			id: 2,
-			category: { name: "Vejskade", icon: "fas fa-road", subCategories: [] },
+			category: { name: "Vejskade", icon: "fas fa-road", miscellaneous: false, subCategories: [] },
 			subCategories: [{ name: "Hul" }, { name: "Isskade" }],
 			images: [],
 			comment: undefined,
+			description: null,
 			status: { color: "#00ff00", name: "Færdig" },
 			geographicLocation: { longitude: 9.88387122, latitude: 57.01991472 },
 			createdAt: new Date(2018, 11, 15),
