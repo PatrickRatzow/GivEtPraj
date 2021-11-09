@@ -5,8 +5,8 @@ import { useCreateCaseStore } from "@/stores/create-case";
 import { Geolocation } from "@capacitor/geolocation";
 import { presentAlert } from "@/compositions/geolocation-error-alert";
 import * as turf from "@turf/turf";
-import { streetMap, sateliteMap, bounderiesCoords } from "@/../leaflet.config";
-import { map, tileLayer, marker, LeafletMouseEvent, Marker, control, Control, circle, Map } from "leaflet";
+import { streetMap, satelliteMap, boundariesCoords, greyOutCoords } from "@/../leaflet.config";
+import { map, tileLayer, marker, LeafletMouseEvent, Marker, control, Control, circle, Map, polygon } from "leaflet";
 import { Position } from "@capacitor/geolocation/dist/esm/definitions";
 
 const router = useRouter();
@@ -23,7 +23,7 @@ const loadMap = (): Map => {
 
   let satellite = tileLayer(
     "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
-    sateliteMap
+    satelliteMap
   );
 
   const myMap = map("mapid", { layers: [streets] }).setView([56.15674, 10.21076], 6);
@@ -35,7 +35,14 @@ const loadMap = (): Map => {
     control.layers(baseMaps).addTo(myMap);
   };
 
-  let bounderies = turf.multiPolygon(bounderiesCoords);
+  let boundaries = turf.multiPolygon(boundariesCoords);
+
+  let greyOut = polygon(greyOutCoords, {
+    color: "grey",
+    fillColor: "lightgrey",
+    weight: 1,
+    fillOpacity: 0.8,
+  }).addTo(myMap);
 
   addLayers();
   watch(
@@ -58,7 +65,7 @@ const loadMap = (): Map => {
     createCase.geographicLocation = location;
   };
   myMap.on("click", (e: LeafletMouseEvent) => {
-    if (turf.booleanWithin(turf.point([e.latlng.lat, e.latlng.lng]), bounderies)) {
+    if (turf.booleanWithin(turf.point([e.latlng.lat, e.latlng.lng]), boundaries)) {
       setLocation({ latitude: e.latlng.lat, longitude: e.latlng.lng });
     }
   });
