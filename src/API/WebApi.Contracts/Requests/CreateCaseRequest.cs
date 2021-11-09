@@ -6,8 +6,8 @@ public class CreateCaseRequest
     {
     }
 
-    public CreateCaseRequest(string title, List<string> images, string category, double longitude,
-        double latitude, Guid deviceId, string description = "", string comment = "", string?[] subCategories = null)
+    public CreateCaseRequest(string title, List<string> images, int category, double longitude,
+        double latitude, Guid deviceId, string description = "", string comment = "", int[]? subCategories = null)
     {
         Title = title;
         Description = description;
@@ -24,9 +24,9 @@ public class CreateCaseRequest
     public Guid DeviceId { get; set; }
     public string Description { get; set; }
     public string Comment { get; set; }
-    public string?[] SubCategories { get; set; }
+    public int[]? SubCategories { get; set; }
     public List<string> Images { get; set; } = new();
-    public string Category { get; set; }
+    public int Category { get; set; }
     public double Longitude { get; set; }
     public double Latitude { get; set; }
 }

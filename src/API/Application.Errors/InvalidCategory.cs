@@ -2,7 +2,7 @@
 
 namespace Commentor.GivEtPraj.Application.Errors;
 
-public record InvalidCategory(string Category) : IValidationError
+public record InvalidCategory(int CategoryId) : IValidationError
 {
-    public string ErrorMessage => $"The category with the name {Category} does not exist";
+    public string ErrorMessage => $"The category with the name {CategoryId} does not exist";
 }

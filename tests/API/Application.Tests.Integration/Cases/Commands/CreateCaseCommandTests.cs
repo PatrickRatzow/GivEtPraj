@@ -24,14 +24,14 @@ public class CreateCaseCommandTests : TestBase
 
         var deviceId = Guid.NewGuid();
         var comment = "An example Comment";
-        var subCategories = subCats.Select(s => s.Name.English).ToArray();
+        var subCategories = subCats.Select(s => s.Id).ToArray();
         var images = new List<Stream>();
         var longitude = 0;
         var latitude = 0;
         var priority = Priority.Low;
         var ipAddress = IPAddress.Parse("127.0.0.1");
 
-        var command = new CreateCaseCommand(deviceId, images, category.Name.English,
+        var command = new CreateCaseCommand(deviceId, images, category.Id,
             longitude, latitude, priority, ipAddress, "", comment, subCategories);
 
         // Act
@@ -59,7 +59,7 @@ public class CreateCaseCommandTests : TestBase
         var priority = Priority.Low;
         var ipAddress = IPAddress.Parse("127.0.0.1");
 
-        var command = new CreateCaseCommand(deviceId, images, category.Name.English,
+        var command = new CreateCaseCommand(deviceId, images, category.Id,
             longitude, latitude, priority, ipAddress, description);
 
         // Act
@@ -78,13 +78,13 @@ public class CreateCaseCommandTests : TestBase
         var deviceId = Guid.Empty;
         var description = "An example description";
         var images = new List<Stream>();
-        var categoryName = "Some category";
+        var category = 1;
         var longitude = 0;
         var latitude = 0;
         var priority = Priority.Low;
         var ipAddress = IPAddress.Parse("127.0.0.1");
 
-        var command = new CreateCaseCommand(deviceId, images, categoryName, longitude, latitude, priority, ipAddress,
+        var command = new CreateCaseCommand(deviceId, images, category, longitude, latitude, priority, ipAddress,
             description);
 
         // Act
