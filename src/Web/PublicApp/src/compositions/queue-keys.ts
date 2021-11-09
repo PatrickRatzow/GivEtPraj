@@ -14,8 +14,16 @@ export function useQueueKeys() {
 	const { executeRecaptcha, recaptchaLoaded } = useReCaptcha()!;
 	const key = ref<QueueKey | undefined>();
 
-	async function purgeKey() {
+	function hasKey() {
+		return key.value !== undefined;
+	}
+
+	async function consumeKey(): Promise<QueueKey> {
+		if (!key.value) throw new Error("Unable to consume key as there is none");
+
 		await Storage.remove({ key: "queueKey" });
+
+		return key.value;
 	}
 
 	async function createKey(): Promise<QueueKey | undefined> {
@@ -50,5 +58,5 @@ export function useQueueKeys() {
 
 	watch(network.status, createKey);
 
-	return { key, purgeKey, createKey };
+	return { hasKey, consumeKey, createKey };
 }
