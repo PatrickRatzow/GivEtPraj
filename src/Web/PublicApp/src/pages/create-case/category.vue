@@ -20,11 +20,6 @@ const selectCategory = (category: Category) => {
   createCase.category = category;
   createCase.subCategories = [];
 };
-
-const area = () => {
-  createCase.description = document.getElementById("description")?.textContent;
-  console.log("area value:" + createCase.description);
-};
 </script>
 
 <template>
@@ -35,7 +30,7 @@ const area = () => {
       </ion-buttons>
       <ion-title>{{ t("create-case.category.title") }}</ion-title>
     </ion-toolbar>
-    <ion-content>
+    <ion-content class="ion-padding">
       <div class="flex flex-col justify-between h-full">
         <div>
           <ion-searchbar
@@ -54,23 +49,24 @@ const area = () => {
                 </ion-item>
 
                 <template v-if="createCase.category == cat">
-                  <ion-textarea
-                    v-if="createCase.category?.miscellaneous"
-                    id="description"
-                    placeholder="Enter your concern here"
-                    maxlength="200"
-                    class="description"
-                  ></ion-textarea>
-                  <sub-categories v-else></sub-categories>
+                  <sub-categories></sub-categories>
                 </template>
               </template>
+              <ion-item v-if="createCase.category?.miscellaneous">
+                <ion-textarea
+                  placeholder="Enter your concern here"
+                  autogrow="true"
+                  maxlength="200"
+                  class="border"
+                  @IonChange="createCase.description = $event.target.textContent"
+                ></ion-textarea>
+              </ion-item>
             </ion-radio-group>
           </ion-list>
           <div></div>
         </div>
-        <ion-button class="flex flex-row my-6 mx-12 float-bottom" @click="router.push('/create-praj/pictures')">
+        <ion-button class="flex-row float-bottom" @click="router.push('/create-praj/pictures')">
           {{ t("navigation.next") }}
-          {{ area() }}
         </ion-button>
       </div>
     </ion-content>

@@ -47,9 +47,14 @@ const { t } = useI18n();
         <ion-list v-else>
           <ion-list-header>{{ t("create-case.overview.description.title") }}</ion-list-header>
           <ion-item>
-            <ion-textarea readonly :placeholder="createCase.description"></ion-textarea>
+            <ion-textarea
+              id="final-description"
+              autogrow="true"
+              maxlength="200"
+              :value="createCase.description"
+              @ionChange="createCase.description = $event.target.textContent"
+            ></ion-textarea>
           </ion-item>
-          <p class="float-right">{{ createCase.description?.length }}/200</p>
         </ion-list>
         <div class="w-full ion-padding">
           <ion-button expand="block">{{ t("create-case.overview.finish") }}</ion-button>

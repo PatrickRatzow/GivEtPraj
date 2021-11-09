@@ -19,7 +19,7 @@ const { t } = useI18n();
         <p>
           {{ language ? "da" : "en" }}
         </p>
-        <dark-mode1 />
+        <dark-mode />
       </ion-list>
     </ion-content>
   </ion-page>

@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { create, fileTrayFull, settings } from "ionicons/icons";
 import { useQueueKeys } from "@/compositions/queue-keys";
+import { useThemes } from "@/compositions/themes";
 
+const themes = useThemes();
 const { t } = useI18n();
 const { hasKey, createKey } = useQueueKeys();
 
 onMounted(async () => {
+  await themes.loadTheme();
+
   if (!hasKey()) return;
 
   await createKey();
