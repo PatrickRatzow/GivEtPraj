@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import { create, fileTrayFull } from "ionicons/icons";
+import { create, fileTrayFull, settings } from "ionicons/icons";
 import { useQueueKeys } from "@/compositions/queue-keys";
+import { useThemes } from "@/compositions/themes";
 
+const themes = useThemes();
 const { t } = useI18n();
-const { key, createKey } = useQueueKeys();
+const { hasKey, createKey } = useQueueKeys();
 
 onMounted(async () => {
-  if (key.value !== undefined) return;
+  await themes.loadTheme();
+
+  if (!hasKey()) return;
 
   await createKey();
 });
@@ -27,6 +31,11 @@ onMounted(async () => {
           <ion-tab-button tab="history" href="/my-prajs">
             <ion-icon :icon="fileTrayFull"></ion-icon>
             <ion-label>{{ t("tabs.my-cases") }}</ion-label>
+          </ion-tab-button>
+
+          <ion-tab-button tab="settings" href="/settings">
+            <ion-icon :icon="settings"></ion-icon>
+            <ion-label>{{ t("tabs.settings") }}</ion-label>
           </ion-tab-button>
         </ion-tab-bar>
       </ion-tabs>

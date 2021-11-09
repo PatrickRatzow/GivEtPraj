@@ -1,15 +1,8 @@
 <script setup lang="ts">
-import DarkMode1 from "@/components/DarkMode.vue";
-const setting = ref(false);
 const language = ref(false);
-const theme = ref(false);
 
 const router = useRouter();
 const { t } = useI18n();
-
-const toggleDarkModeHandler = (s: string) => {
-  document.body.classList.toggle(s);
-};
 </script>
 
 <template>
@@ -26,7 +19,7 @@ const toggleDarkModeHandler = (s: string) => {
         <p>
           {{ language ? "da" : "en" }}
         </p>
-        <dark-mode1 />
+        <dark-mode />
       </ion-list>
     </ion-content>
   </ion-page>
