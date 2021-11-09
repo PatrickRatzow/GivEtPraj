@@ -3,10 +3,10 @@ import { create, fileTrayFull, settings } from "ionicons/icons";
 import { useQueueKeys } from "@/compositions/queue-keys";
 
 const { t } = useI18n();
-const { key, createKey } = useQueueKeys();
+const { hasKey, createKey } = useQueueKeys();
 
 onMounted(async () => {
-  if (key.value !== undefined) return;
+  if (!hasKey()) return;
 
   await createKey();
 });
