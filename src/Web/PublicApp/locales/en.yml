@@ -1,6 +1,7 @@
 tabs:
   create-case: "Create Praj"
   my-cases: "My Prajs"
+  settings: "Settings"
 create-case:
   map:
     title: "Choose Location"
