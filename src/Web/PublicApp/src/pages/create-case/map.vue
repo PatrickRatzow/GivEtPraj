@@ -129,16 +129,10 @@ const sendInCurrentLocation = async () => {
     router.push("/create-praj/category");
   } catch (e: unknown) {
     if (e instanceof GeolocationPositionError) {
-      if (e.code == 1) {
-        presentAlert(e.code);
-      } else if (e.code == 2) {
-        presentAlert(e.code);
-      } else if (e.code == 3) {
-        presentAlert(e.code);
-      }
+      return presentAlert(e);
     }
 
-    console.log("Unknown error occurred");
+    console.error("Unknown error occurred", e);
   }
 };
 </script>
