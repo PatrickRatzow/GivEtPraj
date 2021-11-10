@@ -11,7 +11,9 @@ const tutorial = useTutorial();
 const { t } = useI18n();
 const { hasKey, createKey } = useQueueKeys();
 
-await tutorial.loadCache();
+onBeforeMount(async () => {
+  await tutorial.loadCache();
+});
 
 onMounted(async () => {
   await themes.loadTheme();
