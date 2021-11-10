@@ -4,6 +4,7 @@ namespace Commentor.GivEtPraj.Application.Contracts;
 
 public class CategoryDto
 {
+    public int Id { get; set; }
     public string Name { get; set; }
     public string Icon { get; set; }
     public bool Miscellaneous { get; set; }
