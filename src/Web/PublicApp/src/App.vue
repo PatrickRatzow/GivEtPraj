@@ -3,9 +3,11 @@ import { create, fileTrayFull, settings } from "ionicons/icons";
 import { useQueueKeys } from "@/compositions/queue-keys";
 import { useThemes } from "@/compositions/themes";
 import { useMainStore } from "@/stores/main";
+import { useTutorial } from "@/compositions/tutorial";
 
 const themes = useThemes();
 const main = useMainStore();
+const tutorial = useTutorial();
 const { t } = useI18n();
 const { hasKey, createKey } = useQueueKeys();
 
@@ -22,7 +24,10 @@ onMounted(async () => {
   <main :class="{ dark: main.activeTheme }">
     <ion-app>
       <ion-page>
-        <ion-tabs>
+        <ion-content v-if="!main.hasSeenTutorial">
+          <ion-button @click="tutorial.setTutorialSeen(true)">skip tutorial</ion-button>
+        </ion-content>
+        <ion-tabs v-else>
           <ion-router-outlet />
 
           <ion-tab-bar slot="bottom">
