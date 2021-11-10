@@ -9,10 +9,11 @@ const themes = useThemes();
 const main = useMainStore();
 const tutorial = useTutorial();
 const { t } = useI18n();
-const { hasKey, createKey } = useQueueKeys();
+const { hasKey, createKey, loadKey } = useQueueKeys();
 
 onBeforeMount(async () => {
   await tutorial.loadCache();
+  await loadKey();
 });
 
 onMounted(async () => {

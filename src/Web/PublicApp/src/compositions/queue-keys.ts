@@ -3,6 +3,7 @@ import { Device } from "@capacitor/device";
 import { useReCaptcha } from "vue-recaptcha-v3";
 import { useNetwork } from "@/compositions/network";
 import { Storage } from "@capacitor/storage";
+import { useMainStore } from "@/stores/main";
 
 interface CreateQueueKeyRequest {
 	deviceId: string;
@@ -10,20 +11,20 @@ interface CreateQueueKeyRequest {
 
 export function useQueueKeys() {
 	const network = useNetwork();
+	const main = useMainStore();
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const { executeRecaptcha, recaptchaLoaded } = useReCaptcha()!;
-	const key = ref<QueueKey | undefined>();
 
 	function hasKey() {
-		return key.value !== undefined;
+		return main.queueKey !== undefined;
 	}
 
 	async function consumeKey(): Promise<QueueKey> {
-		if (!key.value) throw new Error("Unable to consume key as there is none");
+		if (!main.queueKey) throw new Error("Unable to consume key as there is none");
 
 		await Storage.remove({ key: "queueKey" });
 
-		return key.value;
+		return main.queueKey;
 	}
 
 	async function createKey(): Promise<QueueKey | undefined> {
@@ -56,7 +57,15 @@ export function useQueueKeys() {
 		return queueKey;
 	}
 
+	async function loadKey() {
+		const { value } = await Storage.get({ key: "queueKey" });
+		if (value !== null) {
+			main.queueKey = JSON.parse(value) as QueueKey;
+		}
+		console.log(main.queueKey);
+	}
+
 	watch(network.status, createKey);
 
-	return { hasKey, consumeKey, createKey };
+	return { hasKey, consumeKey, createKey, loadKey };
 }

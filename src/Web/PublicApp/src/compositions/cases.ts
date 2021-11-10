@@ -1,7 +1,7 @@
 import { useNetwork } from "@/compositions/network";
 import { useMainStore } from "@/stores/main";
 import { useCreateCaseStore } from "@/stores/create-case";
-import axios from "axios";
+import axios from "@/utils/axios";
 import { useQueueKeys } from "@/compositions/queue-keys";
 import { useCaseHistory } from "@/compositions/case-history";
 import { Device } from "@capacitor/device";
@@ -59,7 +59,7 @@ export function useCases() {
 					latitude: c.geographicLocation.latitude,
 				} as CreateCaseRequestDto;
 			});
-			await axios.post(`cases`, main.caseQueue, {
+			await axios.post("cases", cases, {
 				headers: {
 					["X-QueueKey"]: queueKey.id,
 				},
