@@ -4,6 +4,7 @@ import axios from "@/utils/axios";
 type Theme = true | false;
 
 export const useMainStore = defineStore("main", () => {
+	const caseQueue = ref<BaseCase[]>([]);
 	const cases = ref<Case[]>([
 		{
 			id: 1,
@@ -11,7 +12,7 @@ export const useMainStore = defineStore("main", () => {
 			subCategories: [{ name: "Hul" }],
 			images: [],
 			comment: undefined,
-			description: null,
+			description: undefined,
 			status: { color: "#00ff00", name: "Færdig" },
 			geographicLocation: { longitude: 9.34, latitude: 52.0 },
 			createdAt: new Date(),
@@ -23,7 +24,7 @@ export const useMainStore = defineStore("main", () => {
 			subCategories: [{ name: "Hul" }, { name: "Isskade" }],
 			images: [],
 			comment: undefined,
-			description: null,
+			description: undefined,
 			status: { color: "#00ff00", name: "Færdig" },
 			geographicLocation: { longitude: 9.88387122, latitude: 57.01991472 },
 			createdAt: new Date(2018, 11, 15),
@@ -42,5 +43,5 @@ export const useMainStore = defineStore("main", () => {
 		categories.value = resp.data;
 	};
 
-	return { hasSeenTutorial, cases, categories, activeTheme, fetchCategories };
+	return { hasSeenTutorial, cases, categories, activeTheme, fetchCategories, caseQueue };
 });

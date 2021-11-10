@@ -35,7 +35,17 @@ create-case:
     description:
       title: "Description"
       placeholder: "Type your concern here"
-    finish: "Send"
+    send: 
+      button:
+        send: "Send"
+        sending: "Sending"
+      success: "Your Praj has been sent"
+      offline-popup: 
+        header: "You are offline"
+        message: |
+          Your device is offline, therefore the report has been saved.
+          Next time you have an internet connection, the report will be sent. 
+        button: "Ok"
 navigation:
   back: "Back"
   delete: "Delete"

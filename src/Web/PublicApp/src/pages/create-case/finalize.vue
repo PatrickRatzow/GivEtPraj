@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { useCreateCaseStore } from "@/stores/create-case";
+import { useCases } from "@/compositions/cases";
+import { useNetwork } from "@/compositions/network";
+import { alertController, toastController } from "@ionic/vue";
 
 const createCase = useCreateCaseStore();
 const { t } = useI18n();
+const cases = useCases();
+const network = useNetwork();
 
 // createCase.category = {
 //   name: "Vejskade",
@@ -10,6 +15,33 @@ const { t } = useI18n();
 //   subCategories: [],
 // };
 //createCase.subCategories = [{ name: "Hul" }, { name: "XD" }, { name: "XD2" }];
+const loading = ref(false);
+
+const sendCase = async () => {
+  cases.addCurrentCaseToQueue();
+
+  if (!network.status.value?.connected) {
+    const alert = await alertController.create({
+      header: t("create-case.overview.send.offline-popup.header"),
+      message: t("create-case.overview.send.offline-popup.message"),
+      buttons: [t("create-case.overview.send.offline-popup.button")],
+    });
+
+    await alert.present();
+    return;
+  }
+
+  loading.value = true;
+  await cases.sendCases();
+  loading.value = false;
+  const toast = await toastController.create({
+    position: "top",
+    message: t("create-case.overview.send.success"),
+    duration: 2000,
+  });
+
+  await toast.present();
+};
 </script>
 
 <template>
@@ -59,7 +91,17 @@ const { t } = useI18n();
             ></ion-textarea>
           </ion-item>
         </ion-list>
-        <ion-button class="flex-row float-bottom">{{ t("create-case.overview.finish") }}</ion-button>
+        <div class="w-full ion-padding">
+          <ion-button expand="block" @click="sendCase">
+            <template v-if="loading">
+              <ion-spinner class="mr-2"> </ion-spinner>
+              {{ t("create-case.overview.send.button.sending") }}
+            </template>
+            <template v-else>
+              {{ t("create-case.overview.send.button.send") }}
+            </template>
+          </ion-button>
+        </div>
       </div>
     </ion-content>
   </ion-page>
