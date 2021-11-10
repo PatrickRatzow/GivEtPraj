@@ -19,7 +19,6 @@ declare module 'vue' {
     IonItem: typeof import('@ionic/vue')['IonItem']
     IonLabel: typeof import('@ionic/vue')['IonLabel']
     IonList: typeof import('@ionic/vue')['IonList']
-    IonListHeader: typeof import('@ionic/vue')['IonListHeader']
     IonPage: typeof import('@ionic/vue')['IonPage']
     IonRadio: typeof import('@ionic/vue')['IonRadio']
     IonRadioGroup: typeof import('@ionic/vue')['IonRadioGroup']
