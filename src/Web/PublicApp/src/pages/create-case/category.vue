@@ -47,7 +47,6 @@ const selectCategory = (category: Category) => {
                   <ion-label>{{ cat.name }}</ion-label>
                   <ion-radio slot="end" color="success" :value="cat.name"> </ion-radio>
                 </ion-item>
-
                 <template v-if="createCase.category == cat">
                   <sub-categories></sub-categories>
                 </template>
@@ -57,13 +56,12 @@ const selectCategory = (category: Category) => {
                   placeholder="Enter your concern here"
                   autogrow="true"
                   maxlength="200"
-                  class="border"
+                  class="border px-2"
                   @IonChange="createCase.description = $event.target.textContent"
                 ></ion-textarea>
               </ion-item>
             </ion-radio-group>
           </ion-list>
-          <div></div>
         </div>
         <ion-button class="flex-row float-bottom" @click="router.push('/create-praj/pictures')">
           {{ t("navigation.next") }}

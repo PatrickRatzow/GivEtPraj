@@ -20,8 +20,8 @@ const { t } = useI18n();
       </ion-buttons>
       <ion-title>{{ t("create-case.overview.title") }}</ion-title>
     </ion-toolbar>
-    <ion-content>
-      <div class="flex flex-col justify-between h-full ion-padding">
+    <ion-content class="ion-padding">
+      <div class="flex flex-col justify-between h-full">
         <ion-list>
           <ion-list-header>{{ t("create-case.overview.category") }}</ion-list-header>
           <category-row :category="createCase.category!"></category-row>
@@ -40,15 +40,18 @@ const { t } = useI18n();
         <ion-list v-if="createCase.description === undefined">
           <ion-list-header>{{ t("create-case.overview.comment.title") }}</ion-list-header>
           <ion-item>
-            <ion-textarea :placeholder="t('create-case.overview.comment.placeholder')"></ion-textarea>
+            <ion-textarea
+              autogrow="true"
+              maxlength="200"
+              :placeholder="t('create-case.overview.comment.placeholder')"
+              @ionChange="createCase.comment = $event.target.textContent"
+            ></ion-textarea>
           </ion-item>
-          <p class="float-right">{{ createCase.comment?.length }}/200</p>
         </ion-list>
         <ion-list v-else>
           <ion-list-header>{{ t("create-case.overview.description.title") }}</ion-list-header>
           <ion-item>
             <ion-textarea
-              id="final-description"
               autogrow="true"
               maxlength="200"
               :value="createCase.description"
@@ -56,9 +59,7 @@ const { t } = useI18n();
             ></ion-textarea>
           </ion-item>
         </ion-list>
-        <div class="w-full ion-padding">
-          <ion-button expand="block">{{ t("create-case.overview.finish") }}</ion-button>
-        </div>
+        <ion-button class="flex-row float-bottom">{{ t("create-case.overview.finish") }}</ion-button>
       </div>
     </ion-content>
   </ion-page>
