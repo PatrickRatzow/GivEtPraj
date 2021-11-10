@@ -50,17 +50,19 @@ watch(
       <ion-title>{{ t("my-cases.title") }} </ion-title>
     </ion-toolbar>
     <ion-content class="ion-padding">
-      <ion-label v-if="loading">Loading...</ion-label>
-      <ion-list v-else>
-        <ion-item v-for="currentCase in cases" :key="currentCase.id" @click="router.push(`/praj/${currentCase.id}`)">
-          <status-indicator :status="currentCase.status"> </status-indicator>
-          <ion-label>
-            <h3>{{ currentCase.nearestCity ?? t("my-cases.unable-to-fetch-closest-city-name") }}</h3>
-            <p>{{ currentCase.category.name }}</p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-      <ion-button @click="caseHistory.syncWithAPI()">Sync</ion-button>
+      <div class="flex flex-col justify-between h-full">
+        <ion-label v-if="loading">Loading...</ion-label>
+        <ion-list v-else>
+          <ion-item v-for="currentCase in cases" :key="currentCase.id" @click="router.push(`/praj/${currentCase.id}`)">
+            <status-indicator :status="currentCase.status"> </status-indicator>
+            <ion-label>
+              <h3>{{ currentCase.nearestCity ?? t("my-cases.unable-to-fetch-closest-city-name") }}</h3>
+              <p>{{ currentCase.category.name }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        <ion-button class="flex-row float-bottom" @click="caseHistory.syncWithAPI()">Sync</ion-button>
+      </div>
     </ion-content>
   </ion-page>
 </template>
