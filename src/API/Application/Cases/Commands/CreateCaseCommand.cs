@@ -6,9 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
-[ReCaptcha]
-public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory, InvalidSubCategories>>
+public class CreateCaseCommand : IRequest<OneOf<Unit, InvalidCategory, InvalidSubCategories>>
 {
+    public CreateCaseCommand()
+    {
+    }
+    
     public CreateCaseCommand(Guid deviceId, IPAddress ipAddress, List<CaseCreationDto> cases)
     {
         DeviceId = deviceId;
@@ -22,7 +25,7 @@ public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory, InvalidSub
 }
 
 public class
-    CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<int, InvalidCategory, InvalidSubCategories>>
+    CreateCaseCommandHandler : IRequestHandler<CreateCaseCommand, OneOf<Unit, InvalidCategory, InvalidSubCategories>>
 {
     private readonly IAppDbContext _db;
     private readonly IImageStorage _imageStorage;
@@ -33,72 +36,54 @@ public class
         _imageStorage = imageStorage;
     }
 
-    public async Task<OneOf<int, InvalidCategory, InvalidSubCategories>>
+    public async Task<OneOf<Unit, InvalidCategory, InvalidSubCategories>>
         Handle(CreateCaseCommand request, CancellationToken cancellationToken)
     {
-        var categoriesValid = await _db.Categories.AllAsync(cat => request.Cases.Any(@case => @case.CategoryId == cat.Id));
-        if (!categoriesValid) return new InvalidCategory();
+        var categories = await _db.Categories
+            .Include(cat => cat.SubCategories)
+            .Where(cat => request.Cases.Select(@case => @case.CategoryId).Contains(cat.Id))
+            .ToDictionaryAsync(cat => cat.Id, cat => cat, cancellationToken);
+        var distinctRequestCategoryCount = request.Cases.DistinctBy(c => c.CategoryId).Count();
+        if (categories.Count != distinctRequestCategoryCount) return new InvalidCategory();
+        var requestHasAnySubCategoriesNotFound = request.Cases
+            .Any(c => 
+                categories[c.CategoryId]?.Miscellaneous == true 
+                || categories.Values
+                    .Select(cat => cat.SubCategories.Select(sub => sub.Id))
+                    .Contains(c.SubCategoryIds!)
+            );
+        if (requestHasAnySubCategoriesNotFound) return new InvalidSubCategories();
         
-        request.Cases.Select(@case =>
+        foreach (var @case in request.Cases)
         {
-            @case switch
+            var images = await CreateImages(@case);
+
+            var newCase = @case switch
             {
-                { Description: null} => CreateCase(@case, request.DeviceId, request.IpAddress, cancellationToken)
-            }
-        })
-
-        var images = await CreateImages(request);
-
-        BaseCase newCase;
-        if (request.Description is null)
-        {
-            var subCategories = await _db.SubCategories
-                .Where(sc => sc.Category.Id == categoriesValid.Id && request.SubCategories!.Contains(sc.Id))
-                .ToListAsync(cancellationToken);
-
-            if (subCategories.Count != request.SubCategories!.Length)
-                return new InvalidSubCategories(request.SubCategories);
-
-            newCase = new Case
-            {
-                Comment = request.Comment!,
-                SubCategories = subCategories,
-                Images = images,
-                Category = categoriesValid,
-                GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude),
-                Priority = request.Priority,
-                IpAddress = request.IpAddress,
-                DeviceId = request.DeviceId
+                { Description: null, SubCategoryIds: not null, Comment: not null } =>
+                    CreateCase(@case, request, categories.Values.First(c => c.Id == @case.CategoryId).SubCategories.ToList(), images),
+                { Description: not null, SubCategoryIds: null, Comment: null } => 
+                    CreateMiscellaneousCase(@case, request, images),
+                _ => throw new ArgumentOutOfRangeException()
             };
-        }
-        else
-        {
-            newCase = new MiscellaneousCase
-            {
-                Description = request.Description!,
-                Images = images,
-                Category = categoriesValid,
-                GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude),
-                Priority = request.Priority,
-                IpAddress = request.IpAddress,
-                DeviceId = request.DeviceId
-            };
+
+            _db.Cases.Add(newCase);
         }
 
-        _db.Cases.Add(newCase);
         await _db.SaveChangesAsync(cancellationToken);
 
-        return newCase.Id;
+        return Unit.Value;
     }
 
-    private async Task<List<CaseImage>> CreateImages(CreateCaseCommand request)
+    private async Task<List<CaseImage>> CreateImages(CaseCreationDto @case)
     {
         var images = new List<CaseImage>();
         var list = new List<(Stream Image, Guid Id)>();
-        foreach (var image in request.Images)
+        foreach (var image in @case.Images)
         {
+            var streamImage = new MemoryStream(Convert.FromBase64String(image));
             var guid = Guid.NewGuid();
-            list.Add((image, guid));
+            list.Add((streamImage, guid));
             images.Add(new()
             {
                 Id = guid
@@ -119,44 +104,74 @@ public class
         await Task.WhenAll(imageUploads);
     }
 
-    private async Task<Case> CreateCase(Case @case, Guid deviceId, IPAddress ipAddress, CancellationToken cancellationToken)
+    private static BaseCase CreateCase(CaseCreationDto @case, CreateCaseCommand request,
+        List<SubCategory> subCategories, List<CaseImage> images)
     {
-        List<SubCategory> subCategories = await _db.SubCategories.Where(subCat => @case.SubCategories.Any(sub => subCat.Id == sub.Id)).ToListAsync(cancellationToken);
-        Case newCase = new Case
+        return new Case
         {
-            Comment =  @case.Comment!,
+            Comment = @case.Comment!,
             SubCategories = subCategories,
             Images = images,
-            Category = categoriesValid,
-            GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude),
-            Priority = request.Priority,
+            CategoryId = @case.CategoryId,
+            GeographicLocation = GeographicLocation.From(@case.Latitude, @case.Longitude),
+            Priority = @case.Priority,
+            IpAddress = request.IpAddress,
+            DeviceId = request.DeviceId
+        };
+    }
+
+    private static BaseCase CreateMiscellaneousCase(CaseCreationDto @case, CreateCaseCommand request,
+        List<CaseImage> images)
+    {
+        return new MiscellaneousCase
+        {
+            Description = @case.Description!,
+            Images = images,
+            CategoryId = @case.CategoryId,
+            GeographicLocation = GeographicLocation.From(@case.Latitude, @case.Longitude),
+            Priority = @case.Priority,
             IpAddress = request.IpAddress,
             DeviceId = request.DeviceId
         };
     }
 }
 
-
 public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 {
     public CreateCaseCommandValidator()
     {
-        RuleFor(x => x.Longitude)
-            .LessThanOrEqualTo(180)
-            .GreaterThanOrEqualTo(-180);
+        RuleForEach(c => c.Cases).ChildRules(@case => {
+            @case.RuleFor(x => x.Longitude)
+                .LessThanOrEqualTo(180)
+                .GreaterThanOrEqualTo(-180);
 
-        RuleFor(x => x.Latitude)
-            .LessThanOrEqualTo(90)
-            .GreaterThanOrEqualTo(-90);
+            @case.RuleFor(x => x.Latitude)
+                .LessThanOrEqualTo(90)
+                .GreaterThanOrEqualTo(-90);
 
-        RuleFor(x => x.Category)
-            .NotEmpty();
+            @case.RuleFor(x => x.CategoryId)
+                .NotEmpty();
 
-        RuleForEach(x => x.Images)
-            .NotEmpty();
+            @case.RuleForEach(x => x.Images)
+                .NotEmpty();
 
-        RuleFor(x => x.Priority)
-            .IsInEnum();
+            @case.RuleFor(x => x.Priority)
+                .IsInEnum();
+            
+            @case.When(x => x.SubCategoryIds != null, () => {
+                @case.RuleFor(x => x.SubCategoryIds!.Length)
+                    .NotNull()
+                    .LessThanOrEqualTo(3);
+
+                @case.RuleFor(x => x.Comment)
+                    .MaximumLength(4096);
+            }).Otherwise(() => {
+                @case.RuleFor(x => x.Description)
+                    .NotEmpty()
+                    .MaximumLength(4096);
+            });
+        });
+        
 
         RuleFor(x => x.IpAddress)
             .NotNull()
@@ -164,20 +179,6 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 
         RuleFor(x => x.DeviceId)
             .NotNull();
-
-        When(x => x.SubCategories != null, () =>
-        {
-            RuleFor(x => x.SubCategories!.Length)
-                .NotNull()
-                .LessThanOrEqualTo(3);
-
-            RuleFor(x => x.Comment)
-                .MaximumLength(4096);
-        }).Otherwise(() =>
-        {
-            RuleFor(x => x.Description)
-                .MaximumLength(4096);
-        });
     }
 
     private bool ValidateIP(string ipString)

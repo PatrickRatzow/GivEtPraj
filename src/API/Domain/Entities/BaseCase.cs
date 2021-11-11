@@ -9,6 +9,7 @@ public abstract class BaseCase
     public int Id { get; set; }
     public Guid DeviceId { get; set; }
     public Category Category { get; set; } = null!;
+    public int CategoryId { get; set; }
     public List<CaseImage> Images { get; set; } = new();
     public GeographicLocation GeographicLocation { get; set; } = null!;
     public Priority Priority { get; set; }

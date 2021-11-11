@@ -22,6 +22,21 @@ namespace Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("CaseSubCategory", b =>
+                {
+                    b.Property<int>("CasesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubCategoriesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CasesId", "SubCategoriesId");
+
+                    b.HasIndex("SubCategoriesId");
+
+                    b.ToTable("CaseSubCategory");
+                });
+
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.BaseCase", b =>
                 {
                     b.Property<int>("Id")
@@ -214,6 +229,21 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("MiscellaneousCase");
+                });
+
+            modelBuilder.Entity("CaseSubCategory", b =>
+                {
+                    b.HasOne("Commentor.GivEtPraj.Domain.Entities.Case", null)
+                        .WithMany()
+                        .HasForeignKey("CasesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Commentor.GivEtPraj.Domain.Entities.SubCategory", null)
+                        .WithMany()
+                        .HasForeignKey("SubCategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.BaseCase", b =>

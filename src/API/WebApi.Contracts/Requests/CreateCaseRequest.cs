@@ -15,5 +15,5 @@ public class CreateCaseRequest
 
     }
     public Guid DeviceId { get; set; }
-    public List<CaseCreationDto> Cases;
+    public List<CaseCreationDto> Cases { get; set; }
 }
