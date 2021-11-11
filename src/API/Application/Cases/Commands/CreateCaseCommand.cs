@@ -9,32 +9,16 @@ namespace Commentor.GivEtPraj.Application.Cases.Commands;
 [ReCaptcha]
 public class CreateCaseCommand : IRequest<OneOf<int, InvalidCategory, InvalidSubCategories>>
 {
-    public CreateCaseCommand(Guid deviceId, List<Stream> images, int category, double longitude,
-        double latitude, Priority priority, IPAddress ipAddress, string description = "", string comment = "",
-        int[]? subCategories = null)
+    public CreateCaseCommand(Guid deviceId, IPAddress ipAddress, List<CaseCreationDto> cases)
     {
         DeviceId = deviceId;
-        Comment = comment;
-        Description = description;
-        Images = images;
-        Category = category;
-        SubCategories = subCategories;
-        Longitude = longitude;
-        Latitude = latitude;
-        Priority = priority;
         IpAddress = ipAddress;
+        Cases = cases;
     }
 
-    public string? Comment { get; }
-    public string? Description { get; }
-    public List<Stream> Images { get; set; }
-    public int Category { get; set; }
-    public int[]? SubCategories { get; }
-    public double Longitude { get; set; }
-    public double Latitude { get; set; }
-    public Priority Priority { get; set; }
     public IPAddress IpAddress { get; set; }
     public Guid DeviceId { get; set; }
+    public List<CaseCreationDto> Cases { get; set; }
 }
 
 public class
@@ -52,8 +36,16 @@ public class
     public async Task<OneOf<int, InvalidCategory, InvalidSubCategories>>
         Handle(CreateCaseCommand request, CancellationToken cancellationToken)
     {
-        var category = await _db.Categories.FindAsync(new object[] { request.Category }, cancellationToken);
-        if (category is null) return new InvalidCategory(request.Category);
+        var categoriesValid = await _db.Categories.AllAsync(cat => request.Cases.Any(@case => @case.CategoryId == cat.Id));
+        if (!categoriesValid) return new InvalidCategory();
+        
+        request.Cases.Select(@case =>
+        {
+            @case switch
+            {
+                { Description: null} => CreateCase(@case, request.DeviceId, request.IpAddress, cancellationToken)
+            }
+        })
 
         var images = await CreateImages(request);
 
@@ -61,7 +53,7 @@ public class
         if (request.Description is null)
         {
             var subCategories = await _db.SubCategories
-                .Where(sc => sc.Category.Id == category.Id && request.SubCategories!.Contains(sc.Id))
+                .Where(sc => sc.Category.Id == categoriesValid.Id && request.SubCategories!.Contains(sc.Id))
                 .ToListAsync(cancellationToken);
 
             if (subCategories.Count != request.SubCategories!.Length)
@@ -72,7 +64,7 @@ public class
                 Comment = request.Comment!,
                 SubCategories = subCategories,
                 Images = images,
-                Category = category,
+                Category = categoriesValid,
                 GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude),
                 Priority = request.Priority,
                 IpAddress = request.IpAddress,
@@ -85,7 +77,7 @@ public class
             {
                 Description = request.Description!,
                 Images = images,
-                Category = category,
+                Category = categoriesValid,
                 GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude),
                 Priority = request.Priority,
                 IpAddress = request.IpAddress,
@@ -126,7 +118,24 @@ public class
 
         await Task.WhenAll(imageUploads);
     }
+
+    private async Task<Case> CreateCase(Case @case, Guid deviceId, IPAddress ipAddress, CancellationToken cancellationToken)
+    {
+        List<SubCategory> subCategories = await _db.SubCategories.Where(subCat => @case.SubCategories.Any(sub => subCat.Id == sub.Id)).ToListAsync(cancellationToken);
+        Case newCase = new Case
+        {
+            Comment =  @case.Comment!,
+            SubCategories = subCategories,
+            Images = images,
+            Category = categoriesValid,
+            GeographicLocation = GeographicLocation.From(request.Latitude, request.Longitude),
+            Priority = request.Priority,
+            IpAddress = request.IpAddress,
+            DeviceId = request.DeviceId
+        };
+    }
 }
+
 
 public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 {

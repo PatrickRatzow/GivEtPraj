@@ -31,6 +31,10 @@ export function useCases() {
 
 	interface CreateCaseRequestDto {
 		deviceId: string;
+		cases: CreateCase[];
+	}
+
+	interface CreateCase {
 		description: string;
 		comment: string;
 		subCategories: number[];
@@ -47,18 +51,20 @@ export function useCases() {
 		const queueKey = await queueKeys.consumeKey();
 		try {
 			const deviceId = await Device.getId();
-			const cases: CreateCaseRequestDto[] = main.caseQueue.map((c) => {
-				return {
-					deviceId: deviceId.uuid,
-					description: c.description,
-					comment: c.comment,
-					subCategories: c.subCategories.map((s) => s.id),
-					images: c.images,
-					category: c.category.id,
-					longitude: c.geographicLocation.longitude,
-					latitude: c.geographicLocation.latitude,
-				} as CreateCaseRequestDto;
-			});
+			const cases: CreateCaseRequestDto = {
+				deviceId: deviceId.uuid,
+				cases: main.caseQueue.map((c) => {
+					return {
+						description: c.description,
+						comment: c.comment,
+						subCategories: c.subCategories.map((s) => s.id),
+						images: c.images,
+						category: c.category.id,
+						longitude: c.geographicLocation.longitude,
+						latitude: c.geographicLocation.latitude,
+					} as CreateCase;
+				}),
+			};
 			await axios.post("cases", cases, {
 				headers: {
 					["X-QueueKey"]: queueKey.id,
