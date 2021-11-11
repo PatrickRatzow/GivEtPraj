@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { useTutorial } from "@/compositions/tutorial";
 
-const language = ref(false);
-
 const tutorial = useTutorial();
 
 const router = useRouter();
@@ -19,7 +17,7 @@ const { t } = useI18n();
     </ion-toolbar>
     <ion-content>
       <ion-list>
-        <toggle v-model:setting="language" :title="t('settings.english')" />
+        <toggle />
         <dark-mode />
         <ion-button @click="tutorial.setTutorialSeen(false)">{{ t("settings.view-tutorial") }}</ion-button>
       </ion-list>

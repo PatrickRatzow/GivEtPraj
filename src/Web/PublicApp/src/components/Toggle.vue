@@ -1,21 +1,18 @@
 <script setup lang="ts">
-interface Props {
-  title: string;
-  setting: boolean;
-}
+import { useLocale } from "../compositions/locale";
 
-const props = defineProps<Props>();
-const emit = defineEmits(["update:setting"]);
+const locale = useLocale();
 </script>
 
 <template>
   <ion-item>
-    <ion-label>{{ title }}</ion-label>
+    <ion-label>{{ "English" }}</ion-label>
     <ion-toggle
       slot="start"
       color="success"
       class="w-15 h-7.2"
-      @ionChange="emit('update:setting', $event.target.checked)"
+      :checked="locale.isEnglish"
+      @ionChange="locale.setLanguage($event.target.value)"
     >
     </ion-toggle>
   </ion-item>
