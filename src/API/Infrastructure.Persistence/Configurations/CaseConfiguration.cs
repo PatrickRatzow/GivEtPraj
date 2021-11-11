@@ -31,8 +31,6 @@ public class CaseConfiguration : IEntityTypeConfiguration<Case>
         builder.Property(c => c.Comment)
             .HasMaxLength(4096)
             .IsRequired();
-        builder.HasMany(c => c.SubCategories)
-            .WithMany(subCat => subCat.Cases);
     }
 }
 

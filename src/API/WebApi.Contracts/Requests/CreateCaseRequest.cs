@@ -1,6 +1,4 @@
-﻿using Commentor.GivEtPraj.Application.Contracts;
-
-namespace Commentor.GivEtPraj.WebApi.Contracts.Requests;
+﻿namespace Commentor.GivEtPraj.WebApi.Contracts.Requests;
 
 public class CreateCaseRequest
 {
@@ -8,12 +6,27 @@ public class CreateCaseRequest
     {
     }
 
-    public CreateCaseRequest(Guid deviceId, List<CaseCreationDto> cases)
+    public CreateCaseRequest(string title, List<string> images, int category, double longitude,
+        double latitude, Guid deviceId, string description = "", string comment = "", int[]? subCategories = null)
     {
+        Title = title;
+        Description = description;
+        Comment = comment;
+        SubCategories = subCategories;
+        Images = images;
+        Category = category;
+        Longitude = longitude;
+        Latitude = latitude;
         DeviceId = deviceId;
-        Cases = cases;
-
     }
+
+    public string Title { get; set; }
     public Guid DeviceId { get; set; }
-    public List<CaseCreationDto> Cases;
+    public string Description { get; set; }
+    public string Comment { get; set; }
+    public int[]? SubCategories { get; set; }
+    public List<string> Images { get; set; } = new();
+    public int Category { get; set; }
+    public double Longitude { get; set; }
+    public double Latitude { get; set; }
 }
