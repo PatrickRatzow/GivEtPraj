@@ -59,3 +59,6 @@ case:
   last-updated-at: "Last updated {time}"
 settings:
   title: "Settings"
+privacy-policy:
+  header: "Privacy Policy"
+  content: "legal type here"
