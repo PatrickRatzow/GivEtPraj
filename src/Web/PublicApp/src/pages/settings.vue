@@ -5,11 +5,8 @@ import { useTutorial } from "@/compositions/tutorial";
 import { useMainStore } from "@/stores/main";
 import { close } from "ionicons/icons";
 
-<<<<<<< HEAD
-=======
 const main = useMainStore();
 const locale = useLocale();
->>>>>>> 131aa1da59c21c0099a5a93683e622f3f5dcffd6
 const tutorial = useTutorial();
 const themes = useThemes();
 const { t } = useI18n();
@@ -29,9 +26,9 @@ const viewPrivacyPolicy = ref(false);
       <ion-list>
         <ion-list-header>{{ t("settings.general.header") }}</ion-list-header>
         <!-- TODO: Switch language -->
-        <ion-item>
+        <ion-item @click="locale.setLanguage(!locale.isEnglish)">
           <ion-label>{{ t("settings.general.english-language") }}</ion-label>
-          <ion-toggle color="success" :checked="locale.language"></ion-toggle>
+          <ion-toggle color="success" :checked="locale.isEnglish"></ion-toggle>
         </ion-item>
         <ion-item @click="themes.setTheme(!main.activeTheme)">
           <ion-label>{{ t("settings.general.dark-mode") }}</ion-label>

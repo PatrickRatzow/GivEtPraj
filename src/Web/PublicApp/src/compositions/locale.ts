@@ -24,8 +24,8 @@ export function useLocale() {
 		return language.value;
 	}
 
-	async function setLanguage(lang: Language) {
-		language.value = lang;
+	async function setLanguage(english: boolean) {
+		language.value = english ? "en" : "da";
 
 		saveLanguage();
 	}
