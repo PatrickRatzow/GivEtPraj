@@ -16,6 +16,9 @@ public static class AppDbContextSeed
 
         SeedCases(context);
         await context.SaveChangesAsync();
+        
+        SeedSubCategories(context);
+        await context.SaveChangesAsync();
     }
     
     private static void SeedCategories(AppDbContext context)
@@ -47,12 +50,16 @@ public static class AppDbContextSeed
         var hasAny = context.SubCategories.Any();
         if (hasAny) return;
 
+        var category = context.Categories.First();
         context.SubCategories.AddRange(new()
         {
-            Name = LocalizedString.From("Toilet", "Toilet")
+            Name = LocalizedString.From("Hul", "Hole"),
+            Category = category
         }, new()
         {
-            Name = LocalizedString.From("Vejskade", "Road damage")
+            Name = LocalizedString.From("Manglende markering", "Missing marking"),
+            Category = category
+            
         });
     }
 
