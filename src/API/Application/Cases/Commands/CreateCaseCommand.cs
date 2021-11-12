@@ -47,10 +47,10 @@ public class
         if (categories.Count != distinctRequestCategoryCount) return new InvalidCategory();
         var requestHasAnySubCategoriesNotFound = request.Cases
             .Any(c => 
-                categories[c.CategoryId]?.Miscellaneous == true 
+                categories.GetValueOrDefault(c.CategoryId)?.Miscellaneous == true 
                 || categories.Values
                     .Select(cat => cat.SubCategories.Select(sub => sub.Id))
-                    .Contains(c.SubCategoryIds!)
+                    .Contains(c.SubCategoryIds)
             );
         if (requestHasAnySubCategoriesNotFound) return new InvalidSubCategories();
         
