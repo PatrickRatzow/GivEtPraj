@@ -29,6 +29,10 @@ export function useCases() {
 		main.caseQueue = [...main.caseQueue, newCase];
 	}
 
+	function emptyCaseQueue() {
+		main.caseQueue = [];
+	}
+
 	interface CreateCaseRequestDto {
 		deviceId: string;
 		description: string;
@@ -41,8 +45,9 @@ export function useCases() {
 	}
 
 	async function sendCases(): Promise<boolean> {
-		if (network.status.value?.connected != true) return false;
+		if (!network.status.value?.connected) return false;
 		if (!queueKeys.hasKey()) return false;
+		if (main.caseQueue.length <= 0) return false;
 
 		const queueKey = await queueKeys.consumeKey();
 		try {
@@ -64,11 +69,16 @@ export function useCases() {
 					["X-QueueKey"]: queueKey.id,
 				},
 			});
+
 			await caseHistory.syncWithAPI();
+			emptyCaseQueue();
 			return true;
 		} catch {
 			return false;
 		}
 	}
+
+	watch(network.status, sendCases);
+
 	return { addCurrentCaseToQueue, sendCases };
 }
