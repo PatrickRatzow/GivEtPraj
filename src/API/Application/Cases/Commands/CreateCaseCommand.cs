@@ -46,6 +46,7 @@ public class
         var distinctRequestCategoryCount = request.Cases.DistinctBy(c => c.CategoryId).Count();
         if (categories.Count != distinctRequestCategoryCount) return new InvalidCategory();
         var requestHasAnySubCategoriesNotFound = request.Cases
+            .Where(c => categories.GetValueOrDefault(c.CategoryId)?.Miscellaneous == true)
             .Any(c => 
                 categories.GetValueOrDefault(c.CategoryId)?.Miscellaneous == true 
                 || categories.Values

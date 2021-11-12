@@ -28,7 +28,7 @@ namespace Commentor.GivEtPraj.Application.Contracts
 
         public string? Description { get; set; }
         public string? Comment { get; set; }
-        public int[] SubCategoryIds { get; set; }
+        public int[]? SubCategoryIds { get; set; }
         public List<string> Images { get; set; } = new();
         public int CategoryId { get; set; }
         public double Longitude { get; set; }
