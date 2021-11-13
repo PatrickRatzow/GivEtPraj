@@ -29,6 +29,12 @@ export function useCases() {
 		main.caseQueue = [...main.caseQueue, newCase];
 	}
 
+	function removeCaseFromQueue(index: number) {
+		const caseQueue = [...main.caseQueue];
+		delete caseQueue[index];
+		main.caseQueue = caseQueue;
+	}
+
 	interface CreateCaseRequestDto {
 		deviceId: string;
 		description: string;
@@ -70,5 +76,5 @@ export function useCases() {
 			return false;
 		}
 	}
-	return { addCurrentCaseToQueue, sendCases };
+	return { addCurrentCaseToQueue, sendCases, removeCaseFromQueue };
 }
