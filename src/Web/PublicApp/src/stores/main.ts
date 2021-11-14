@@ -8,8 +8,8 @@ export const useMainStore = defineStore("main", () => {
 	const cases = ref<Case[]>([
 		{
 			id: 1,
-			category: { name: "Vejskade", icon: "fas fa-road", miscellaneous: false, subCategories: [] },
-			subCategories: [{ name: "Hul" }],
+			category: { id: 1, name: "Vejskade", icon: "fas fa-road", miscellaneous: false, subCategories: [] },
+			subCategories: [{ id: 1, name: "Hul" }],
 			images: [],
 			comment: undefined,
 			description: undefined,
@@ -20,8 +20,11 @@ export const useMainStore = defineStore("main", () => {
 		},
 		{
 			id: 2,
-			category: { name: "Vejskade", icon: "fas fa-road", miscellaneous: false, subCategories: [] },
-			subCategories: [{ name: "Hul" }, { name: "Isskade" }],
+			category: { id: 2, name: "Vejskade", icon: "fas fa-road", miscellaneous: false, subCategories: [] },
+			subCategories: [
+				{ id: 2, name: "Hul" },
+				{ id: 2, name: "Isskade" },
+			],
 			images: [],
 			comment: undefined,
 			description: undefined,
