@@ -4,7 +4,17 @@ import axios from "@/utils/axios";
 type Theme = true | false;
 
 export const useMainStore = defineStore("main", () => {
-	const caseQueue = ref<BaseCase[]>([]);
+	const caseQueue = ref<BaseCase[]>([
+		{
+			category: { id: 1, name: "Vejskade", icon: "fas fa-road", miscellaneous: false, subCategories: [] },
+			subCategories: [{ id: 1, name: "Hul" }],
+			images: [],
+			comment: undefined,
+			description: undefined,
+			status: { color: "##FF0000", name: "Ikke færdig" },
+			geographicLocation: { longitude: 9.34, latitude: 52.0 },
+		}
+	]);
 	const cases = ref<Case[]>([
 		{
 			id: 1,

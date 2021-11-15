@@ -55,6 +55,17 @@ not-found:
   text: "Ain't nothing here"
 my-cases:
   title: "Your Prajs"
+  cached:
+    title: "Cached cases"
+    delete-alert: 
+      header: "Are you sure?"
+      message: "Do you really want to delete this case? This process cannot be undone."
+      delete: "Delete"
+      cancel: "Cancel"
+
+
+  unable-to-fetch-closest-city-name: "Unable to fetch closest city name"
+
 case:
   title: "Praj"
   last-updated-at: "Last updated {time}"

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { closeCircleOutline } from "ionicons/icons"
 import { useCaseHistory } from "@/compositions/case-history";
 import { useLocationLookup } from "@/compositions/location-lookup";
 import { useNetwork } from "@/compositions/network";
@@ -54,7 +55,28 @@ const getQueueCaseId = (queueCase: BaseCase): string => {
   return `${queueCase.category.id}-${queueCase.subCategories.map((s) => s.id).join(",")}`;
 };
 
-const deleteQueueCase = async () => {};
+const deleteQueueCase = async (idx: number) => {
+
+  const alert = await alertController.create({
+    header: t("my-cases.cached.delete-alert.header"),
+    message: t("my-cases.cached.delete-alert.message"),
+    buttons: [
+      {
+        text: t("my-cases.cached.delete-alert.delete"),
+        role: 'destructive',
+        handler: () => {
+          cases.removeCaseFromQueue(idx)
+        },
+      },
+       {
+      text: t("my-cases.cached.delete-alert.cancel"),
+      role: 'cancel'
+      }
+      ]
+  })
+  await alert.present();
+  return;
+};
 </script>
 
 <template>
@@ -69,9 +91,10 @@ const deleteQueueCase = async () => {};
       <div class="flex flex-col justify-between h-full">
         <ion-label v-if="loading">Loading...</ion-label>
         <ion-list v-else>
-          <ion-list v-if="main.caseQueue.length">
+          <ion-list v-if="main.caseQueue.length > 0">
+            <ion-list-header>{{ t("my-cases.cached.title")}}</ion-list-header>
             <ion-item v-for="(queueCase, idx) in main.caseQueue" :key="getQueueCaseId(queueCase)">
-              <ion-icon name="add-circle-outline" @click="cases.removeCaseFromQueue(idx)"></ion-icon>
+              <ion-icon class="text-black" :icon="closeCircleOutline" @click="deleteQueueCase(idx)"></ion-icon>
             </ion-item>
           </ion-list>
           <ion-item
