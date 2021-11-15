@@ -58,5 +58,7 @@ declare global {
 	}
 
 	export type AppModule = (options: ModuleOptions) => Promise<void>;
+	// Alias
+	export type BeforeAppMount = AppModule;
 	export type Language = "en" | "da";
 }
