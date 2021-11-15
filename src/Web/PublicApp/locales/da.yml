@@ -12,53 +12,62 @@ create-case:
       valid: "Accepter Lokation"
       invalid: "Vælg Lokation"
     confirm-button-offline: 
-      valid: "Send ind nuværende lokation"
+      valid: "Send nuværende lokation"
     internet-error:
       no-internet: "Intet internet"
-      internet-msg: "Take pictures of your Praj case, and upload them later"
+      internet-msg: "Tag et billede af din Praj sag, og upload den på et senere tidspunkt"
       no-internet-explanation: |
-        There is no internet connection so the map cant be loaded, you can send in your current location. 
-        Make sure your current location equals to where the error is.
+        Der er ingen internet forbindelse, så kortet kan ikke indlæses. Du kan indsende din nuværende position.
+        Vær sikker på at din nuværende position er det samme sted som fejlen du rapportere.
   category:
-    title: "Choose Category"
-    search-placeholder: "Search"
+    title: "Vælg Kategori"
+    search-placeholder: "Søg"
+    description-placeholder: "Indtast hvad Prajet omhandler"
   pictures:
-    title: "Choose Pictures"
+    title: "Vælg Billeder"
   overview:
-    title: "Overview"
-    category: "Category"
-    sub-categories: "Sub categories"
-    pictures: "Pictures"
+    title: "Overblik"
+    category: "Kategori"
+    sub-categories: "Underkategorier"
+    pictures: "Billeder"
     comment:
-      title: "Comment"
-      placeholder: "Type here"
+      title: "Kommentar"
+      placeholder: "Skriv Her"
     description:
-      title: "Description"
-      placeholder: "Type your concern here"
+      title: "Beskrivelse"
+      placeholder: "Indtast hvad Prajet omhandler"
     send: 
       button:
         send: "Send"
-        sending: "Sending"
-      success: "Your Praj has been sent"
+        sending: "Sender"
+      success: "Dit Praj er blevet indsendt"
       offline-popup: 
-        header: "You are offline"
+        header: "Du er offline"
         message: |
-          Your device is offline, therefore the report has been saved.
-          Next time you have an internet connection, the report will be sent. 
+          Din enhed er offline, og derfor er din sag blevet gemt.
+          Næste gang du har internet forbindelse, vil din sag blive indsendt
         button: "Ok"
 navigation:
-  back: "Back"
-  delete: "Delete"
-  next: "Next"
+  back: "Tilbage"
+  delete: "Slet"
+  next: "Næste"
 not-found:
-  text: "Ain't nothing here"
+  text: "Intet at se her"
 my-cases:
-  title: "Your Prajs"
+  title: "Dine Prajs"
 case:
   title: "Praj"
-  last-updated-at: "Last updated {time}"
+  last-updated-at: "Senest opdateret {time}"
 settings:
-  title: "Settings"
+  title: "Indstillinger"
+  general:
+    header: 'Generelle indstillinger'
+    english-language: 'Engelsk'
+    dark-mode: 'Mørk tilstand'
+  misc:
+    header: 'Om'
+    view-tutorial: 'Vis tutorial'
+    view-privacy-policy: 'Privat politik'
 privacy-policy:
-  header: "Privacy Policy"
-  content: "legal type here"
+  header: "Privat Politik"
+  content: "Noget legalt "
