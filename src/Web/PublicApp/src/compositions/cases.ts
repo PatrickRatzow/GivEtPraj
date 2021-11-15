@@ -33,6 +33,8 @@ export function useCases() {
 		const caseQueue = [...main.caseQueue];
 		delete caseQueue[index];
 		main.caseQueue = caseQueue;
+	}
+
 	function emptyCaseQueue() {
 		main.caseQueue = [];
 	}
