@@ -69,7 +69,7 @@ const setDescription = (description: string) => {
               </template>
               <ion-item v-if="createCase.category?.miscellaneous">
                 <ion-textarea
-                  placeholder="Enter your concern here"
+                  :placeholder="t('create-case.category.description-placeholder')"
                   autogrow="true"
                   maxlength="200"
                   class="border px-2"
