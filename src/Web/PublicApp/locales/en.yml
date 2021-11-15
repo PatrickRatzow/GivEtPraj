@@ -22,6 +22,7 @@ create-case:
   category:
     title: "Choose Category"
     search-placeholder: "Search"
+    description-placeholder: "Type your concern here"
   pictures:
     title: "Choose Pictures"
   overview:
@@ -43,8 +44,8 @@ create-case:
       offline-popup: 
         header: "You are offline"
         message: |
-          Your device is offline, therefore the report has been saved.
-          Next time you have an internet connection, the report will be sent. 
+          Your device is offline, therefore the case has been saved.
+          Next time you have an internet connection, the case will be sent. 
         button: "Ok"
 navigation:
   back: "Back"
@@ -59,6 +60,14 @@ case:
   last-updated-at: "Last updated {time}"
 settings:
   title: "Settings"
+  general:
+    header: 'General Settings'
+    english-language: 'English'
+    dark-mode: 'Dark mode'
+  misc:
+    header: 'About'
+    view-tutorial: 'View tutorial'
+    view-privacy-policy: 'Privacy policy'
 privacy-policy:
   header: "Privacy Policy"
   content: "legal type here"
