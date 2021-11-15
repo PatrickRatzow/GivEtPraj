@@ -12,8 +12,8 @@ interface CreateQueueKeyRequest {
 export function useQueueKeys() {
 	const network = useNetwork();
 	const main = useMainStore();
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const { executeRecaptcha, recaptchaLoaded } = useReCaptcha()!;
+	let executeRecaptcha: ((action: string) => Promise<string>) | undefined;
+	let recaptchaLoaded: (() => Promise<boolean>) | undefined;
 
 	function hasKey() {
 		return main.queueKey !== undefined;
@@ -27,21 +27,36 @@ export function useQueueKeys() {
 		return main.queueKey;
 	}
 
+	function loadReCaptcha() {
+		if (executeRecaptcha && recaptchaLoaded) return true;
+
+		const reCaptcha = useReCaptcha();
+		if (!reCaptcha) return false;
+
+		executeRecaptcha = reCaptcha.executeRecaptcha;
+		recaptchaLoaded = reCaptcha.recaptchaLoaded;
+
+		return true;
+	}
+
 	async function createKey(): Promise<QueueKey | undefined> {
 		if (!network.status.value?.connected) return;
 
 		const { value } = await Storage.get({ key: "queueKey" });
 		if (value !== null) return JSON.parse(value) as QueueKey;
 
-		await recaptchaLoaded();
+		const isLoaded = loadReCaptcha();
+		if (!isLoaded) return;
 
-		const reCaptchaToken = await executeRecaptcha("queue_key");
+		await recaptchaLoaded?.();
+
+		const reCaptchaToken = await executeRecaptcha?.("queue_key");
 
 		const id = await Device.getId();
 		const data: CreateQueueKeyRequest = { deviceId: id.uuid };
 		const resp = await axios.post("queue-keys", data, {
 			headers: {
-				["X-ReCAPTCHA-V3"]: reCaptchaToken,
+				["X-ReCAPTCHA-V3"]: reCaptchaToken as string,
 			},
 		});
 
