@@ -92,7 +92,7 @@ const sendCase = async () => {
           </ion-item>
         </ion-list>
         <div class="w-full ion-padding">
-          <ion-button expand="block" @click="sendCase">
+          <ion-button expand="block" @click="cases.addCurrentCaseToQueue">
             <template v-if="loading">
               <ion-spinner class="mr-2"> </ion-spinner>
               {{ t("create-case.overview.send.button.sending") }}

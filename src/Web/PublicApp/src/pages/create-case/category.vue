@@ -19,6 +19,22 @@ const categories = computed(() =>
 const selectCategory = (category: Category) => {
   createCase.category = category;
   createCase.subCategories = [];
+  selectionIsValid();
+};
+
+const isValid = ref(false);
+
+const selectionIsValid = () =>
+  (isValid.value =
+    (createCase.category &&
+      ((createCase.category.miscellaneous && createCase.description && createCase.description.length > 4) ||
+        !createCase.category.miscellaneous)) ||
+    false);
+
+const setDescription = (description: string) => {
+  createCase.description = description;
+
+  selectionIsValid();
 };
 </script>
 
@@ -57,13 +73,13 @@ const selectCategory = (category: Category) => {
                   autogrow="true"
                   maxlength="200"
                   class="border px-2"
-                  @IonChange="createCase.description = $event.target.textContent"
+                  @IonChange="setDescription($event.target.textContent)"
                 ></ion-textarea>
               </ion-item>
             </ion-radio-group>
           </ion-list>
         </div>
-        <ion-button class="flex-row float-bottom" @click="router.push('/create-praj/pictures')">
+        <ion-button :disabled="!isValid" class="flex-row float-bottom" @click="router.push('/create-praj/pictures')">
           {{ t("navigation.next") }}
         </ion-button>
       </div>

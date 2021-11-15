@@ -1,5 +1,64 @@
-title-bar:
-  back: "Tilbage"
-  delete: "Slet"
-error-message:
-  no-internet: ""
+tabs:
+  create-case: "Opret Praj"
+  my-cases: "Mine Prajs"
+  settings: "Indstillinger"
+create-case:
+  map:
+    title: "Vælg lokation"
+    layers:
+      street: "Veje"
+      satellite: "Satellit"
+    confirm-button:
+      valid: "Accepter Lokation"
+      invalid: "Vælg Lokation"
+    confirm-button-offline: 
+      valid: "Send ind nuværende lokation"
+    internet-error:
+      no-internet: "Intet internet"
+      internet-msg: "Take pictures of your Praj case, and upload them later"
+      no-internet-explanation: |
+        There is no internet connection so the map cant be loaded, you can send in your current location. 
+        Make sure your current location equals to where the error is.
+  category:
+    title: "Choose Category"
+    search-placeholder: "Search"
+  pictures:
+    title: "Choose Pictures"
+  overview:
+    title: "Overview"
+    category: "Category"
+    sub-categories: "Sub categories"
+    pictures: "Pictures"
+    comment:
+      title: "Comment"
+      placeholder: "Type here"
+    description:
+      title: "Description"
+      placeholder: "Type your concern here"
+    send: 
+      button:
+        send: "Send"
+        sending: "Sending"
+      success: "Your Praj has been sent"
+      offline-popup: 
+        header: "You are offline"
+        message: |
+          Your device is offline, therefore the report has been saved.
+          Next time you have an internet connection, the report will be sent. 
+        button: "Ok"
+navigation:
+  back: "Back"
+  delete: "Delete"
+  next: "Next"
+not-found:
+  text: "Ain't nothing here"
+my-cases:
+  title: "Your Prajs"
+case:
+  title: "Praj"
+  last-updated-at: "Last updated {time}"
+settings:
+  title: "Settings"
+privacy-policy:
+  header: "Privacy Policy"
+  content: "legal type here"

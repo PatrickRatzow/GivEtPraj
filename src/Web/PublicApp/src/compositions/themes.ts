@@ -34,3 +34,9 @@ export function useThemes() {
 
 	return { loadTheme, setTheme };
 }
+
+export const beforeAppMount: BeforeAppMount = async () => {
+	const themes = useThemes();
+
+	await themes.loadTheme();
+};

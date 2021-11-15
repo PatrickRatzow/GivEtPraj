@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { create, fileTrayFull, settings } from "ionicons/icons";
 import { useQueueKeys } from "@/compositions/queue-keys";
-import { useThemes } from "@/compositions/themes";
 import { useMainStore } from "@/stores/main";
 import { useTutorial } from "@/compositions/tutorial";
 
-const themes = useThemes();
 const main = useMainStore();
 const tutorial = useTutorial();
 const { t } = useI18n();
@@ -17,8 +15,6 @@ onBeforeMount(async () => {
 });
 
 onMounted(async () => {
-  await themes.loadTheme();
-
   if (!hasKey()) return;
 
   await createKey();
