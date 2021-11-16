@@ -1,11 +1,20 @@
 <script setup lang="ts">
 import { useImages } from "@/compositions/images";
 import { useCreateCaseStore } from "@/stores/create-case";
+import { close } from "ionicons/icons";
 
 const createCase = useCreateCaseStore();
 const router = useRouter();
 const images = useImages();
 const { t } = useI18n();
+
+let currentIndex = ref(22);
+const viewCamraModal = ref(false);
+
+const openCamraModal = (index: number) => {
+  currentIndex.value = index;
+  viewCamraModal.value = true;
+};
 </script>
 
 <template>
@@ -21,7 +30,7 @@ const { t } = useI18n();
         <div class="grid grid-cols-3 gap-4 w-full auto-rows-fr">
           <template v-for="idx in 6" :key="idx">
             <div class="bg-gray-100 dark:bg-opacity-5 text-center text-xl rounded-md relative">
-              <i class="fas fa-plus text-black dark:text-white my-12" @click="images.takePicture(idx - 1)"></i>
+              <i class="fas fa-plus text-black dark:text-white my-12" @click="openCamraModal(idx)"></i>
               <img
                 v-if="createCase.images[idx - 1]"
                 class="absolute inset-0 w-full h-full"
@@ -37,6 +46,22 @@ const { t } = useI18n();
           }}</ion-button>
         </div>
       </div>
+
+      <ion-modal :is-open="viewCamraModal" @didDismiss="viewCamraModal = false">
+        <ion-header translucent>
+          <ion-toolbar>
+            <ion-title>{{ t("create-case.pictures.modal.title") }}</ion-title>
+            <ion-buttons slot="end">
+              <ion-button @click="viewCamraModal = false">
+                <ion-icon :icon="close"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content fullscreen overflow-scroll="false">
+          <camera-modal :index="currentIndex"></camera-modal>
+        </ion-content>
+      </ion-modal>
     </ion-content>
   </ion-page>
 </template>

@@ -1,4 +1,4 @@
-import { Camera, CameraResultType } from "@capacitor/camera";
+import { Camera, CameraResultType, Photo } from "@capacitor/camera";
 import { useCreateCaseStore } from "@/stores/create-case";
 
 export function useImages() {
@@ -15,6 +15,12 @@ export function useImages() {
 		return base64ToDataUrl(image.base64String);
 	}
 
+	function addPicture(index: number, photo: Photo) {
+		const images = [...createCase.images];
+		images[index] = photo;
+		createCase.images = images;
+	}
+
 	async function takePicture(index: number) {
 		const image = await Camera.getPhoto({
 			quality: 90,
@@ -22,9 +28,7 @@ export function useImages() {
 			resultType: CameraResultType.Base64,
 		});
 
-		const images = [...createCase.images];
-		images[index] = image;
-		createCase.images = images;
+		addPicture(index, image);
 	}
 
 	function removePicture(index: number) {
@@ -33,5 +37,5 @@ export function useImages() {
 		createCase.images = images;
 	}
 
-	return { base64ToDataUrl, getImageAsDataUrl, takePicture, removePicture };
+	return { base64ToDataUrl, getImageAsDataUrl, takePicture, removePicture, addPicture };
 }

@@ -49,8 +49,6 @@ onMounted(async () => {
           </ion-tab-bar>
         </ion-tabs>
       </ion-page>
-
-      <!-- <ReloadPWA /> -->
     </ion-app>
   </main>
 </template>
