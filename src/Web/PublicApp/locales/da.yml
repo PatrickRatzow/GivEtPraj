@@ -56,9 +56,9 @@ not-found:
 my-cases:
   title: "Dine Prajs"
       delete-alert: 
-      header: "Er du sikker?"
-      delete: "Delete"
-      cancel: "Cancel"
+       header: "Er du sikker?"
+       delete: "Delete"
+       cancel: "Cancel"
   unable-to-fetch-closest-city-name: "Unable to fetch closest city name"
 case:
   title: "Praj"
