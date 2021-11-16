@@ -55,11 +55,13 @@ not-found:
   text: "Intet at se her"
 my-cases:
   title: "Dine Prajs"
-      delete-alert: 
-       header: "Er du sikker?"
-       delete: "Delete"
-       cancel: "Cancel"
-  unable-to-fetch-closest-city-name: "Unable to fetch closest city name"
+  cached:
+    title: "Lageret praj"
+    delete-alert: 
+      header: "Er du sikker?"
+      delete: "Slet"
+      cancel: "Fortryd"
+  unable-to-fetch-closest-city-name: "Kunne ikke finde nærmeste by"
 case:
   title: "Praj"
   last-updated-at: "Senest opdateret {time}"
