@@ -28,13 +28,7 @@ public class CasesController : ControllerBase
 
         var result = await _mediator.Send(command, cancellationToken);
 
-        return result.MatchResponse(
-            caseId => CreatedAtAction(nameof(FindCase),
-                new
-                {
-                    Id = caseId
-                }, null)
-        );
+        return result.MatchResponse();
     }
 
     [HttpGet]

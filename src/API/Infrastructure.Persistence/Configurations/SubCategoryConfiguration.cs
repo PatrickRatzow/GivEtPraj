@@ -13,5 +13,8 @@ public class SubCategoryConfiguration : IEntityTypeConfiguration<SubCategory>
                 .IsRequired()
                 .HasMaxLength(120);
         });
+
+        builder.HasMany(sub => sub.Cases)
+            .WithMany(c => c.SubCategories);
     }
 }
