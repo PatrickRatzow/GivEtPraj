@@ -13,7 +13,16 @@ export const useMainStore = defineStore("main", () => {
 			description: undefined,
 			status: { color: "##FF0000", name: "Ikke færdig" },
 			geographicLocation: { longitude: 9.34, latitude: 52.0 },
-		}
+		},
+		{
+			category: { id: 2, name: "Vejskade", icon: "fas fa-road", miscellaneous: false, subCategories: [] },
+			subCategories: [{ id: 1, name: "Hul" }],
+			images: [],
+			comment: undefined,
+			description: undefined,
+			status: { color: "##FF0000", name: "Ikke færdig" },
+			geographicLocation: { longitude: 9.34, latitude: 52.0 },
+		},
 	]);
 	const cases = ref<Case[]>([
 		{

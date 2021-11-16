@@ -30,9 +30,7 @@ export function useCases() {
 	}
 
 	function removeCaseFromQueue(index: number) {
-		const caseQueue = [...main.caseQueue];
-		delete caseQueue[index];
-		main.caseQueue = caseQueue;
+		main.caseQueue = main.caseQueue.filter((c, idx) => idx != index);
 	}
 
 	function emptyCaseQueue() {
