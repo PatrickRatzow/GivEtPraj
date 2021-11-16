@@ -44,15 +44,28 @@ public class
             .Where(cat => request.Cases.Select(@case => @case.CategoryId).Contains(cat.Id))
             .ToDictionaryAsync(cat => cat.Id, cat => cat, cancellationToken);
         var distinctRequestCategoryCount = request.Cases.DistinctBy(c => c.CategoryId).Count();
+        
         if (categories.Count != distinctRequestCategoryCount) return new InvalidCategory();
+        foreach (var c in request.Cases)
+        {
+            var isMiscellaneous = categories.GetValueOrDefault(c.CategoryId)?.Miscellaneous == true;
+            if (isMiscellaneous) continue;
+            
+            var subCategoriesCount = c.SubCategoryIds?.Length;
+            if (subCategoriesCount > 0) continue;
+            
+            return new InvalidCategory();
+        }
         var requestHasAnySubCategoriesNotFound = request.Cases
-            .Where(c => categories.GetValueOrDefault(c.CategoryId)?.Miscellaneous == true)
-            .Any(c => 
-                categories.GetValueOrDefault(c.CategoryId)?.Miscellaneous == true 
-                || categories.Values
+            .Any(c => {
+                var isMiscellaneous = categories.GetValueOrDefault(c.CategoryId)?.Miscellaneous == true;
+                if (isMiscellaneous) return false;
+                if (c.SubCategoryIds?.Length == 0) return false;
+                
+                return categories.Values
                     .Select(cat => cat.SubCategories.Select(sub => sub.Id))
-                    .Contains(c.SubCategoryIds)
-            );
+                    .Contains(c.SubCategoryIds);
+            });
         if (requestHasAnySubCategoriesNotFound) return new InvalidSubCategories();
         
         foreach (var @case in request.Cases)

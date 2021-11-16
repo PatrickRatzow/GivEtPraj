@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Commentor.GivEtPraj.Application.Cases.Commands;
 using Commentor.GivEtPraj.Domain.Enums;
+using MediatR;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration.Cases.Commands;
 
@@ -69,9 +69,10 @@ public class CreateCaseCommandTests : TestBase
         var command = new CreateCaseCommand(deviceId, ipAddress, cases);
 
         // Act
-        await Send(command);
+        var result = await Send(command);
 
         // Assert
+        result.Value.Should().BeOfType<Unit>();
         var dbResult = await Search<BaseCase>(c => c.DeviceId == deviceId);
         dbResult.Should().HaveCount(1);
         dbResult.Should().AllBeOfType<MiscellaneousCase>();
