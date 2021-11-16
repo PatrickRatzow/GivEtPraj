@@ -109,7 +109,6 @@ const getUserPosition = async (map: Map): Promise<Position> => {
 
 onMounted(async () => {
   const map: Map = loadMap();
-  //ake map fill whole div
   setInterval(async function () {
     map.invalidateSize();
   }, 100);
