@@ -25,7 +25,7 @@ public static partial class OneOfExtensions
             */
             IError error =>
                 throw new ArgumentException($"Unable to find an error handler for {error.GetType().Name}"),
-            Unit unit => new NoContentResult(),
+            Unit => new NoContentResult(),
             var data =>
                 GetResult(typeof(OkResult), typeof(OkObjectResult), data)
         };

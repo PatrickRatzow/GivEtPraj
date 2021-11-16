@@ -20,11 +20,11 @@ public class CategoryFactory : DatabaseFactory
         set => _created = value;
     }
 
-    public Category Create(string? name = null)
+    public Category Create(string? name = null, string? icon = null, bool miscellaneous = false)
     {
         lock (CreationLock)
         {
-            return CreateCategory(name);
+            return CreateCategory(name, icon, miscellaneous);
         }
     }
 
@@ -38,17 +38,18 @@ public class CategoryFactory : DatabaseFactory
         }
     }
 
-    private Category CreateCategory(string? name = null)
+    private Category CreateCategory(string? name = null, string? icon = null, bool miscellaneous = false)
     {
         Created++;
 
         name ??= $"Category #{Created}";
+        icon ??= "fas fa-road";
 
         return Add(new Category
         {
             Name = LocalizedString.From(name, name),
-            Icon = "fas fa-road",
-            Miscellaneous = false
+            Icon = icon,
+            Miscellaneous = miscellaneous
         });
     }
 }

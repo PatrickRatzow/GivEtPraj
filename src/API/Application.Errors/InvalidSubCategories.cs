@@ -2,7 +2,7 @@
 
 namespace Commentor.GivEtPraj.Application.Errors;
 
-public record InvalidSubCategories(int[] SubCategories) : IValidationError
+public record InvalidSubCategories : IValidationError
 {
-    public string ErrorMessage => $"The subcategories with the Ids '{string.Join(", ", SubCategories)}' does not exist";
+    public string ErrorMessage => $"At least one sub category is invalid";
 }

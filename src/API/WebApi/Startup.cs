@@ -68,8 +68,6 @@ public class Startup
         });
 
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
-        services.AddFluentValidation();
-        services.AddValidatorsFromAssembly(typeof(CreateCaseRequest).Assembly);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
