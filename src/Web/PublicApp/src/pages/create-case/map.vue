@@ -158,6 +158,7 @@ const sendInCurrentLocation = async () => {
       </template>
       <template v-else>
         <button
+          :disabled="!isPositionValid"
           class="
             absolute
             bottom-4
