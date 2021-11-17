@@ -3,24 +3,30 @@ import { useCreateCaseStore } from "@/stores/create-case";
 import { useImages } from "@/compositions/images";
 
 defineProps<{ index: number }>();
+const emits = defineEmits(["pictureTaken"]);
 const createCase = useCreateCaseStore();
 const images = useImages();
 const video = ref<HTMLVideoElement | null>(null);
 const canvas = ref<HTMLCanvasElement | null>(null);
+let isUsingEnviromentCamera = true;
 
 watchEffect(() => {
+  startCamera();
+});
+
+function startCamera() {
   if (navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices
-      .getUserMedia({ video: true })
+      .getUserMedia({ video: { facingMode: isUsingEnviromentCamera ? "environment" : "user" } })
       .then(function (stream) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         video.value!.srcObject = stream;
       })
-      .catch(function (err0r) {
-        console.log("Something went wrong!");
+      .catch(function (error) {
+        console.log("Something went wrong! " + error);
       });
   }
-});
+}
 
 const takeImg = (index: number) => {
   if (canvas.value == null) return;
@@ -37,10 +43,17 @@ const takeImg = (index: number) => {
     format: "jpeg",
     saved: true,
   });
+
+  emits("pictureTaken");
 };
-const switchCamera = () => {
-  const b = 1;
-};
+
+function switchCamera() {
+  video.value?.pause();
+  video.value!.srcObject = null;
+
+  isUsingEnviromentCamera = !isUsingEnviromentCamera;
+  startCamera();
+}
 
 const accessFileSystem = () => {
   const b = 1;

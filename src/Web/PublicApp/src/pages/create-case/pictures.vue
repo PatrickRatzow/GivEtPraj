@@ -8,7 +8,7 @@ const router = useRouter();
 const images = useImages();
 const { t } = useI18n();
 
-let currentIndex = ref(22);
+let currentIndex = ref(0);
 const viewCamraModal = ref(false);
 
 const openCamraModal = (index: number) => {
@@ -59,7 +59,7 @@ const openCamraModal = (index: number) => {
           </ion-toolbar>
         </ion-header>
         <ion-content fullscreen overflow-scroll="false">
-          <camera-modal :index="currentIndex"></camera-modal>
+          <camera-modal :index="currentIndex" @pictureTaken="viewCamraModal = false"></camera-modal>
         </ion-content>
       </ion-modal>
     </ion-content>
