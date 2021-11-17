@@ -8,7 +8,8 @@
     "serve": "vite preview",
     "lint": "eslint --ext .js,.vue src",
     "format": "prettier .  --write",
-    "test": "npx playwright test"
+    "test": "npx playwright test",
+    "testconfig": "playwright test --config=tests/playwright.config.ts"
   },
   "dependencies": {
     "@capacitor/camera": "^1.1.2",
