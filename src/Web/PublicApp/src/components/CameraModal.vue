@@ -4,10 +4,10 @@ import { useImages } from "@/compositions/images";
 
 defineProps<{ index: number }>();
 const emits = defineEmits(["pictureTaken"]);
-const createCase = useCreateCaseStore();
 const images = useImages();
 const video = ref<HTMLVideoElement | null>(null);
 const canvas = ref<HTMLCanvasElement | null>(null);
+const input = ref<HTMLInputElement | null>(null);
 let isUsingEnviromentCamera = true;
 
 watchEffect(() => {
@@ -50,13 +50,29 @@ const takeImg = (index: number) => {
 function switchCamera() {
   video.value?.pause();
   video.value!.srcObject = null;
-
   isUsingEnviromentCamera = !isUsingEnviromentCamera;
   startCamera();
 }
 
-const accessFileSystem = () => {
-  const b = 1;
+async function accessFileSystem() {
+  input.value?.click();
+}
+
+const fileChosen = (index: number) => {
+  var file = input.value!.files![0];
+  if (file != null) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      images.addPicture(index - 1, {
+        base64String: reader.result?.toString().replaceAll("data:image/jpeg;base64,", ""),
+        format: "jpeg",
+        saved: true,
+      });
+    };
+
+    emits("pictureTaken");
+  }
 };
 </script>
 
@@ -67,7 +83,15 @@ const accessFileSystem = () => {
     </div>
     <div class="flex flex-row justify-between px-12 pb-12">
       <button @click="accessFileSystem">
-        <i class="fas fa-photo-video text-white text-4xl"></i>
+        <input
+          ref="input"
+          hidden="true"
+          class="w-20 fas fa-photo-video"
+          type="file"
+          accept="image/jpeg"
+          @change="fileChosen(index)"
+        />
+        <i type="file" class="fas fa-photo-video text-white text-4xl"></i>
       </button>
       <button @click="takeImg(index)">
         <i class="fas fa-circle text-white text-7xl pb-12 pt-3"></i>
