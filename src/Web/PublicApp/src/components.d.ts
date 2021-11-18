@@ -5,6 +5,7 @@
 declare module 'vue' {
   export interface GlobalComponents {
     BackButton: typeof import('./components/BackButton.vue')['default']
+    CameraModal: typeof import('./components/CameraModal.vue')['default']
     CategoryRow: typeof import('./components/CategoryRow.vue')['default']
     IonApp: typeof import('@ionic/vue')['IonApp']
     IonBackButton: typeof import('@ionic/vue')['IonBackButton']
