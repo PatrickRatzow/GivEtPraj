@@ -3,6 +3,7 @@ import { useCreateCaseStore } from "@/stores/create-case";
 import { useCases } from "@/compositions/cases";
 import { useNetwork } from "@/compositions/network";
 import { alertController, toastController } from "@ionic/vue";
+import ReCaptchaV2 from "@/components/ReCaptchaV2.vue";
 
 const createCase = useCreateCaseStore();
 const { t } = useI18n();
@@ -91,6 +92,7 @@ const sendCase = async () => {
             ></ion-textarea>
           </ion-item>
         </ion-list>
+        <re-captcha-v2 />
         <div class="w-full ion-padding">
           <ion-button expand="block" @click="cases.addCurrentCaseToQueue">
             <template v-if="loading">

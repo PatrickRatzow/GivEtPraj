@@ -57,6 +57,11 @@ const cfgRoutes: RouteRecordRaw[] = [
 		component: () => import("@/pages/settings.vue"),
 	},
 	{
+		name: "recaptchatest",
+		path: "/recaptchatest",
+		component: () => import("@/pages/recaptchatest.vue"),
+	},
+	{
 		name: "404",
 		path: "/:pathMatch(.*)*",
 		component: () => import("@/pages/404.vue"),
