@@ -60,6 +60,7 @@ onMounted(async () => {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   min-height: 100vh;
+  max-width: 600px;
 }
 
 .grecaptcha-badge {

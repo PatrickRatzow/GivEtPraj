@@ -12,8 +12,10 @@ let currentIndex = ref(0);
 const viewCamraModal = ref(false);
 
 const openCamraModal = (index: number) => {
-  currentIndex.value = index;
-  viewCamraModal.value = true;
+  if (!createCase.images[index - 1]) {
+    currentIndex.value = index;
+    viewCamraModal.value = true;
+  }
 };
 </script>
 
@@ -29,11 +31,14 @@ const openCamraModal = (index: number) => {
       <div class="flex flex-col justify-between items-center h-full">
         <div class="grid grid-cols-3 gap-4 w-full auto-rows-fr">
           <template v-for="idx in 6" :key="idx">
-            <div class="bg-gray-100 dark:bg-opacity-5 text-center text-xl rounded-md relative">
-              <i class="fas fa-plus text-black dark:text-white my-12" @click="openCamraModal(idx)"></i>
+            <div
+              class="bg-gray-100 dark:bg-opacity-5 text-center text-xl rounded-md relative"
+              @click="openCamraModal(idx)"
+            >
+              <i class="fas fa-plus text-black dark:text-white my-12"></i>
               <img
                 v-if="createCase.images[idx - 1]"
-                class="absolute inset-0 w-full h-full"
+                class="absolute inset-0 w-full h-full object-cover"
                 :src="images.getImageAsDataUrl(idx - 1)"
                 @click="router.push(`/create-praj/pictures/${idx}`)"
               />
