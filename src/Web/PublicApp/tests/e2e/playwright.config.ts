@@ -5,6 +5,7 @@ const config: PlaywrightTestConfig = {
 		browserName: "chromium",
 		headless: false,
 		locale: "en-GB",
+		actionTimeout: 0,
 	},
 };
 export default config;

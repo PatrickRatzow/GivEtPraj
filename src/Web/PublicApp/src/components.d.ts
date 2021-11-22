@@ -25,6 +25,7 @@ declare module 'vue' {
     IonRadioGroup: typeof import('@ionic/vue')['IonRadioGroup']
     IonRouterOutlet: typeof import('@ionic/vue')['IonRouterOutlet']
     IonSearchbar: typeof import('@ionic/vue')['IonSearchbar']
+    IonSpinner: typeof import('@ionic/vue')['IonSpinner']
     IonTabBar: typeof import('@ionic/vue')['IonTabBar']
     IonTabButton: typeof import('@ionic/vue')['IonTabButton']
     IonTabs: typeof import('@ionic/vue')['IonTabs']
