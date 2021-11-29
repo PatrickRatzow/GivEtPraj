@@ -9,19 +9,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentAssertions" Version="6.1.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-rc.1.21452.10"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0-rc.1.21451.13"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0"/>
-        <PackageReference Include="Moq" Version="4.16.1"/>
-        <PackageReference Include="NUnit" Version="3.13.2"/>
-        <PackageReference Include="NUnit3TestAdapter" Version="4.0.0"/>
-        <PackageReference Include="coverlet.collector" Version="3.0.3"/>
-        <PackageReference Include="Respawn" Version="4.0.0"/>
+        <PackageReference Include="FluentAssertions" Version="6.1.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-rc.1.21452.10" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0-rc.1.21451.13" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+        <PackageReference Include="Moq" Version="4.16.1" />
+        <PackageReference Include="NUnit" Version="3.13.2" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+        <PackageReference Include="coverlet.collector" Version="3.0.3" />
+        <PackageReference Include="Respawn" Version="4.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="appsettings.json"/>
+        <None Remove="appsettings.json" />
     </ItemGroup>
 
     <ItemGroup>
@@ -31,8 +31,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\src\API\Infrastructure.Persistence\Infrastructure.Persistence.csproj"/>
-        <ProjectReference Include="..\..\..\src\API\WebApi\WebApi.csproj"/>
+        <ProjectReference Include="..\..\..\src\API\Infrastructure.Persistence\Infrastructure.Persistence.csproj" />
+        <ProjectReference Include="..\..\..\src\API\WebApi\WebApi.csproj" />
     </ItemGroup>
 
 </Project>

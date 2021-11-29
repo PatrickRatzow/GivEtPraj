@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Commentor.GivEtPraj.Application.Cases.Commands;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration.Cases.Commands;
 
 using static Testing;
 
-public class CreateQueueKeyCommandTest : TestBase
+public class PreAuthorizeDeviceIdCommandTests : TestBase
 {
     [Test]
-    public async Task ShouldCreateQueueKey()
+    public async Task ShouldCreateReCaptchaAuthorization()
     {
         // Arrange
-        var command = new CreateQueueKeyCommand();
+        var command = new PreAuthorizeDeviceCommand();
         
         // Act
         await Send(command);
