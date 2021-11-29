@@ -10,7 +10,7 @@ public interface IAppDbContext
     DbSet<Category> Categories { get; set; }
     DbSet<Employee> Employees { get; set; }
     DbSet<SubCategory> SubCategories { get; set; }
-    DbSet<RecaptchaAuthorization> QueueKeys { get; set; }
+    DbSet<ReCaptchaAuthorization> QueueKeys { get; set; }
     EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = new());
 }

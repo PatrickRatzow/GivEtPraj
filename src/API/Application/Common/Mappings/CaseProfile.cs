@@ -16,7 +16,7 @@ public class CaseProfile : Profile
             );
         CreateMap<Category, CategoryDto>();
         CreateMap<SubCategory, SubCategoryDto>();
-        CreateMap<RecaptchaAuthorization, QueueKeyDto>();
+        CreateMap<ReCaptchaAuthorization, QueueKeyDto>();
 
         CreateMap<LocalizedString, string>().ConvertUsing(new LocalizedStringConverter());
     }

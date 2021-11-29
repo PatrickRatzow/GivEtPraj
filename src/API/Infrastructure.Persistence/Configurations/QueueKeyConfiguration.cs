@@ -1,8 +1,8 @@
 ﻿namespace Infrastructure.Persistence.Configurations;
 
-public class QueueKeyConfiguration : IEntityTypeConfiguration<RecaptchaAuthorization>
+public class QueueKeyConfiguration : IEntityTypeConfiguration<ReCaptchaAuthorization>
 {
-    public void Configure(EntityTypeBuilder<RecaptchaAuthorization> builder)
+    public void Configure(EntityTypeBuilder<ReCaptchaAuthorization> builder)
     {
         builder.Property(qk => qk.DeviceId)
             .IsRequired();

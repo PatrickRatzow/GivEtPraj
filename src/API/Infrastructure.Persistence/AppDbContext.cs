@@ -13,7 +13,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<SubCategory> SubCategories { get; set; }
     public DbSet<Employee> Employees { get; set; }
-    public DbSet<RecaptchaAuthorization> QueueKeys { get; set; }
+    public DbSet<ReCaptchaAuthorization> QueueKeys { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

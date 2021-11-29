@@ -26,12 +26,11 @@ public class CreateQueueKeyCommandHandler : IRequestHandler<CreateQueueKeyComman
         {
             DeviceId = _deviceService.DeviceIdentifier,
             CaptchaScore = 1,
-            CreatedAt = DateTimeOffset.UtcNow,
             ExpiresAt = DateTimeOffset.UtcNow.AddDays(30)
         });
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<RecaptchaAuthorization, QueueKeyDto>(queueKey.Entity);
+        return _mapper.Map<ReCaptchaAuthorization, QueueKeyDto>(queueKey.Entity);
     }
 }

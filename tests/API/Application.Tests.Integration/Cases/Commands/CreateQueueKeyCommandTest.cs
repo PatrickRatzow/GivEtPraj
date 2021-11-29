@@ -13,15 +13,13 @@ public class CreateQueueKeyCommandTest : TestBase
     public async Task ShouldCreateQueueKey()
     {
         // Arrange
-        var deviceId = Guid.NewGuid();
-
-        var queueKey = new List<QueueKeyDto>();
-        var command = new CreateQueueKeyCommand(deviceId);
+        var command = new CreateQueueKeyCommand();
+        
         // Act
         await Send(command);
 
         // Assert
-        var dbResult = await Count<RecaptchaAuthorization>();
+        var dbResult = await Count<ReCaptchaAuthorization>();
         dbResult.Should().Be(1);
     }
 }
