@@ -19,15 +19,18 @@ public class ReCaptchaBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILogger<ReCaptchaBehavior<TRequest, TResponse>> _logger;
     private readonly ReCaptchaOptions _options;
+    private readonly IDeviceService _deviceService;
 
     public ReCaptchaBehavior(IOptions<ReCaptchaOptions> options, ILogger<ReCaptchaBehavior<TRequest, TResponse>> logger,
-        HttpClient httpClient, IHttpContextAccessor httpContextAccessor, IAppDbContext context)
+        HttpClient httpClient, IHttpContextAccessor httpContextAccessor, 
+        IAppDbContext context, IDeviceService deviceService)
     {
         _options = options.Value;
         _logger = logger;
         _httpClient = httpClient;
         _httpContextAccessor = httpContextAccessor;
         _context = context;
+        _deviceService = deviceService;
     }
 
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
@@ -44,10 +47,9 @@ public class ReCaptchaBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
                 return await next();
         }
 
-        bool? v3Result = null;
         bool? v2Result = null;
 
-        v3Result = await VerifyV3(reCaptchaAttribute.MinimumScore);
+        var v3Result = await VerifyV3(reCaptchaAttribute.MinimumScore);
         if (v3Result is null || !v3Result.Value)
             v2Result = await VerifyV2();
 
@@ -97,24 +99,27 @@ public class ReCaptchaBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
 
     private async Task<bool> VerifyQueue()
     {
-        var userInput = _httpContextAccessor.HttpContext?.Request.Headers["X-DeviceId"];
-        if (string.IsNullOrEmpty(userInput)) return false;
-        if (!Guid.TryParse(userInput, out var guid)) return false;
+        try
+        {
+            var guid = _deviceService.DeviceIdentifier;
+            var queueKey = await _context.QueueKeys
+                .FirstOrDefaultAsync(qk => qk.DeviceId == guid && qk.ExpiresAt > DateTimeOffset.UtcNow);
+            if (queueKey is null) return false;
 
-        var queueKey = await _context.QueueKeys
-            .FirstOrDefaultAsync(qk => qk.DeviceId == guid && qk.ExpiresAt > DateTimeOffset.UtcNow);
-        if (queueKey is null) return false;
+            _context.QueueKeys.Remove(queueKey);
+            await _context.SaveChangesAsync();
 
-        _context.QueueKeys.Remove(queueKey);
-        await _context.SaveChangesAsync();
-
-        return true;
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private class ReCaptchaV3Response
     {
         [JsonPropertyName("success")] public bool Success { get; set; }
-
         [JsonPropertyName("score")] public float Score { get; set; }
 
         [JsonPropertyName("action")] public string Action { get; set; } = null!;
