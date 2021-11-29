@@ -13,7 +13,7 @@
     "paths": {
       "@/*": ["./*"]
     },
-    "lib": ["ESnext", "DOM", "WebWorker"],
+    "lib": ["ESnext", "DOM", "WebWorker", "es2016"],
     "types": [
       "vite/client"
     ],

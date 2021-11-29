@@ -1,9 +1,9 @@
 import axios from "@/utils/axios";
 import { Device } from "@capacitor/device";
-import { useReCaptcha } from "vue-recaptcha-v3";
 import { useNetwork } from "@/compositions/network";
 import { Storage } from "@capacitor/storage";
 import { useMainStore } from "@/stores/main";
+import { useReCaptcha } from "vue-recaptcha-v3";
 
 interface CreateQueueKeyRequest {
 	deviceId: string;
@@ -12,8 +12,7 @@ interface CreateQueueKeyRequest {
 export function useQueueKeys() {
 	const network = useNetwork();
 	const main = useMainStore();
-	let executeRecaptcha: ((action: string) => Promise<string>) | undefined;
-	let recaptchaLoaded: (() => Promise<boolean>) | undefined;
+	const { executeRecaptcha, recaptchaLoaded } = useReCaptcha();
 
 	function hasKey() {
 		return main.queueKey !== undefined;
@@ -27,30 +26,15 @@ export function useQueueKeys() {
 		return main.queueKey;
 	}
 
-	function loadReCaptcha() {
-		if (executeRecaptcha && recaptchaLoaded) return true;
-
-		const reCaptcha = useReCaptcha();
-		if (!reCaptcha) return false;
-
-		executeRecaptcha = reCaptcha.executeRecaptcha;
-		recaptchaLoaded = reCaptcha.recaptchaLoaded;
-
-		return true;
-	}
-
 	async function createKey(): Promise<QueueKey | undefined> {
 		if (!network.status.value?.connected) return;
 
 		const { value } = await Storage.get({ key: "queueKey" });
 		if (value !== null) return JSON.parse(value) as QueueKey;
 
-		const isLoaded = loadReCaptcha();
-		if (!isLoaded) return;
+		await recaptchaLoaded();
 
-		await recaptchaLoaded?.();
-
-		const reCaptchaToken = await executeRecaptcha?.("queue_key");
+		const reCaptchaToken = await executeRecaptcha("queue_key");
 
 		const id = await Device.getId();
 		const data: CreateQueueKeyRequest = { deviceId: id.uuid };
@@ -77,10 +61,11 @@ export function useQueueKeys() {
 		if (value !== null) {
 			main.queueKey = JSON.parse(value) as QueueKey;
 		}
-		console.log(main.queueKey);
 	}
 
 	watch(network.status, createKey);
 
 	return { hasKey, consumeKey, createKey, loadKey };
 }
+
+export const beforeAppMount: BeforeAppMount = async () => {};

@@ -1,9 +1,9 @@
 import { Device } from "@capacitor/device";
 import { Storage } from "@capacitor/storage";
 
-export function useLocale() {
-	const language = ref<Language>();
+const language = ref<Language>();
 
+export function useLocale() {
 	async function saveLanguage() {
 		if (!language.value) return;
 
@@ -30,7 +30,9 @@ export function useLocale() {
 		saveLanguage();
 	}
 
-	const isEnglish = computed(() => language.value == "en");
-
-	return { getLanguageCode, setLanguage, isEnglish };
+	return {
+		getLanguageCode,
+		setLanguage,
+		language: readonly(language),
+	};
 }

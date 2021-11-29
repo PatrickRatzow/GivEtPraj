@@ -87,7 +87,7 @@ export function useCases() {
 	return { addCurrentCaseToQueue, sendCases, removeCaseFromQueue };
 }
 
-export const beforeAppMount: BeforeAppMount = () => {
+export const afterAppMount: BeforeAppMount = () => {
 	const cases = useCases();
 
 	cases.sendCases();
