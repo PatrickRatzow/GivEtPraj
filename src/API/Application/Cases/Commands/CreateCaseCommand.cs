@@ -13,15 +13,11 @@ public class CreateCaseCommand : IRequest<OneOf<Unit, InvalidCategory, InvalidSu
     {
     }
     
-    public CreateCaseCommand(Guid deviceId, IPAddress ipAddress, List<CaseCreationDto> cases)
+    public CreateCaseCommand(List<CaseCreationDto> cases)
     {
-        DeviceId = deviceId;
-        IpAddress = ipAddress;
         Cases = cases;
     }
 
-    public IPAddress IpAddress { get; set; }
-    public Guid DeviceId { get; set; }
     public List<CaseCreationDto> Cases { get; set; }
 }
 
@@ -30,11 +26,13 @@ public class
 {
     private readonly IAppDbContext _db;
     private readonly IImageStorage _imageStorage;
+    private readonly IDeviceService _deviceService;
 
-    public CreateCaseCommandHandler(IAppDbContext db, IImageStorage imageStorage)
+    public CreateCaseCommandHandler(IAppDbContext db, IImageStorage imageStorage, IDeviceService deviceService)
     {
         _db = db;
         _imageStorage = imageStorage;
+        _deviceService = deviceService;
     }
 
     public async Task<OneOf<Unit, InvalidCategory, InvalidSubCategories>>
@@ -56,9 +54,9 @@ public class
             var newCase = @case switch
             {
                 { Description: null, SubCategoryIds: not null, Comment: not null } =>
-                    CreateCase(@case, request, categories.Values.First(c => c.Id == @case.CategoryId).SubCategories.ToList(), images),
+                    CreateCase(@case, categories.Values.First(c => c.Id == @case.CategoryId).SubCategories.ToList(), images),
                 { Description: not null, SubCategoryIds: null, Comment: null } => 
-                    CreateMiscellaneousCase(@case, request, images),
+                    CreateMiscellaneousCase(@case, images),
                 _ => throw new ArgumentOutOfRangeException()
             };
 
@@ -131,8 +129,7 @@ public class
         await Task.WhenAll(imageUploads);
     }
 
-    private static BaseCase CreateCase(CaseCreationDto @case, CreateCaseCommand request,
-        List<SubCategory> subCategories, List<CaseImage> images)
+    private BaseCase CreateCase(CaseCreationDto @case, List<SubCategory> subCategories, List<CaseImage> images)
     {
         return new Case
         {
@@ -141,14 +138,11 @@ public class
             Images = images,
             CategoryId = @case.CategoryId,
             GeographicLocation = GeographicLocation.From(@case.Latitude, @case.Longitude),
-            Priority = @case.Priority,
-            IpAddress = request.IpAddress,
-            DeviceId = request.DeviceId
+            DeviceId = _deviceService.DeviceIdentifier
         };
     }
 
-    private static BaseCase CreateMiscellaneousCase(CaseCreationDto @case, CreateCaseCommand request,
-        List<CaseImage> images)
+    private BaseCase CreateMiscellaneousCase(CaseCreationDto @case, List<CaseImage> images)
     {
         return new MiscellaneousCase
         {
@@ -156,9 +150,7 @@ public class
             Images = images,
             CategoryId = @case.CategoryId,
             GeographicLocation = GeographicLocation.From(@case.Latitude, @case.Longitude),
-            Priority = @case.Priority,
-            IpAddress = request.IpAddress,
-            DeviceId = request.DeviceId
+            DeviceId = _deviceService.DeviceIdentifier
         };
     }
 }
@@ -182,9 +174,6 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
             @case.RuleForEach(x => x.Images)
                 .NotEmpty();
 
-            @case.RuleFor(x => x.Priority)
-                .IsInEnum();
-            
             @case.When(x => x.SubCategoryIds != null, () => {
                 @case.RuleFor(x => x.SubCategoryIds!.Length)
                     .NotNull()
@@ -198,14 +187,6 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
                     .MaximumLength(4096);
             });
         });
-        
-
-        RuleFor(x => x.IpAddress)
-            .NotNull()
-            .Must(x => ValidateIP(x.ToString()));
-
-        RuleFor(x => x.DeviceId)
-            .NotNull();
     }
 
     private bool ValidateIP(string ipString)

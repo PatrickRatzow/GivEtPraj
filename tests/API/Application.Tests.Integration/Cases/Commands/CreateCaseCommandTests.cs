@@ -22,28 +22,25 @@ public class CreateCaseCommandTests : TestBase
 
         await Database.Save();
 
-        var deviceId = Guid.NewGuid();
         var comment = "An example Comment";
         var subCategories = subCats.Select(s => s.Id).ToArray();
         var images = new List<string>();
         var longitude = 0;
         var latitude = 0;
-        var priority = Priority.Low;
-        var ipAddress = IPAddress.Parse("127.0.0.1");
 
         var cases = new List<CaseCreationDto>
         {
-            new(images, category.Id, longitude, latitude, priority, comment: comment, subCategories: subCategories)
+            new(images, category.Id, longitude, latitude, comment: comment, subCategories: subCategories)
         };
-        var command = new CreateCaseCommand(deviceId, ipAddress, cases);
+        var command = new CreateCaseCommand(cases);
 
         // Act
        await Send(command);
 
         // Assert
-        var dbResult = await Search<BaseCase>(c => c.DeviceId == deviceId);
-        dbResult.Should().HaveCount(1);
-        dbResult.Should().AllBeOfType<Case>();
+        var dbResult = await Search<BaseCase>(c => c.CategoryId == category.Id);
+        dbResult.Should().HaveCount(1)
+            .And.AllBeOfType<Case>();
     }
 
     [Test]
@@ -54,28 +51,25 @@ public class CreateCaseCommandTests : TestBase
 
         await Database.Save();
 
-        var deviceId = Guid.NewGuid();
         var description = "An example Description";
         var images = new List<string>();
         var longitude = 0;
         var latitude = 0;
-        var priority = Priority.Low;
-        var ipAddress = IPAddress.Parse("127.0.0.1");
 
         var cases = new List<CaseCreationDto>
         {
-            new(images, category.Id, longitude, latitude, priority, description)
+            new(images, category.Id, longitude, latitude, description)
         };
-        var command = new CreateCaseCommand(deviceId, ipAddress, cases);
+        var command = new CreateCaseCommand(cases);
 
         // Act
         var result = await Send(command);
 
         // Assert
         result.Value.Should().BeOfType<Unit>();
-        var dbResult = await Search<BaseCase>(c => c.DeviceId == deviceId);
-        dbResult.Should().HaveCount(1);
-        dbResult.Should().AllBeOfType<MiscellaneousCase>();
+        var dbResult = await Search<BaseCase>(c => c.CategoryId == category.Id);
+        dbResult.Should().HaveCount(1)
+            .And.AllBeOfType<MiscellaneousCase>();
     }
     
     [Test]
@@ -86,19 +80,16 @@ public class CreateCaseCommandTests : TestBase
 
         await Database.Save();
 
-        var deviceId = Guid.NewGuid();
         var description = "An example Description";
         var images = new List<string>();
         var longitude = 0;
         var latitude = 0;
-        var priority = Priority.Low;
-        var ipAddress = IPAddress.Parse("127.0.0.1");
 
         var cases = new List<CaseCreationDto>
         {
-            new(images, category.Id, longitude, latitude, priority, description)
+            new(images, category.Id, longitude, latitude, description)
         };
-        var command = new CreateCaseCommand(deviceId, ipAddress, cases);
+        var command = new CreateCaseCommand(cases);
 
         // Act
         var result = await Send(command);
@@ -113,21 +104,18 @@ public class CreateCaseCommandTests : TestBase
     public async Task ShouldNotCreateCaseIfCategoryDoesNotExist()
     {
         // Arrange
-        var deviceId = Guid.NewGuid();
         var comment = "An example comment";
         var categoryId = int.MaxValue;
         var subCategories = Array.Empty<int>();
         var images = new List<string>();
         var longitude = 0;
         var latitude = 0;
-        var priority = Priority.Low;
-        var ipAddress = IPAddress.Parse("127.0.0.1");
 
         var cases = new List<CaseCreationDto>
         {
-            new(images, categoryId, longitude, latitude, priority, comment: comment, subCategories: subCategories)
+            new(images, categoryId, longitude, latitude, comment: comment, subCategories: subCategories)
         };
-        var command = new CreateCaseCommand(deviceId, ipAddress, cases);
+        var command = new CreateCaseCommand(cases);
 
         // Act
         var result = await Send(command);

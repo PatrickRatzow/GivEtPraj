@@ -74,15 +74,11 @@ public static class AppDbContextSeed
             Comment = "Der er et stor hul i vejen på arbejde",
             Category = category,
             GeographicLocation = GeographicLocation.From(54, 54),
-            IpAddress = IPAddress.Parse("127.0.0.1"),
-            Priority = Priority.Low
         }, new Case
         {
             Comment = "Hul vejen",
             Category = category,
             GeographicLocation = GeographicLocation.From(53, 53.5),
-            IpAddress = IPAddress.Parse("127.0.0.1"),
-            Priority = Priority.Low,
             Images = new()
             {
                 new()

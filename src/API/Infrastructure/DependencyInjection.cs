@@ -30,6 +30,7 @@ public static class DependencyInjection
         services.AddSingleton<IImageStorage, ImageStorage>();
         services.AddSingleton<IImageCompression, BitmapImageCompression>();
         services.AddScoped<ILanguageService, LanguageService>();
+        services.AddScoped<IDeviceService, DeviceService>();
 
         return services;
     }

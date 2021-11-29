@@ -96,6 +96,7 @@ public class Startup
         app.UseRouting();
 
         app.UseLanguageService();
+        app.UseDeviceService();
 
         app.UseAuthentication();
         app.UseAuthorization();

@@ -31,4 +31,19 @@ public static class ApplicationBuilderExtensions
             await next();
         });
     }
+
+    public static void UseDeviceService(this IApplicationBuilder app)
+    {
+        app.Use(async (context, next) =>
+        {
+            var deviceService = context.RequestServices.GetRequiredService<IDeviceService>();
+            var deviceId = context.Request.Headers["X-DeviceId"];
+            if (Guid.TryParse(deviceId, out var guid))
+            {
+                deviceService.DeviceIdentifier = guid;
+            }
+            
+            await next();
+        });
+    }
 }
