@@ -97,12 +97,12 @@ public class ReCaptchaBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
 
     private async Task<bool> VerifyQueue()
     {
-        var userInput = _httpContextAccessor.HttpContext?.Request.Headers["X-QueueKey"];
+        var userInput = _httpContextAccessor.HttpContext?.Request.Headers["X-DeviceId"];
         if (string.IsNullOrEmpty(userInput)) return false;
         if (!Guid.TryParse(userInput, out var guid)) return false;
 
         var queueKey = await _context.QueueKeys
-            .FirstOrDefaultAsync(qk => qk.Id == guid && qk.ExpiresAt > DateTimeOffset.UtcNow);
+            .FirstOrDefaultAsync(qk => qk.DeviceId == guid && qk.ExpiresAt > DateTimeOffset.UtcNow);
         if (queueKey is null) return false;
 
         _context.QueueKeys.Remove(queueKey);

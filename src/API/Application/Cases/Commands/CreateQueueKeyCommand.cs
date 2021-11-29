@@ -5,7 +5,6 @@ namespace Commentor.GivEtPraj.Application.Cases.Commands;
 [ReCaptcha]
 public class CreateQueueKeyCommand : IRequest<OneOf<QueueKeyDto>>
 {
-
     public CreateQueueKeyCommand()
     {
     }
@@ -35,13 +34,12 @@ public class CreateQueueKeyCommandHandler : IRequestHandler<CreateQueueKeyComman
         {
             DeviceId = request.DeviceId,
             CaptchaScore = 1,
-            CreatedAt = DateTimeOffset.UtcNow,
-            ExpiresAt = DateTimeOffset.UtcNow.AddDays(30)
+            ExpiresAt = DateTimeOffset.UtcNow.AddDays(30),
         });
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<QueueKey, QueueKeyDto>(queueKey.Entity);
+        return _mapper.Map<RecaptchaAuthorization, QueueKeyDto>(queueKey.Entity);
     }
 }
 
