@@ -32,6 +32,6 @@ public class CreateQueueKeyCommandHandler : IRequestHandler<CreateQueueKeyComman
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<QueueKey, QueueKeyDto>(queueKey.Entity);
+        return _mapper.Map<RecaptchaAuthorization, QueueKeyDto>(queueKey.Entity);
     }
 }

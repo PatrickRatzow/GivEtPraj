@@ -25,4 +25,17 @@ public class FindAllCasesQueryTest : TestBase
         result.Should().AllBeOfType<CaseDto>();
         result.Should().HaveCount(cases.Count);
     }
+
+    [Test]
+    public async Task ShouldReturnEmptyListIfNoCasesAreFound()
+    {
+        // Arrange
+        var query = new FindAllCasesQuery();
+
+        // Act
+        var result = await Send(query);
+
+        // Assert
+        result.Should().BeEmpty();
+    }
 }
