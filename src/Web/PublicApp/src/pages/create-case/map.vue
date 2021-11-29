@@ -37,7 +37,7 @@ const loadMap = (): Map => {
 
   let boundaries = turf.multiPolygon(boundariesCoords);
 
-  let greyOut = polygon(greyOutCoords, {
+  polygon(greyOutCoords, {
     color: "grey",
     fillColor: "lightgrey",
     weight: 1,
@@ -109,7 +109,6 @@ const getUserPosition = async (map: Map): Promise<Position> => {
 
 onMounted(async () => {
   const map: Map = loadMap();
-  //ake map fill whole div
   setInterval(async function () {
     map.invalidateSize();
   }, 100);
@@ -143,7 +142,7 @@ const sendInCurrentLocation = async () => {
       <ion-title>{{ t("create-case.map.title") }}</ion-title>
     </ion-toolbar>
     <ion-content>
-      <div id="mapid" class="h-full w-full"></div>
+      <div v-show="getStatus()" id="mapid" class="h-full w-full"></div>
       <template v-if="!getStatus()">
         <div class="flex flex-col justify-between items-center text-black dark:text-white text-center h-full">
           <div class="flex flex-col items-center mt-8">
@@ -159,6 +158,7 @@ const sendInCurrentLocation = async () => {
       </template>
       <template v-else>
         <button
+          :disabled="!isPositionValid"
           class="
             absolute
             bottom-4

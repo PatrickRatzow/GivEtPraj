@@ -58,7 +58,6 @@ const getQueueCaseId = (queueCase: BaseCase): string => {
 const deleteQueueCase = async (idx: number) => {
   const alert = await alertController.create({
     header: t("my-cases.cached.delete-alert.header"),
-    message: t("my-cases.cached.delete-alert.message"),
     buttons: [
       {
         text: t("my-cases.cached.delete-alert.delete"),

@@ -51,8 +51,6 @@ onMounted(() => {
           </ion-tab-bar>
         </ion-tabs>
       </ion-page>
-
-      <!-- <ReloadPWA /> -->
     </ion-app>
   </main>
 </template>
@@ -64,6 +62,7 @@ onMounted(() => {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   min-height: 100vh;
+  max-width: 600px;
 }
 
 main {
