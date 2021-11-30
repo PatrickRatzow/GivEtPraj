@@ -4,7 +4,6 @@ namespace Infrastructure.Persistence;
 
 public class AppDbContext : DbContext, IAppDbContext
 {
-
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
@@ -14,7 +13,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<SubCategory> SubCategories { get; set; }
     public DbSet<Employee> Employees { get; set; }
-    public DbSet<QueueKey> QueueKeys { get; set; }
+    public DbSet<ReCaptchaAuthorization> QueueKeys { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

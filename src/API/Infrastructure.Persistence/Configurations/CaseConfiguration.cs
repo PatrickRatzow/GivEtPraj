@@ -13,9 +13,6 @@ public class BaseCaseConfiguration : IEntityTypeConfiguration<BaseCase>
         builder.Property(c => c.DeviceId)
             .IsRequired();
 
-        builder.Property(c => c.Priority);
-
-        builder.Property(c => c.IpAddress);
         builder.OwnsOne(c => c.GeographicLocation);
 
         builder.HasMany(c => c.CaseUpdates)

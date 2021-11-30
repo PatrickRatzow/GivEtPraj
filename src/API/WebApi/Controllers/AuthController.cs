@@ -3,23 +3,20 @@
 namespace Commentor.GivEtPraj.WebApi.Controllers;
 
 [ApiController]
-[Route("v1/queue-keys")]
-public class QueueKeysController : ControllerBase
+[Route("v1/auth")]
+public class AuthController : ControllerBase
 {
-    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
-    public QueueKeysController(IMediator mediator, IMapper mapper)
+    public AuthController(IMediator mediator)
     {
         _mediator = mediator;
-        _mapper = mapper;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateQueueKey([FromBody] CreateQueueKeyRequest request,
+    public async Task<IActionResult> PreAuthorizeDeviceId([FromBody] PreAuthorizeDeviceCommand command,
         CancellationToken cancellationToken)
     {
-        var command = _mapper.Map<CreateQueueKeyRequest, CreateQueueKeyCommand>(request);
         var result = await _mediator.Send(command, cancellationToken);
 
         return result.MatchResponse();

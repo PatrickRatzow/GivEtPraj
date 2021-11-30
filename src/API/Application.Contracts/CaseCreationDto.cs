@@ -14,7 +14,7 @@ namespace Commentor.GivEtPraj.Application.Contracts
         }
 
         public CaseCreationDto(List<string> images, int category, double longitude,
-            double latitude, Priority priority, string? description = null, string? comment = null, int[]? subCategories = null)
+            double latitude, string? description = null, string? comment = null, int[]? subCategories = null)
         {
             Description = description;
             Comment = comment;
@@ -23,7 +23,6 @@ namespace Commentor.GivEtPraj.Application.Contracts
             CategoryId = category;
             Longitude = longitude;
             Latitude = latitude;
-            Priority = priority;
         }
 
         public string? Description { get; set; }
@@ -33,6 +32,5 @@ namespace Commentor.GivEtPraj.Application.Contracts
         public int CategoryId { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
-        public Priority Priority { get; set; }
     }
 }

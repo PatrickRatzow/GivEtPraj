@@ -7,25 +7,17 @@ namespace Commentor.GivEtPraj.WebApi.Controllers;
 [Route("v1/cases")]
 public class CasesController : ControllerBase
 {
-    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
-    public CasesController(IMediator mediator, IMapper mapper)
+    public CasesController(IMediator mediator)
     {
         _mediator = mediator;
-        _mapper = mapper;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCase([FromBody] CreateCaseRequest request,
+    public async Task<IActionResult> CreateCase([FromBody] CreateCaseCommand command,
         CancellationToken cancellationToken)
     {
-        var command = _mapper.Map<CreateCaseRequest, CreateCaseCommand>(request);
-        var ipAddress = HttpContext.Connection.RemoteIpAddress;
-        if (ipAddress is null) throw new("IP Address is null??");
-
-        command.IpAddress = ipAddress;
-
         var result = await _mediator.Send(command, cancellationToken);
 
         return result.MatchResponse();
