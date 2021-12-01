@@ -2,7 +2,7 @@ import { useNetwork } from "@/compositions/network";
 import { useMainStore } from "@/stores/main";
 import { useCreateCaseStore } from "@/stores/create-case";
 import axios from "@/utils/axios";
-import { useQueueKeys } from "@/compositions/queue-keys";
+import { useAuth } from "@/compositions/auth";
 import { useCaseHistory } from "@/compositions/case-history";
 import { Device } from "@capacitor/device";
 
@@ -10,7 +10,7 @@ export function useCases() {
 	const network = useNetwork();
 	const main = useMainStore();
 	const createCase = useCreateCaseStore();
-	const queueKeys = useQueueKeys();
+	const { isAuthorizated, removeAuthorization } = useAuth();
 	const caseHistory = useCaseHistory();
 
 	function addCurrentCaseToQueue() {
@@ -50,10 +50,9 @@ export function useCases() {
 
 	async function sendCases(): Promise<boolean> {
 		if (!network.status.value?.connected) return false;
-		if (!queueKeys.hasKey()) return false;
+		if (!isAuthorizated.value) return false;
 		if (main.caseQueue.length <= 0) return false;
 
-		const queueKey = await queueKeys.consumeKey();
 		try {
 			const deviceId = await Device.getId();
 			const cases: CreateCaseRequestDto[] = main.caseQueue.map((c) => {
@@ -68,14 +67,12 @@ export function useCases() {
 					latitude: c.geographicLocation.latitude,
 				} as CreateCaseRequestDto;
 			});
-			await axios.post("cases", cases, {
-				headers: {
-					["X-QueueKey"]: queueKey.id,
-				},
-			});
+			await axios.post("cases", cases);
 
+			await removeAuthorization();
 			await caseHistory.syncWithAPI();
 			emptyCaseQueue();
+
 			return true;
 		} catch {
 			return false;
@@ -87,11 +84,11 @@ export function useCases() {
 	return { addCurrentCaseToQueue, sendCases, removeCaseFromQueue };
 }
 
-export const afterAppMount: BeforeAppMount = () => {
+export const beforeAppMount: BeforeAppMount = () => {
 	const cases = useCases();
 
+	// Don't await due to result not being critical to our app at startup
 	cases.sendCases();
 
-	// Don't await due to result not being critical to our app at startup
 	return Promise.resolve();
 };

@@ -1,29 +1,29 @@
 <script setup lang="ts">
 import { create, fileTrayFull, settings } from "ionicons/icons";
-import { useQueueKeys } from "@/compositions/queue-keys";
+import { useAuth } from "@/compositions/auth";
 import { useMainStore } from "@/stores/main";
 import { useTutorial } from "@/compositions/tutorial";
 
 const main = useMainStore();
 const tutorial = useTutorial();
 const { t } = useI18n();
-const { hasKey, createKey } = useQueueKeys();
+const { authorize } = useAuth();
 
 onBeforeMount(async () => {
   await tutorial.loadCache();
 });
 
 onMounted(() => {
-  setTimeout(createKey, 10000);
+  setTimeout(authorize, 10000);
 });
 </script>
 
 <template>
   <main :class="{ dark: main.activeTheme }">
-    <div class="hidden absolute w-full h-screen md:flex flex-col justify-between">
-      <div class="toolbar"></div>
-      <div class="bg-container"></div>
-      <div class="tab-bar"></div>
+    <div class="hidden absolute w-screen h-screen md:flex flex-col justify-between">
+      <div class="w-screen toolbar"></div>
+      <div class="min w-screen bg-container"></div>
+      <div class="w-screen tab-bar"></div>
     </div>
     <ion-app class="max-w-screen-md ml-[50%] w-full transform -translate-x-1/2">
       <ion-page>
@@ -68,6 +68,7 @@ onMounted(() => {
 main {
   background: #fff;
   min-height: 100vh;
+  min-width: 100vw;
 }
 
 main.dark {
@@ -110,8 +111,7 @@ main.dark {
 }
 
 .bg-container {
-  height: 100%;
-  background: red;
+  height: auto;
   margin-left: 50%;
   @apply max-w-screen-md transform -translate-x-1/2;
 }

@@ -2,6 +2,7 @@ import { useLocale } from "@/compositions/locale";
 import { Storage } from "@capacitor/storage";
 import axios, { AxiosRequestConfig } from "axios";
 import { useNetwork } from "@/compositions/network";
+import { Device } from "@capacitor/device";
 
 const network = useNetwork();
 const locale = useLocale();
@@ -19,9 +20,11 @@ class HttpClient {
 	constructor() {
 		this.conn.interceptors.request.use(async (config) => {
 			const languageCode = locale.language.value ?? "en";
+			const deviceId = await Device.getId();
 
 			config.headers ??= {};
 			config.headers["X-Language"] = languageCode;
+			config.headers["X-DeviceId"] = deviceId.uuid;
 
 			return config;
 		});
@@ -47,8 +50,12 @@ class HttpClient {
 		return httpResponse;
 	}
 
-	public async post<T = unknown>(url: string, config?: AxiosRequestConfig<T>): Promise<HttpResponse<T>> {
-		const response = await axios.post<T>(url, config);
+	public async post<T = unknown>(
+		url: string,
+		data?: unknown,
+		config?: AxiosRequestConfig<T>
+	): Promise<HttpResponse<T>> {
+		const response = await axios.post<T>(url, data, config);
 		const httpResponse: HttpResponse<T> = {
 			data: response.data,
 			status: response.status,
