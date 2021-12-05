@@ -4,12 +4,11 @@ namespace Commentor.GivEtPraj.Domain.ValueObjects;
 
 // Don't let ReSharper remove the private set because EF Core needs it
 [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Local")]
+[SuppressMessage("ReSharper", "UnusedMember.Local")]
 public class LocalizedString : ValueObject
 {
-
     private LocalizedString()
     {
-
     }
 
     private LocalizedString(string danish, string english)
@@ -28,7 +27,7 @@ public class LocalizedString : ValueObject
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
-
-        throw new NotImplementedException();
+        yield return Danish;
+        yield return English;
     }
 }
