@@ -7,7 +7,7 @@ using static Testing;
 public abstract class TestBase
 {
     protected DatabaseSetup Database;
-
+    
     [SetUp]
     public async Task SetUp()
     {
