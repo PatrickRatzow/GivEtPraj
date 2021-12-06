@@ -10,13 +10,11 @@ public class PreAuthorizeDeviceCommand : IRequest<OneOf<Unit>>
 public class PreAuthorizeDeviceCommandHandler : IRequestHandler<PreAuthorizeDeviceCommand, OneOf<Unit>>
 {
     private readonly IAppDbContext _context;
-    private readonly IMapper _mapper;
     private readonly IDeviceService _deviceService;
 
-    public PreAuthorizeDeviceCommandHandler(IAppDbContext context, IMapper mapper, IDeviceService deviceService)
+    public PreAuthorizeDeviceCommandHandler(IAppDbContext context, IDeviceService deviceService)
     {
         _context = context;
-        _mapper = mapper;
         _deviceService = deviceService;
     }
 
