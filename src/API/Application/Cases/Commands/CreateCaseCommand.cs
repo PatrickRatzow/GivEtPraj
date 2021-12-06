@@ -42,9 +42,8 @@ public class
             .Include(cat => cat.SubCategories)
             .Where(cat => request.Cases.Select(@case => @case.CategoryId).Contains(cat.Id))
             .ToDictionaryAsync(cat => cat.Id, cat => cat, cancellationToken);
-        var distinctRequestCategoryCount = request.Cases.DistinctBy(c => c.CategoryId).Count();
 
-        if (!ValidateCategory(request, categories, distinctRequestCategoryCount)) return new InvalidCategory();
+        if (!ValidateCategory(request, categories)) return new InvalidCategory();
         if (!ValidateSubCategories(request, categories)) return new InvalidSubCategories();
 
         foreach (var @case in request.Cases)
@@ -67,8 +66,9 @@ public class
 
         return Unit.Value;
     }
-    private static bool ValidateCategory(CreateCaseCommand request, Dictionary<int, Category> categories, int distinctRequestCategoryCount)
+    private static bool ValidateCategory(CreateCaseCommand request, Dictionary<int, Category> categories)
     {
+        var distinctRequestCategoryCount = request.Cases.DistinctBy(c => c.CategoryId).Count();
         if (categories.Count != distinctRequestCategoryCount) return false;
         
         foreach (var @case in request.Cases)
@@ -93,6 +93,7 @@ public class
                 if (isMiscellaneous) return false;
                 if (c.SubCategoryIds?.Length == 0) return false;
                 
+                // Check that the category in database has all the sub categories in the request
                 return categories.Values
                     .Select(cat => cat.SubCategories.Select(sub => sub.Id))
                     .Contains(c.SubCategoryIds);

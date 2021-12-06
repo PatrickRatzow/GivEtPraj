@@ -23,15 +23,6 @@ public class CasesController : ControllerBase
         return result.MatchResponse();
     }
 
-    [HttpGet]
-    public async Task<IActionResult> FindAllCases(CancellationToken cancellationToken)
-    {
-        var query = new FindAllCasesQuery();
-        var result = await _mediator.Send(query, cancellationToken);
-
-        return Ok(result);
-    }
-
     [HttpGet("{id:int}")]
     public async Task<IActionResult> FindCase(int id, CancellationToken cancellationToken)
     {
@@ -41,10 +32,11 @@ public class CasesController : ControllerBase
         return result.MatchResponse();
     }
 
-    [HttpGet("{deviceId:Guid}")]
-    public async Task<IActionResult> FindCasesByDeviceId(Guid deviceId, CancellationToken cancellationToken)
+    // The device ID is handled via middleware, it does not need to be included as a parameter here
+    [HttpGet("mine")]
+    public async Task<IActionResult> FindCasesByDeviceId(CancellationToken cancellationToken)
     {
-        var query = new FindCasesByDeviceIdQuery(deviceId);
+        var query = new FindCasesByCurrentDeviceIdQuery();
         var result = await _mediator.Send(query, cancellationToken);
 
         return result.MatchResponse();

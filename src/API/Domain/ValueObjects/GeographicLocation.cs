@@ -5,9 +5,9 @@ namespace Commentor.GivEtPraj.Domain.ValueObjects;
 
 // Don't let ReSharper remove the private set because EF Core needs it
 [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Local")]
+[SuppressMessage("ReSharper", "UnusedMember.Local")]
 public class GeographicLocation : ValueObject
 {
-
     private GeographicLocation()
     {
     }

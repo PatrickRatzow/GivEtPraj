@@ -8,13 +8,13 @@ namespace Commentor.GivEtPraj.Application.Tests.Integration.Cases.Queries;
 
 using static Testing;
 
-public class FindCasesByDeviceIdQueryTests : TestBase
+public class FindCasesByCurrentDeviceIdQueryTests : TestBase
 {
     [Test]
     public async Task ShouldFindCasesByDeviceId()
     {
         // Arrange
-        var deviceId = Guid.NewGuid();
+        var deviceId = SetRandomDeviceId();
 
         var category = Database.Factory<CategoryFactory>().Create();
         var casesWithDeviceId = Database.Factory<CaseFactory>().CreateMany(category, 2, deviceId);
@@ -22,36 +22,35 @@ public class FindCasesByDeviceIdQueryTests : TestBase
 
         await Database.Save();
 
-        var query = new FindCasesByDeviceIdQuery(deviceId);
+        var query = new FindCasesByCurrentDeviceIdQuery();
 
         // Act
         var result = await Send(query);
 
         // Assert
-        var value = result.Value.As<List<CaseDto>>();
-        value.Should().Contain(@case => casesWithDeviceId.Any(c => c.Id == @case.Id));
-        value.Should().Contain(@case => cases.All(c => c.Id != @case.Id));
-        value.Should().HaveCount(casesWithDeviceId.Count);
+        result.AsT0.Should().BeOfType<List<CaseDto>>()
+            .And.Contain(@case => casesWithDeviceId.Any(c => c.Id == @case.Id))
+            .And.Contain(@case => cases.All(c => c.Id != @case.Id))
+            .And.HaveCount(casesWithDeviceId.Count);
     }
 
     [Test]
     public async Task ShouldNotFindAnyCasesThatDoesNotHaveTheDeviceId()
     {
         // Arrange
-        var deviceId = Guid.NewGuid();
+        SetRandomDeviceId();
 
         var category = Database.Factory<CategoryFactory>().Create();
         Database.Factory<CaseFactory>().CreateMany(category, 10, Guid.NewGuid());
 
         await Database.Save();
 
-        var query = new FindCasesByDeviceIdQuery(deviceId);
+        var query = new FindCasesByCurrentDeviceIdQuery();
 
         // Act
         var result = await Send(query);
 
         // Assert
-        var value = result.Value.As<List<CaseDto>>();
-        value.Should().BeEmpty();
+        result.AsT0.Should().BeEmpty();
     }
 }

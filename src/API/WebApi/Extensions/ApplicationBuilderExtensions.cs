@@ -1,6 +1,10 @@
-﻿using Commentor.GivEtPraj.Application.Common.Interfaces;
+﻿using System.Net;
+using System.Text;
+using System.Text.Json;
+using Commentor.GivEtPraj.Application.Common.Interfaces;
 using Commentor.GivEtPraj.Application.Contracts;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Commentor.GivEtPraj.WebApi.Extensions;
@@ -41,9 +45,22 @@ public static class ApplicationBuilderExtensions
             if (Guid.TryParse(deviceId, out var guid))
             {
                 deviceService.DeviceIdentifier = guid;
+
+                await next();
+
+                return;
             }
-            
-            await next();
+
+            var errorText = JsonSerializer.Serialize(new
+            {
+                Errors = new object[]
+                {
+                    new { ErrorMessage = "Invalid/missing GUID in the X-DeviceId header" }
+                }
+            });
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync(errorText, Encoding.UTF8);
         });
     }
 }
