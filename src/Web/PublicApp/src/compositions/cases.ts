@@ -84,7 +84,7 @@ export function useCases() {
 	return { addCurrentCaseToQueue, sendCases, removeCaseFromQueue };
 }
 
-export const beforeAppMount: BeforeAppMount = () => {
+export const afterAppMount: BeforeAppMount = () => {
 	const cases = useCases();
 
 	// Don't await due to result not being critical to our app at startup

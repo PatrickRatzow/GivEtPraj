@@ -5,13 +5,21 @@ import { useTutorial } from "@/compositions/tutorial";
 import { useMainStore } from "@/stores/main";
 import { close } from "ionicons/icons";
 
+const localeComposable = useLocale();
 const main = useMainStore();
-const locale = useLocale();
 const tutorial = useTutorial();
 const themes = useThemes();
-const { t } = useI18n();
+const { t, availableLocales, locale } = useI18n();
 
 const viewPrivacyPolicy = ref(false);
+
+const toggleLanguage = async () => {
+  await localeComposable.toggleLanguage();
+
+  const languageCode = await localeComposable.getLanguageCode();
+  const index = availableLocales.indexOf(languageCode);
+  locale.value = availableLocales[index];
+};
 </script>
 
 <template>
@@ -26,9 +34,9 @@ const viewPrivacyPolicy = ref(false);
       <ion-list>
         <ion-list-header>{{ t("settings.general.header") }}</ion-list-header>
         <!-- TODO: Switch language -->
-        <ion-item @click="locale.setLanguage(!locale.isEnglish)">
+        <ion-item @click="toggleLanguage">
           <ion-label>{{ t("settings.general.english-language") }}</ion-label>
-          <ion-toggle color="success" :checked="locale.isEnglish"></ion-toggle>
+          <ion-toggle color="success" :checked="main.language == 'en'"></ion-toggle>
         </ion-item>
         <ion-item @click="themes.setTheme(!main.activeTheme)">
           <ion-label>{{ t("settings.general.dark-mode") }}</ion-label>

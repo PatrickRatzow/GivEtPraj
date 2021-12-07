@@ -20,10 +20,11 @@ import {
   Circle,
 } from "leaflet";
 import { Position } from "@capacitor/geolocation/dist/esm/definitions";
+import { useMainStore } from "@/stores/main";
 
+const main = useMainStore();
 const router = useRouter();
 const createCase = useCreateCaseStore();
-const locale = useLocale();
 const { t } = useI18n();
 const network = useNetwork();
 
@@ -58,7 +59,7 @@ const loadMap = (): Map => {
 
   addLayers();
   watch(
-    () => locale.language,
+    () => main.language,
     () => {
       myMap.eachLayer((layer) => myMap.removeLayer(layer));
 

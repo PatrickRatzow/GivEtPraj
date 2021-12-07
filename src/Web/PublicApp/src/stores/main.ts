@@ -56,6 +56,7 @@ export const useMainStore = defineStore("main", () => {
 	const categories = ref<Category[]>([]);
 	const activeTheme = ref<Theme>(false);
 	const hasSeenTutorial = ref(false);
+	const language = ref<Language>("en");
 
 	const fetchCategories = async () => {
 		if (categories.value.length > 0) return;
@@ -65,5 +66,5 @@ export const useMainStore = defineStore("main", () => {
 		categories.value = resp.data;
 	};
 
-	return { hasSeenTutorial, cases, categories, activeTheme, fetchCategories, caseQueue };
+	return { hasSeenTutorial, cases, categories, activeTheme, fetchCategories, caseQueue, language };
 });

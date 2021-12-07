@@ -1,15 +1,16 @@
+import { useMainStore } from "@/stores/main";
 import { Device } from "@capacitor/device";
 import { Storage } from "@capacitor/storage";
 
-const language = ref<Language>();
-
 export function useLocale() {
 	async function saveLanguage() {
-		if (!language.value) return;
+		const main = useMainStore();
+
+		if (!main.language) return;
 
 		await Storage.set({
 			key: "language",
-			value: language.value.toString(),
+			value: main.language.toString(),
 		});
 	}
 
@@ -19,20 +20,27 @@ export function useLocale() {
 
 		const languageCodeResult = await Device.getLanguageCode();
 		const languageCode = languageCodeResult.value.split("-")[0];
-		language.value = languageCode == "da" ? "da" : "en";
 
-		return language.value;
+		return languageCode == "da" ? "da" : "en";
 	}
 
 	async function setLanguage(english: boolean) {
-		language.value = english ? "en" : "da";
+		const main = useMainStore();
+
+		main.language = english ? "en" : "da";
 
 		saveLanguage();
+	}
+
+	async function toggleLanguage() {
+		const main = useMainStore();
+
+		await setLanguage(main.language != "en");
 	}
 
 	return {
 		getLanguageCode,
 		setLanguage,
-		language: readonly(language),
+		toggleLanguage,
 	};
 }

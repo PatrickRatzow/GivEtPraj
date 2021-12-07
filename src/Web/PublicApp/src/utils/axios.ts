@@ -1,11 +1,10 @@
-import { useLocale } from "@/compositions/locale";
 import { Storage } from "@capacitor/storage";
 import axios, { AxiosRequestConfig } from "axios";
 import { useNetwork } from "@/compositions/network";
 import { Device } from "@capacitor/device";
+import { useMainStore } from "@/stores/main";
 
 const network = useNetwork();
-const locale = useLocale();
 const baseURL = "https://localhost:5001/v1/";
 
 interface HttpResponse<T> {
@@ -19,7 +18,9 @@ class HttpClient {
 
 	constructor() {
 		this.conn.interceptors.request.use(async (config) => {
-			const languageCode = locale.language.value ?? "en";
+			const main = useMainStore();
+
+			const languageCode = main.language;
 			const deviceId = await Device.getId();
 
 			config.headers ??= {};

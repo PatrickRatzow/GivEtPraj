@@ -19,4 +19,10 @@ router.isReady().then(async () => {
 	await Promise.all(compositions);
 
 	app.mount("#app");
+
+	await Promise.all(
+		Object.values(import.meta.globEager("./compositions/*.ts")).map((i) =>
+			i.afterAppMount?.({ app, router } as ModuleOptions)
+		)
+	);
 });

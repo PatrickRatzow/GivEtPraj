@@ -11,8 +11,9 @@ export function useAuth() {
 
 	function loadReCaptcha() {
 		if (!executeRecaptcha || !recaptchaLoaded) {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			({ executeRecaptcha, recaptchaLoaded } = useReCaptcha()!);
+			const captcha = useReCaptcha();
+			executeRecaptcha = captcha?.executeRecaptcha;
+			recaptchaLoaded = captcha?.recaptchaLoaded;
 
 			if (!executeRecaptcha || !recaptchaLoaded) return false;
 		}
