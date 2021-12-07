@@ -8,12 +8,12 @@ public class AppDbContext : DbContext, IAppDbContext
     {
     }
 
-    public DbSet<BaseCase> Cases { get; set; }
-    public DbSet<CaseImage> Images { get; set; }
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<SubCategory> SubCategories { get; set; }
-    public DbSet<Employee> Employees { get; set; }
-    public DbSet<ReCaptchaAuthorization> QueueKeys { get; set; }
+    public DbSet<BaseCase> Cases { get; set; } = null!;
+    public DbSet<CaseImage> Images { get; set; } = null!;
+    public DbSet<Category> Categories { get; set; } = null!;
+    public DbSet<SubCategory> SubCategories { get; set; } = null!;
+    public DbSet<Employee> Employees { get; set; } = null!;
+    public DbSet<ReCaptchaAuthorization> QueueKeys { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
