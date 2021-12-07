@@ -75,6 +75,11 @@ const deleteQueueCase = async (idx: number) => {
   await alert.present();
   return;
 };
+
+const queueStatus: Status = {
+  color: "#f1c40f",
+  name: "Draft",
+};
 </script>
 
 <template>
@@ -92,9 +97,14 @@ const deleteQueueCase = async (idx: number) => {
           <ion-list v-if="main.caseQueue.length > 0">
             <ion-list-header>{{ t("my-cases.cached.title") }}</ion-list-header>
             <ion-item v-for="(queueCase, idx) in main.caseQueue" :key="getQueueCaseId(queueCase)">
-              <ion-icon class="text-black" :icon="closeCircleOutline" @click="deleteQueueCase(idx)"></ion-icon>
-              {{ queueCase.category.id }}
+              <status-indicator :status="queueStatus"> </status-indicator>
+              <ion-label>
+                <h3>{{ queueCase.nearestCity ?? t("my-cases.unable-to-fetch-closest-city-name") }}</h3>
+                <p>{{ queueCase.category.name }}</p>
+              </ion-label>
+              <ion-icon :icon="closeCircleOutline" @click="deleteQueueCase(idx)" />
             </ion-item>
+            <ion-list-header>{{ t("my-cases.not-cached.title") }}</ion-list-header>
           </ion-list>
           <ion-item
             v-for="currentCase in savedCases"
@@ -108,7 +118,6 @@ const deleteQueueCase = async (idx: number) => {
             </ion-label>
           </ion-item>
         </ion-list>
-        <ion-button class="flex-row float-bottom" @click="caseHistory.syncWithAPI()">Sync</ion-button>
       </div>
     </ion-content>
   </ion-page>

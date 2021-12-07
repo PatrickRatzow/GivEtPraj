@@ -44,7 +44,7 @@ create-case:
       offline-popup: 
         header: "You are offline"
         message: |
-          Your device is offline, therefore the case has been saved.
+          Your device is offline, therefore the case has been saved as a draft.
           Next time you have an internet connection, the case will be sent. 
         button: "Ok"
 navigation:
@@ -56,11 +56,13 @@ not-found:
 my-cases:
   title: "Your Prajs"
   cached:
-    title: "Cached cases"
+    title: "Draft Prajs"
     delete-alert: 
       header: "Are you sure?"
       delete: "Delete"
       cancel: "Cancel"
+  not-cached:
+    title: "Sent Prajs"
   unable-to-fetch-closest-city-name: "Unable to fetch closest city name"
 
 case:
