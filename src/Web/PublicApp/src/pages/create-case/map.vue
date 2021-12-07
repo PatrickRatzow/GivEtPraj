@@ -6,7 +6,19 @@ import { Geolocation } from "@capacitor/geolocation";
 import { presentAlert } from "@/compositions/geolocation-error-alert";
 import * as turf from "@turf/turf";
 import { streetMap, satelliteMap, boundariesCoords, greyOutCoords } from "@/../leaflet.config";
-import { map, tileLayer, marker, LeafletMouseEvent, Marker, control, Control, circle, Map, polygon } from "leaflet";
+import {
+  map,
+  tileLayer,
+  marker,
+  LeafletMouseEvent,
+  Marker,
+  control,
+  Control,
+  circle,
+  Map,
+  polygon,
+  Circle,
+} from "leaflet";
 import { Position } from "@capacitor/geolocation/dist/esm/definitions";
 
 const router = useRouter();
@@ -72,39 +84,49 @@ const loadMap = (): Map => {
   return myMap;
 };
 
-const getUserPosition = async (map: Map): Promise<Position> => {
-  const pos = await Geolocation.getCurrentPosition();
+const watchMap = async (map: Map): Promise<void> => {
+  let userPoint: Circle<unknown> | undefined;
+  let userAccuracy: Circle<unknown> | undefined;
+  let hasSetInitialPosition = false;
 
-  const userPoint = circle([pos.coords.latitude, pos.coords.longitude], {
-    color: "white",
-    fillColor: "blue",
-    weight: 4,
-    fillOpacity: 1,
-    radius: 21 - map.getZoom(),
-  }).addTo(map);
+  const setPos = (pos: Position | null) => {
+    if (!pos) return;
 
-  let userAccuracy = circle([pos.coords.latitude, pos.coords.longitude], {
-    color: "blue",
-    opacity: 1,
-    weight: 0.5,
-    fillColor: "#96c3eb",
-    fillOpacity: 0.6,
-    radius: pos.coords.accuracy,
-  }).addTo(map);
+    userPoint ??= circle([pos.coords.latitude, pos.coords.longitude], {
+      color: "white",
+      fillColor: "blue",
+      weight: 4,
+      fillOpacity: 1,
+      radius: 21 - map.getZoom(),
+    }).addTo(map);
 
-  const watchPos = (newPos: Position | null) => {
-    if (!newPos) return;
+    userAccuracy ??= circle([pos.coords.latitude, pos.coords.longitude], {
+      color: "blue",
+      opacity: 1,
+      weight: 0.5,
+      fillColor: "#96c3eb",
+      fillOpacity: 0.6,
+      radius: pos.coords.accuracy,
+    }).addTo(map);
 
-    userPoint.setLatLng([newPos.coords.latitude, newPos.coords.longitude]);
-    userAccuracy.setLatLng([newPos.coords.latitude, newPos.coords.longitude]);
-    userAccuracy.setRadius(newPos.coords.accuracy);
+    userPoint.setLatLng([pos.coords.latitude, pos.coords.longitude]);
+    userAccuracy.setLatLng([pos.coords.latitude, pos.coords.longitude]);
+    userAccuracy.setRadius(pos.coords.accuracy);
+
+    if (!hasSetInitialPosition) {
+      hasSetInitialPosition = true;
+
+      map.setView([pos.coords.latitude, pos.coords.longitude], 18);
+    }
   };
 
-  Geolocation.watchPosition({ enableHighAccuracy: true, timeout: 10000 }, watchPos);
+  await Geolocation.watchPosition({ enableHighAccuracy: true, timeout: 10000 }, setPos);
 
-  map.on("zoom", () => userPoint.setRadius(Math.pow(2, 20 - map.getZoom())));
+  map.on("zoom", () => {
+    if (!userPoint) return;
 
-  return pos;
+    userPoint.setRadius(Math.pow(2, 20 - map.getZoom()));
+  });
 };
 
 onMounted(async () => {
@@ -113,8 +135,7 @@ onMounted(async () => {
     map.invalidateSize();
   }, 100);
 
-  const pos: Position = await getUserPosition(map);
-  map.setView([pos.coords.latitude, pos.coords.longitude], 18);
+  await watchMap(map);
 });
 
 const getStatus = () => network.status.value?.connected;
