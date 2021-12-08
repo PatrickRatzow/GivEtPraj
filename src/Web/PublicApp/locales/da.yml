@@ -25,6 +25,8 @@ create-case:
     description-placeholder: "Indtast hvad Prajet omhandler"
   pictures:
     title: "Vælg Billeder"
+    modal:
+      title: "Kamera"
   overview:
     title: "Overblik"
     category: "Kategori"
@@ -55,8 +57,9 @@ not-found:
   text: "Intet at se her"
 my-cases:
   title: "Dine Prajs"
+  no-cases: "Du har ikke lavet nogle praj"
   cached:
-    title: "Lageret praj"
+    title: "Klader"
     delete-alert: 
       header: "Er du sikker?"
       delete: "Slet"
@@ -70,11 +73,11 @@ settings:
   general:
     header: 'Generelle indstillinger'
     english-language: 'Engelsk'
-    dark-mode: 'Mørk tilstand'
+    dark-mode: 'Mørkt tema'
   misc:
     header: 'Om'
     view-tutorial: 'Vis tutorial'
     view-privacy-policy: 'Privat politik'
 privacy-policy:
   header: "Privat Politik"
-  content: "Noget legalt "
+  content: "Advokat snak"

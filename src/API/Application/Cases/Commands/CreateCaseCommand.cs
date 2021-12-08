@@ -6,13 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Commentor.GivEtPraj.Application.Cases.Commands;
 
-[ReCaptcha]
+[ReCaptcha(AllowQueue = true)]
 public class CreateCaseCommand : IRequest<OneOf<Unit, InvalidCategory, InvalidSubCategories>>
 {
-    public CreateCaseCommand()
-    {
-    }
-    
     public CreateCaseCommand(List<CaseCreationDto> cases)
     {
         Cases = cases;
@@ -52,9 +48,9 @@ public class
 
             var newCase = @case switch
             {
-                { Description: null, SubCategoryIds: not null, Comment: not null } =>
+                { SubCategoryIds: not null } =>
                     CreateCase(@case, categories.Values.First(c => c.Id == @case.CategoryId).SubCategories.ToList(), images),
-                { Description: not null, SubCategoryIds: null, Comment: null } => 
+                { SubCategoryIds: null } => 
                     CreateMiscellaneousCase(@case, images),
                 _ => throw new ArgumentOutOfRangeException()
             };
@@ -74,7 +70,7 @@ public class
         foreach (var @case in request.Cases)
         {
             var isMiscellaneous = categories.GetValueOrDefault(@case.CategoryId)?.Miscellaneous == true;
-            if (isMiscellaneous) continue;
+            if (!isMiscellaneous) continue;
 
             var subCategoriesCount = @case.SubCategoryIds?.Length;
             if (subCategoriesCount > 0) continue;

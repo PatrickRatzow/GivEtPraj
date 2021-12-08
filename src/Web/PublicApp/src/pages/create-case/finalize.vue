@@ -8,13 +8,7 @@ const createCase = useCreateCaseStore();
 const { t } = useI18n();
 const cases = useCases();
 const network = useNetwork();
-
-// createCase.category = {
-//   name: "Vejskade",
-//   icon: "fas fa-road",
-//   subCategories: [],
-// };
-//createCase.subCategories = [{ name: "Hul" }, { name: "XD" }, { name: "XD2" }];
+const router = useRouter();
 const loading = ref(false);
 
 const sendCase = async () => {
@@ -37,10 +31,12 @@ const sendCase = async () => {
   const toast = await toastController.create({
     position: "top",
     message: t("create-case.overview.send.success"),
-    duration: 2000,
+    duration: 5000,
   });
 
   await toast.present();
+
+  router.push("/create-praj");
 };
 </script>
 
@@ -92,7 +88,7 @@ const sendCase = async () => {
           </ion-item>
         </ion-list>
         <div class="w-full ion-padding">
-          <ion-button expand="block" @click="cases.addCurrentCaseToQueue">
+          <ion-button expand="block" @click="sendCase">
             <template v-if="loading">
               <ion-spinner class="mr-2"> </ion-spinner>
               {{ t("create-case.overview.send.button.sending") }}

@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { useNetwork } from "@/compositions/network";
-import { useLocale } from "@/compositions/locale";
 import { useCreateCaseStore } from "@/stores/create-case";
 import { Geolocation } from "@capacitor/geolocation";
 import { presentAlert } from "@/compositions/geolocation-error-alert";
-import * as turf from "@turf/turf";
+import { multiPolygon, booleanWithin, point } from "@turf/turf";
 import { streetMap, satelliteMap, boundariesCoords, greyOutCoords } from "@/../leaflet.config";
 import {
   map,
@@ -48,7 +47,7 @@ const loadMap = (): Map => {
     control.layers(baseMaps).addTo(myMap);
   };
 
-  let boundaries = turf.multiPolygon(boundariesCoords);
+  let boundaries = multiPolygon(boundariesCoords);
 
   polygon(greyOutCoords, {
     color: "grey",
@@ -78,7 +77,7 @@ const loadMap = (): Map => {
     createCase.geographicLocation = location;
   };
   myMap.on("click", (e: LeafletMouseEvent) => {
-    if (turf.booleanWithin(turf.point([e.latlng.lat, e.latlng.lng]), boundaries)) {
+    if (booleanWithin(point([e.latlng.lat, e.latlng.lng]), boundaries)) {
       setLocation({ latitude: e.latlng.lat, longitude: e.latlng.lng });
     }
   });

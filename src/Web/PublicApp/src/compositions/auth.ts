@@ -2,16 +2,17 @@ import axios from "@/utils/axios";
 import { useNetwork } from "@/compositions/network";
 import { Storage } from "@capacitor/storage";
 import { useReCaptcha } from "vue-recaptcha-v3";
+import { AxiosError } from "axios";
 
 const authed = ref(false);
 export function useAuth() {
+	const captcha = useReCaptcha();
 	const network = useNetwork();
 	let executeRecaptcha: ((action: string) => Promise<string>) | undefined = undefined;
 	let recaptchaLoaded: (() => Promise<boolean>) | undefined = undefined;
 
 	function loadReCaptcha() {
 		if (!executeRecaptcha || !recaptchaLoaded) {
-			const captcha = useReCaptcha();
 			executeRecaptcha = captcha?.executeRecaptcha;
 			recaptchaLoaded = captcha?.recaptchaLoaded;
 
@@ -28,30 +29,56 @@ export function useAuth() {
 		await Storage.remove({ key: "preAuthorized" });
 	}
 
+	// TODO: Clean up, this is a mess
 	async function authorize(): Promise<boolean> {
 		if (!network.status.value?.connected) return false;
 
-		const { value } = await Storage.get({ key: "preAuthorized" });
-		if (value !== null) return true;
+		await loadCache();
+		if (authed.value) return true;
 		if (!loadReCaptcha()) return false;
 
 		await recaptchaLoaded?.();
 
 		const reCaptchaToken = await executeRecaptcha?.("pre_authorization");
-		const resp = await axios.post("auth", undefined, {
-			headers: {
-				["X-ReCAPTCHA-V3"]: reCaptchaToken as string,
-			},
-		});
+		try {
+			const resp = await axios.post(
+				"auth",
+				{},
+				{
+					headers: {
+						["X-ReCAPTCHA-V3"]: reCaptchaToken as string,
+					},
+				}
+			);
 
-		if (resp.status != 200) return false;
+			if (resp.status != 204) return false;
 
-		await Storage.set({
-			key: "preAuthorized",
-			value: Boolean(true).toString(),
-		});
+			await Storage.set({
+				key: "preAuthorized",
+				value: "true",
+			});
 
-		return true;
+			authed.value = true;
+
+			return true;
+		} catch (e: unknown) {
+			if (axios.isAxiosError(e)) {
+				const err = e as AxiosError;
+
+				if (err.response?.status != 409) throw e;
+
+				await Storage.set({
+					key: "preAuthorized",
+					value: "true",
+				});
+
+				authed.value = true;
+
+				return true;
+			}
+
+			throw e;
+		}
 	}
 
 	async function loadCache() {

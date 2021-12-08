@@ -25,6 +25,8 @@ create-case:
     description-placeholder: "Type your concern here"
   pictures:
     title: "Choose Pictures"
+    modal:
+      title: "Camera"
   overview:
     title: "Overview"
     category: "Category"
@@ -55,6 +57,7 @@ not-found:
   text: "Ain't nothing here"
 my-cases:
   title: "Your Prajs"
+  no-cases: "You haven't made any Prajs"
   cached:
     title: "Draft Prajs"
     delete-alert: 
@@ -64,7 +67,6 @@ my-cases:
   not-cached:
     title: "Sent Prajs"
   unable-to-fetch-closest-city-name: "Unable to fetch closest city name"
-
 case:
   title: "Praj"
   last-updated-at: "Last updated {time}"
@@ -80,4 +82,5 @@ settings:
     view-privacy-policy: 'Privacy policy'
 privacy-policy:
   header: "Privacy Policy"
-  content: "legal type here"
+  content: "Legal team jargon"
+  

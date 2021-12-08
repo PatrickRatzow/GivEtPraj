@@ -15,6 +15,12 @@ public class BaseCaseConfiguration : IEntityTypeConfiguration<BaseCase>
 
         builder.OwnsOne(c => c.GeographicLocation);
 
+        builder.Property(c => c.CreatedAt)
+            .ValueGeneratedOnAdd();
+
+        builder.Property(c => c.UpdatedAt)
+            .ValueGeneratedOnUpdate();
+        
         builder.HasMany(c => c.CaseUpdates)
             .WithOne(cu => cu.BaseCase)
             .HasForeignKey(cu => cu.CaseId);

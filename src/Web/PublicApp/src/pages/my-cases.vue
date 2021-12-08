@@ -7,7 +7,6 @@ import { useMainStore } from "../stores/main";
 import { useCases } from "@/compositions/cases";
 import { alertController } from "@ionic/vue";
 
-const caseHistory = useCaseHistory();
 const router = useRouter();
 const { t } = useI18n();
 const locationLookup = useLocationLookup();
@@ -19,7 +18,7 @@ const savedCases = ref<SavedCase[]>([]);
 
 const fetchAddressNames = async () => {
   savedCases.value = await Promise.all(
-    caseHistory.cases.map(async (c) => {
+    main.cases.map(async (c) => {
       const address = await locationLookup.fetchAddress(c.geographicLocation);
 
       return {
@@ -32,9 +31,11 @@ const fetchAddressNames = async () => {
 
 const loading = ref(true);
 onMounted(async () => {
-  await fetchAddressNames();
-
-  loading.value = false;
+  try {
+    await fetchAddressNames();
+  } finally {
+    loading.value = false;
+  }
 });
 
 watch(
@@ -45,6 +46,8 @@ watch(
     }
   }
 );
+
+watch(() => main.cases, fetchAddressNames);
 
 const getQueueCaseId = (queueCase: BaseCase): string => {
   if (queueCase.category.miscellaneous) {
@@ -106,17 +109,20 @@ const queueStatus: Status = {
             </ion-item>
             <ion-list-header>{{ t("my-cases.not-cached.title") }}</ion-list-header>
           </ion-list>
-          <ion-item
-            v-for="currentCase in savedCases"
-            :key="currentCase.id"
-            @click="router.push(`/praj/${currentCase.id}`)"
-          >
-            <status-indicator :status="currentCase.status"> </status-indicator>
-            <ion-label>
-              <h3>{{ currentCase.nearestCity ?? t("my-cases.unable-to-fetch-closest-city-name") }}</h3>
-              <p>{{ currentCase.category.name }}</p>
-            </ion-label>
-          </ion-item>
+          <template v-if="savedCases.length > 0">
+            <ion-item
+              v-for="currentCase in savedCases"
+              :key="currentCase.id"
+              @click="router.push(`/praj/${currentCase.id}`)"
+            >
+              <status-indicator :status="currentCase.status"> </status-indicator>
+              <ion-label>
+                <h3>{{ currentCase.nearestCity ?? t("my-cases.unable-to-fetch-closest-city-name") }}</h3>
+                <p>{{ currentCase.category.name }}</p>
+              </ion-label>
+            </ion-item>
+          </template>
+          <ion-title v-else size="small">{{ t("my-cases.no-cases") }}</ion-title>
         </ion-list>
       </div>
     </ion-content>

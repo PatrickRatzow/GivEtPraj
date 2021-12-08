@@ -4,5 +4,4 @@ public class ReCaptchaAuthorization
 {
     public Guid DeviceId { get; set; }
     public DateTimeOffset ExpiresAt { get; set; }
-    public float CaptchaScore { get; set; }
 }

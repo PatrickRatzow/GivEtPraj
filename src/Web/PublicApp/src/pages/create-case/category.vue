@@ -24,6 +24,7 @@ const selectCategory = (category: Category) => {
 
 const isValid = ref(false);
 
+// TODO: Rewrite
 const selectionIsValid = () =>
   (isValid.value =
     (createCase.category &&

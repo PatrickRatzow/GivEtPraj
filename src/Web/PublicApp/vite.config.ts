@@ -27,15 +27,13 @@ export default defineConfig({
 		VitePWA({
 			mode: "development",
 			base: "/",
-			srcDir: "src",
-			filename: "sw.ts",
-			includeAssets: ["/favicon.png"],
+			includeAssets: ["favicon.svg", "favicon.ico", "robots.txt", "apple-touch-icon.png"],
 			strategies: "injectManifest",
 			manifest: {
-				name: "Name of your app",
-				short_name: "Short name of your app",
-				description: "Description of your app",
-				theme_color: "#ffffff",
+				name: "Giv Et Praj",
+				short_name: "Giv Et Praj",
+				description: "Report road related damages to the Danish authorities",
+				theme_color: "#2ecc71",
 				icons: [
 					{
 						src: "icon-192.png",
@@ -67,7 +65,7 @@ export default defineConfig({
 			dts: "src/components.d.ts",
 		}),
 		AutoImport({
-			imports: ["vue", "vue-router", "vue-i18n"],
+			imports: ["vue", "vue-router", "vue-i18n", "@vueuse/head"],
 			dts: "src/auto-imports.d.ts",
 		}),
 		VueI18n({

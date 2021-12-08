@@ -8,8 +8,5 @@ public class ReCaptchaAuthorizationConfiguration : IEntityTypeConfiguration<ReCa
 
         builder.Property(x => x.ExpiresAt)
             .IsRequired();
-
-        builder.Property(x => x.CaptchaScore)
-            .IsRequired();
     }
 }

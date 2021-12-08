@@ -5,7 +5,7 @@ import { Device } from "@capacitor/device";
 import { useMainStore } from "@/stores/main";
 
 const network = useNetwork();
-const baseURL = "https://localhost:5001/v1/";
+const baseURL = "https://givetprajdemo.azurewebsites.net/v1/";
 
 interface HttpResponse<T> {
 	data: T;
@@ -56,7 +56,7 @@ class HttpClient {
 		data?: unknown,
 		config?: AxiosRequestConfig<T>
 	): Promise<HttpResponse<T>> {
-		const response = await axios.post<T>(url, data, config);
+		const response = await this.conn.post<T>(url, data, config);
 		const httpResponse: HttpResponse<T> = {
 			data: response.data,
 			status: response.status,
@@ -64,6 +64,10 @@ class HttpClient {
 		};
 
 		return httpResponse;
+	}
+
+	public isAxiosError(err: unknown): boolean {
+		return axios.isAxiosError(err);
 	}
 
 	private async saveResponseToCache<T, D>(url: string, httpResponse: HttpResponse<T>, config?: AxiosRequestConfig<D>) {

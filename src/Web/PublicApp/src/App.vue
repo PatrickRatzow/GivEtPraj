@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { create, fileTrayFull, settings } from "ionicons/icons";
 import { useAuth } from "@/compositions/auth";
-import { useMainStore } from "@/stores/main";
 import { useTutorial } from "@/compositions/tutorial";
+import { useThemes } from "@/compositions/themes";
+import { useMainStore } from "./stores/main";
 
 const main = useMainStore();
+const themes = useThemes();
 const tutorial = useTutorial();
 const { t } = useI18n();
 const { authorize } = useAuth();
@@ -19,11 +21,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <main :class="{ dark: main.activeTheme }">
+  <main :class="{ dark: themes.activeTheme.value }">
     <div class="hidden absolute w-screen h-screen md:flex flex-col justify-between">
       <div class="w-screen toolbar z-10"></div>
       <div class="w-screen bg-cover z-0"></div>
-      <div class="w-screen absolute h-full w-[774px] bg-cover-border left-1/2 transform -translate-x-1/2 z-20"></div>
+      <div class="absolute h-full w-[774px] bg-cover-border left-1/2 transform -translate-x-1/2 z-20"></div>
       <div class="w-screen tab-bar z-10"></div>
     </div>
     <ion-app class="max-w-screen-md ml-[50%] w-full transform -translate-x-1/2 z-20">
@@ -53,6 +55,7 @@ onMounted(() => {
         </ion-tabs>
       </ion-page>
     </ion-app>
+    <ReloadPWA />
   </main>
 </template>
 

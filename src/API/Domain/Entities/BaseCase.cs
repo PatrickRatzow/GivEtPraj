@@ -12,5 +12,7 @@ public abstract class BaseCase
     public int CategoryId { get; set; }
     public List<CaseImage> Images { get; set; } = new();
     public GeographicLocation GeographicLocation { get; set; } = null!;
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset? UpdatedAt { get; set; }
     public List<CaseUpdate> CaseUpdates { get; set; } = null!;
 }

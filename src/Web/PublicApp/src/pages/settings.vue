@@ -38,9 +38,9 @@ const toggleLanguage = async () => {
           <ion-label>{{ t("settings.general.english-language") }}</ion-label>
           <ion-toggle color="success" :checked="main.language == 'en'"></ion-toggle>
         </ion-item>
-        <ion-item @click="themes.setTheme(!main.activeTheme)">
+        <ion-item @click="themes.setTheme(!themes.activeTheme.value)">
           <ion-label>{{ t("settings.general.dark-mode") }}</ion-label>
-          <ion-toggle color="success" :checked="main.activeTheme"> </ion-toggle>
+          <ion-toggle color="success" :checked="themes.activeTheme.value"> </ion-toggle>
         </ion-item>
       </ion-list>
       <ion-list>

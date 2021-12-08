@@ -4,7 +4,6 @@ import { useCreateCaseStore } from "@/stores/create-case";
 import axios from "@/utils/axios";
 import { useAuth } from "@/compositions/auth";
 import { useCaseHistory } from "@/compositions/case-history";
-import { Device } from "@capacitor/device";
 
 export function useCases() {
 	const network = useNetwork();
@@ -16,10 +15,11 @@ export function useCases() {
 	function addCurrentCaseToQueue() {
 		if (!createCase.category) return;
 		if (!createCase.geographicLocation) return;
+
 		const newCase: BaseCase = {
 			category: createCase.category,
 			subCategories: createCase.subCategories,
-			images: createCase.images.map((photo) => photo.base64String as string),
+			images: createCase.images.filter((photo) => photo).map((photo) => photo.base64String as string),
 			comment: createCase.comment,
 			description: createCase.description,
 			status: { name: "not done", color: "#000000" },
@@ -38,14 +38,15 @@ export function useCases() {
 	}
 
 	interface CreateCaseRequestDto {
-		deviceId: string;
-		description: string;
-		comment: string;
-		subCategories: number[];
-		images: string[];
-		category: number;
-		longitude: number;
-		latitude: number;
+		cases: {
+			description?: string;
+			comment?: string;
+			subCategoryIds: number[];
+			images: string[];
+			categoryId: number;
+			longitude: number;
+			latitude: number;
+		}[];
 	}
 
 	async function sendCases(): Promise<boolean> {
@@ -54,24 +55,27 @@ export function useCases() {
 		if (main.caseQueue.length <= 0) return false;
 
 		try {
-			const deviceId = await Device.getId();
-			const cases: CreateCaseRequestDto[] = main.caseQueue.map((c) => {
-				return {
-					deviceId: deviceId.uuid,
-					description: c.description,
-					comment: c.comment,
-					subCategories: c.subCategories.map((s) => s.id),
-					images: c.images,
-					category: c.category.id,
-					longitude: c.geographicLocation.longitude,
-					latitude: c.geographicLocation.latitude,
-				} as CreateCaseRequestDto;
-			});
-			await axios.post("cases", cases);
+			const cases: CreateCaseRequestDto = {
+				cases: main.caseQueue.map((c) => {
+					return {
+						description: c.description,
+						comment: c.comment,
+						subCategoryIds: c.subCategories.map((s) => s.id),
+						images: c.images,
+						categoryId: c.category.id,
+						longitude: c.geographicLocation.longitude,
+						latitude: c.geographicLocation.latitude,
+					};
+				}),
+			};
 
-			await removeAuthorization();
-			await caseHistory.syncWithAPI();
-			emptyCaseQueue();
+			try {
+				await axios.post("cases", cases);
+				await caseHistory.syncWithAPI();
+			} finally {
+				await removeAuthorization();
+				emptyCaseQueue();
+			}
 
 			return true;
 		} catch {
