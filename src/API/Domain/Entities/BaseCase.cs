@@ -43,7 +43,7 @@ public abstract class BaseEntity
             .Where(t => t is not null)
             .ToList()!;
 
-    public void Validate()
+    protected void Validate()
     {
         var type = GetType();
         ValidateBaseClasses(type);
