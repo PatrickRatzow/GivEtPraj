@@ -8,7 +8,6 @@ public class CaseUpdate
     public int CaseId { get; set; }
     public BaseCase BaseCase { get; set; } = null!;
     public DateTime CreatedAt { get; set; }
-    public Status CurrentStatus { get; set; }
-    public Employee Employee { get; set; } = null!;
+    public Status Status { get; set; }
     public bool SendToReporter { get; set; }
 }

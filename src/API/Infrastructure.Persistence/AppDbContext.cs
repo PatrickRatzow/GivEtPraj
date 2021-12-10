@@ -12,7 +12,6 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<CaseImage> Images { get; set; } = null!;
     public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<SubCategory> SubCategories { get; set; } = null!;
-    public DbSet<Employee> Employees { get; set; } = null!;
     public DbSet<ReCaptchaAuthorization> PreAuthorizations { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
