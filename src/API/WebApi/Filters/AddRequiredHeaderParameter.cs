@@ -9,17 +9,16 @@ public class AddRequiredHeaderParameter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        operation.Parameters ??= new List<OpenApiParameter>();
-
-        operation.Parameters.Add(new OpenApiParameter
+        operation.Parameters.Add(new()
         {
             Name = "X-DeviceId",
             In = ParameterLocation.Header,
             Description = "The users device id",
             Required = false,
-            Schema = new OpenApiSchema
+            Schema = new()
             {
-                Type = "String",
+                Type = "string",
+                Format = "uuid",
                 Default = new OpenApiString("B4275AA5-31D0-40D9-8FD2-CBE7357BE21A")
             }
         });
