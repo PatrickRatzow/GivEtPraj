@@ -2,7 +2,7 @@
 
 namespace Commentor.GivEtPraj.Application.Errors;
 
-public record CaseNotFound(int Id) : INotFoundError
+public record CaseNotFound(Guid Id) : INotFoundError
 {
     public string ErrorMessage => $"Unable to find any case with the ID {Id}";
 }

@@ -24,11 +24,11 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("CaseSubCategory", b =>
                 {
-                    b.Property<int>("CasesId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CasesId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("SubCategoriesId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SubCategoriesId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("CasesId", "SubCategoriesId");
 
@@ -39,14 +39,12 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.BaseCase", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -80,26 +78,24 @@ namespace Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CaseId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("BaseCaseId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CaseId");
+                    b.HasIndex("BaseCaseId");
 
                     b.ToTable("Images");
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.CaseUpdate", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("CaseId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("BaseCaseId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -112,18 +108,16 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CaseId");
+                    b.HasIndex("BaseCaseId");
 
                     b.ToTable("CaseUpdate");
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Icon")
                         .IsRequired()
@@ -156,14 +150,12 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.SubCategory", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -221,8 +213,8 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.OwnsOne("Commentor.GivEtPraj.Domain.ValueObjects.GeographicLocation", "GeographicLocation", b1 =>
                         {
-                            b1.Property<int>("BaseCaseId")
-                                .HasColumnType("int");
+                            b1.Property<Guid>("BaseCaseId")
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<double>("Latitude")
                                 .HasColumnType("float");
@@ -246,20 +238,16 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.CaseImage", b =>
                 {
-                    b.HasOne("Commentor.GivEtPraj.Domain.Entities.BaseCase", "Case")
+                    b.HasOne("Commentor.GivEtPraj.Domain.Entities.BaseCase", null)
                         .WithMany("Images")
-                        .HasForeignKey("CaseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Case");
+                        .HasForeignKey("BaseCaseId");
                 });
 
             modelBuilder.Entity("Commentor.GivEtPraj.Domain.Entities.CaseUpdate", b =>
                 {
                     b.HasOne("Commentor.GivEtPraj.Domain.Entities.BaseCase", "BaseCase")
                         .WithMany("CaseUpdates")
-                        .HasForeignKey("CaseId")
+                        .HasForeignKey("BaseCaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -270,8 +258,8 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.OwnsOne("Commentor.GivEtPraj.Domain.ValueObjects.LocalizedString", "Name", b1 =>
                         {
-                            b1.Property<int>("CategoryId")
-                                .HasColumnType("int");
+                            b1.Property<Guid>("CategoryId")
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Danish")
                                 .IsRequired()
@@ -305,8 +293,8 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.OwnsOne("Commentor.GivEtPraj.Domain.ValueObjects.LocalizedString", "Name", b1 =>
                         {
-                            b1.Property<int>("SubCategoryId")
-                                .HasColumnType("int");
+                            b1.Property<Guid>("SubCategoryId")
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Danish")
                                 .IsRequired()

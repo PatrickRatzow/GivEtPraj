@@ -50,7 +50,7 @@ public class Startup
                 Type = SecuritySchemeType.ApiKey,
                 Scheme = "Bearer"
             });
-
+            c.OperationFilter<AddRequiredHeaderParameter>();
             c.AddSecurityRequirement(new()
             {
                 {

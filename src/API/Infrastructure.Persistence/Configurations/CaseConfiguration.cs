@@ -7,8 +7,7 @@ public class BaseCaseConfiguration : IEntityTypeConfiguration<BaseCase>
         builder.HasIndex(c => c.DeviceId);
 
         builder.HasMany(c => c.Images)
-            .WithOne(cp => cp.Case)
-            .HasForeignKey(cp => cp.CaseId);
+            .WithOne();
 
         builder.Property(c => c.DeviceId)
             .IsRequired();
@@ -20,10 +19,9 @@ public class BaseCaseConfiguration : IEntityTypeConfiguration<BaseCase>
 
         builder.Property(c => c.UpdatedAt)
             .ValueGeneratedOnUpdate();
-        
+
         builder.HasMany(c => c.CaseUpdates)
-            .WithOne(cu => cu.BaseCase)
-            .HasForeignKey(cu => cu.CaseId);
+            .WithOne(cu => cu.BaseCase);
     }
 }
 

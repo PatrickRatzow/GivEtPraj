@@ -12,7 +12,7 @@ public class GeographicLocation : ValueObject
     {
     }
 
-    private GeographicLocation(double latitude, double longitude)
+    public GeographicLocation(double latitude, double longitude)
     {
         Latitude = latitude;
         Longitude = longitude;

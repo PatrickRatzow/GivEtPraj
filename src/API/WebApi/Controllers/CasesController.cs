@@ -24,7 +24,7 @@ public class CasesController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> FindCase(int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> FindCase(Guid id, CancellationToken cancellationToken)
     {
         var query = new FindCaseQuery(id);
         var result = await _mediator.Send(query, cancellationToken);

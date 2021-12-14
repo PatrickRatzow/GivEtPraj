@@ -30,12 +30,8 @@ public class PreAuthorizeDeviceCommandHandler
             deviceId
         }, cancellationToken);
         if (existingAuthorization is not null) return new IsAlreadyPreAuthorized(deviceId);
-        
-        _context.PreAuthorizations.Add(new()
-        {
-            DeviceId = deviceId,
-            ExpiresAt = DateTimeOffset.UtcNow.AddDays(30)
-        });
+
+        _context.PreAuthorizations.Add(new ReCaptchaAuthorization(deviceId, DateTimeOffset.UtcNow.AddDays(30)));
 
         await _context.SaveChangesAsync(cancellationToken);
         await trx.CommitAsync(cancellationToken);

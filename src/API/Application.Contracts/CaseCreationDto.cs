@@ -13,8 +13,8 @@ namespace Commentor.GivEtPraj.Application.Contracts
         {
         }
 
-        public CaseCreationDto(List<string> images, int category, double longitude,
-            double latitude, string? description = null, string? comment = null, int[]? subCategories = null)
+        public CaseCreationDto(List<string> images, Guid category, double longitude,
+            double latitude, string? description = null, string? comment = null, Guid[]? subCategories = null)
         {
             Description = description;
             Comment = comment;
@@ -27,9 +27,9 @@ namespace Commentor.GivEtPraj.Application.Contracts
 
         public string? Description { get; set; }
         public string? Comment { get; set; }
-        public int[]? SubCategoryIds { get; set; }
+        public Guid[]? SubCategoryIds { get; set; }
         public List<string> Images { get; set; } = new();
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
     }
