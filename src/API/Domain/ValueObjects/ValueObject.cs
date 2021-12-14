@@ -4,18 +4,18 @@ namespace Commentor.GivEtPraj.Domain.ValueObjects;
 
 public abstract class ValueObject
 {
-    protected static bool EqualOperator(ValueObject? left, ValueObject? right)
+    public static bool operator ==(ValueObject? left, ValueObject? right)
     {
         if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null)) return false;
         return ReferenceEquals(left, null) || left.Equals(right);
     }
 
-    protected static bool NotEqualOperator(ValueObject? left, ValueObject? right)
+    public static bool operator !=(ValueObject? left, ValueObject? right)
     {
-        return !EqualOperator(left, right);
+        return !(left == right);
     }
 
-    protected abstract IEnumerable<object> GetEqualityComponents();
+    protected abstract IEnumerable<object?> GetEqualityComponents();
 
     public override bool Equals(object? obj)
     {
