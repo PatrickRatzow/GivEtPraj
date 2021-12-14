@@ -6,7 +6,7 @@ namespace Commentor.GivEtPraj.Application.Contracts;
 
 public class CaseDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Description { get; set; } = null!;
     public List<CaseImageDto> Pictures { get; set; } = new();
     public CategoryDto Category { get; set; } = null!;

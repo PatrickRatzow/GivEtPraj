@@ -23,7 +23,7 @@ public class CasesController : ControllerBase
         return result.MatchResponse();
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> FindCase(Guid id, CancellationToken cancellationToken)
     {
         var query = new FindCaseQuery(id);
