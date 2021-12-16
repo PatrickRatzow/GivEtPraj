@@ -18,7 +18,7 @@ public class MiscellaneousCaseTests
     }
 
     [Test]
-    public void CaseInitialization()
+    public void MiscellaneousCaseInitialization()
     {
         //Arrange
         //Arrange
@@ -39,13 +39,6 @@ public class MiscellaneousCaseTests
         //Assert
 
         Assert.IsNotNull(@case);
-
-
-        //Act
-
-        //Assert
-
-        Assert.IsNotNull(category);
 
     }
 }

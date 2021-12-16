@@ -18,7 +18,7 @@ public class SubCategoriesTests
     }
 
     [Test]
-    public void CaseInitialization()
+    public void SubCategoryInitialization()
     {
         //Arrange
 

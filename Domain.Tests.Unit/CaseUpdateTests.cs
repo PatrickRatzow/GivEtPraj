@@ -19,7 +19,7 @@ public class CaseUpdateTests
     }
 
     [Test]
-    public void CaseInitialization()
+    public void CaseUpdateInitialization()
     {
         //Arrange
         //CaseImage

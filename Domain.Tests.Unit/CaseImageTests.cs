@@ -17,7 +17,7 @@ public class CaseImageTests
     }
 
     [Test]
-    public void CaseInitialization()
+    public void CaseImageInitialization()
     {
         //Arrange
         

@@ -17,7 +17,7 @@ public class ReCaptchaAuthorizationTests
     }
 
     [Test]
-    public void CaseInitialization()
+    public void ReCaptchaAuthorizationInitialization()
     {
         //Arrange
 

@@ -18,7 +18,7 @@ public class CategoryTests
     }
 
     [Test]
-    public void CaseInitialization()
+    public void CategoryInitialization()
     {
         //Arrange
         LocalizedString localString = LocalizedString.From("Hul i vejen", "Hole in ground");
