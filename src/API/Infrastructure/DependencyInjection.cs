@@ -30,7 +30,7 @@ public static class DependencyInjection
                 options.UseLoggerFactory(EfLoggerFactory);
             }
         });
-        services.AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>()!);
+        services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
         services.AddSingleton<IFileStorage, AzureBlobFileStorage>();
         services.AddSingleton<IImageStorage, ImageStorage>();
         services.AddSingleton<IImageCompression, BitmapImageCompression>();
