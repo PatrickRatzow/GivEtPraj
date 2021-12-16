@@ -5,44 +5,29 @@ namespace Commentor.GivEtPraj.WebApi.Extensions;
 
 public static class OneOfExtensions
 {
-    private static IActionResult MatchErrorResponse<TResponse>(TResponse response)
-    {
-        return response switch
+    private static IActionResult MatchErrorResponse<TResponse>(TResponse response) =>
+        response switch
         {
-            INotFoundError notFound =>
+            INotFoundError notFound => 
                 GetResult(typeof(NotFoundResult), typeof(NotFoundObjectResult), notFound),
-            IValidationError validationError =>
+            IValidationError validationError => 
                 GetResult(typeof(BadRequestResult), typeof(BadRequestObjectResult), validationError),
-            IAlreadyExistsError alreadyExists =>
+            IAlreadyExistsError alreadyExists => 
                 GetResult(typeof(ConflictResult), typeof(ConflictObjectResult), alreadyExists),
-            /*
-            IPermissionsError permissionsError =>
-                permissionsError.ErrorMessage is null
-                    ? new StatusCodeResult(StatusCodes.Status403Forbidden)
-                    : new ObjectResult(new GenericError(permissionsError.ErrorMessage))
-                    {
-                        StatusCode = StatusCodes.Status403Forbidden
-                    },
-            IAuthorizationError authorizationError =>
-                GetResult(typeof(UnauthorizedResult), typeof(UnauthorizedObjectResult), authorizationError),
-            */
-            IError error =>
+            IError error => 
                 throw new ArgumentException($"Unable to find an error handler for {error.GetType().Name}"),
-            Unit => new NoContentResult(),
-            var data =>
+            Unit => 
+                new NoContentResult(),
+            var data => 
                 GetResult(typeof(OkResult), typeof(OkObjectResult), data)
         };
-    }
 
     private static IActionResult GetResult<TData>(Type status, Type @object, TData data)
     {
         object? msg = data;
         if (data is IError err)
             msg = err.ErrorMessage is not null
-                ? new
-                {
-                    Error = err.ErrorMessage
-                }
+                ? new { Error = err.ErrorMessage }
                 : err.ErrorMessage;
 
         var result = msg is null
