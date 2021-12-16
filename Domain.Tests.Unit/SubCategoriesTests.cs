@@ -25,7 +25,7 @@ public class SubCategoriesTests
         LocalizedString localString = LocalizedString.From("Hul i vejen", "Hole in ground");
 
         //Act
-        SubCategory reCaptchaAuthorization = new SubCategory(1, localString, null, null);
+        SubCategory reCaptchaAuthorization = new SubCategory(Guid.NewGuid(), localString, null, null);
 
         //Assert
 

@@ -28,10 +28,10 @@ public class CaseTests
 
         //SubcategoryList
         LocalizedString localString = LocalizedString.From("Hul i vejen", "Hole in ground");
-        SubCategory subCat = new SubCategory(1, localString, null, null);
+        SubCategory subCat = new SubCategory(Guid.NewGuid(), localString, null, null);
         List<SubCategory> subCategories = new List<SubCategory>();
         subCategories.Add(subCat);
-        Category category = new Category(1, localString, "Icon", false, null, subCategories);
+        Category category = new Category(Guid.NewGuid(), localString, "Icon", false, null, subCategories);
 
         //Act
         Case @case = new Case(Guid.NewGuid(), Guid.NewGuid(), category, caseImages, new GeographicLocation(0, -180),

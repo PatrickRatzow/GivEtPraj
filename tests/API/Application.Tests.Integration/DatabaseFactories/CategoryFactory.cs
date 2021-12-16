@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Commentor.GivEtPraj.Domain.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,11 +21,11 @@ public class CategoryFactory : DatabaseFactory
         set => _created = value;
     }
 
-    public Category Create(string? name = null, string? icon = null, bool miscellaneous = false)
+    public Category Create(Guid id, string? name = null, string? icon = null, bool miscellaneous = false)
     {
         lock (CreationLock)
         {
-            return CreateCategory(name, icon, miscellaneous);
+            return CreateCategory(id, name, icon, miscellaneous);
         }
     }
 
@@ -33,23 +34,18 @@ public class CategoryFactory : DatabaseFactory
         lock (CreationLock)
         {
             return Enumerable.Range(0, amount)
-                .Select(x => CreateCategory())
+                .Select(x => CreateCategory(Guid.NewGuid()))
                 .ToList();
         }
     }
 
-    private Category CreateCategory(string? name = null, string? icon = null, bool miscellaneous = false)
+    private Category CreateCategory(Guid id, string? name = "Category", string? icon = null, bool miscellaneous = false)
     {
         Created++;
 
         name ??= $"Category #{Created}";
         icon ??= "fas fa-road";
 
-        return Add(new Category
-        {
-            Name = LocalizedString.From(name, name),
-            Icon = icon,
-            Miscellaneous = miscellaneous
-        });
+        return Add(new Category(id, LocalizedString.From(name, name), icon, miscellaneous, new List<BaseCase>(), new List<SubCategory>()));
     }
 }

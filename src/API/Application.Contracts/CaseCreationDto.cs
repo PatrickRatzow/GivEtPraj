@@ -10,7 +10,7 @@ public class CaseCreationDto
     }
 
     public CaseCreationDto(List<string> images, Guid category, double longitude,
-        double latitude, string? description = null, string? comment = null, Guid[]? subCategories = null)
+        double latitude, Guid[] subCategories, string? description = null, string? comment = null)
     {
         Description = description;
         Comment = comment;

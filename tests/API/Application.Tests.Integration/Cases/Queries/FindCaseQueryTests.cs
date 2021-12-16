@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Commentor.GivEtPraj.Application.Cases.Queries;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration.Cases.Queries;
@@ -11,7 +12,7 @@ public class FindCaseQueryTests : TestBase
     public async Task ShouldFindCase()
     {
         // Arrange
-        var category = Database.Factory<CategoryFactory>().Create();
+        var category = Database.Factory<CategoryFactory>().Create(Guid.NewGuid());
         var @case = Database.Factory<CaseFactory>().Create(category);
 
         await Database.Save();
@@ -30,7 +31,7 @@ public class FindCaseQueryTests : TestBase
     public async Task ShouldNotFindCase()
     {
         // Arrange
-        var query = new FindCaseQuery(int.MaxValue);
+        var query = new FindCaseQuery(Guid.NewGuid());
 
         // Act
         var result = await Send(query);
@@ -44,9 +45,10 @@ public class FindCaseQueryTests : TestBase
     public async Task ShouldEnsureCategoryIsIncludedInResult()
     {
         // Arrange
-        var category = Database.Factory<CategoryFactory>().Create();
+        var category = Database.Factory<CategoryFactory>().Create(Guid.NewGuid());
         var @case = Database.Factory<CaseFactory>().Create(category);
 
+        
         await Database.Save();
 
         var query = new FindCaseQuery(@case.Id);

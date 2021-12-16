@@ -17,7 +17,7 @@ public class CreateCaseCommandTests : TestBase
     public async Task ShouldCreateCase()
     {
         // Arrange
-        var category = Database.Factory<CategoryFactory>().Create();
+        var category = Database.Factory<CategoryFactory>().Create(Guid.NewGuid());
         var subCats = Database.Factory<SubCategoryFactory>().CreateMany(category, 2);
 
         await Database.Save();
@@ -38,7 +38,7 @@ public class CreateCaseCommandTests : TestBase
        await Send(command);
 
         // Assert
-        var dbResult = await Search<BaseCase>(c => c.CategoryId == category.Id);
+        var dbResult = await Search<BaseCase>(c => c.Category.Id == category.Id);
         dbResult.Should().HaveCount(1)
             .And.AllBeOfType<Case>();
     }
@@ -47,7 +47,7 @@ public class CreateCaseCommandTests : TestBase
     public async Task ShouldCreateMiscellaneousCase()
     {
         // Arrange
-        var category = Database.Factory<CategoryFactory>().Create(miscellaneous: true);
+        var category = Database.Factory<CategoryFactory>().Create(Guid.NewGuid(), miscellaneous: true);
 
         await Database.Save();
 
@@ -58,7 +58,7 @@ public class CreateCaseCommandTests : TestBase
 
         var cases = new List<CaseCreationDto>
         {
-            new(images, category.Id, longitude, latitude, description)
+            new(images, category.Id, longitude, latitude, new Guid[0], description)
         };
         var command = new CreateCaseCommand(cases);
 
@@ -67,7 +67,7 @@ public class CreateCaseCommandTests : TestBase
 
         // Assert
         result.Value.Should().BeOfType<Unit>();
-        var dbResult = await Search<BaseCase>(c => c.CategoryId == category.Id);
+        var dbResult = await Search<BaseCase>(c => c.Category.Id == category.Id);
         dbResult.Should().HaveCount(1)
             .And.AllBeOfType<MiscellaneousCase>();
     }
@@ -76,7 +76,7 @@ public class CreateCaseCommandTests : TestBase
     public async Task ShouldNotCreateMiscellaneousCaseIfGivenCategoryIsNotMiscellaneous()
     {
         // Arrange
-        var category = Database.Factory<CategoryFactory>().Create(miscellaneous: false);
+        var category = Database.Factory<CategoryFactory>().Create(Guid.NewGuid(), miscellaneous: false);
 
         await Database.Save();
 
@@ -87,7 +87,7 @@ public class CreateCaseCommandTests : TestBase
 
         var cases = new List<CaseCreationDto>
         {
-            new(images, category.Id, longitude, latitude, description)
+            new(images, category.Id, longitude, latitude, new Guid[0], description)
         };
         var command = new CreateCaseCommand(cases);
 
@@ -105,15 +105,15 @@ public class CreateCaseCommandTests : TestBase
     {
         // Arrange
         var comment = "An example comment";
-        var categoryId = int.MaxValue;
-        var subCategories = Array.Empty<int>();
+        var categoryId = Guid.NewGuid();
+        var subCategories = Array.Empty<Guid>();
         var images = new List<string>();
         var longitude = 0;
         var latitude = 0;
 
         var cases = new List<CaseCreationDto>
         {
-            new(images, categoryId, longitude, latitude, comment: comment, subCategories: subCategories)
+            new CaseCreationDto(images, categoryId, longitude, latitude, comment: comment, subCategories: subCategories)
         };
         var command = new CreateCaseCommand(cases);
 

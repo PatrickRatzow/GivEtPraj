@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Commentor.GivEtPraj.Application.Categories.Queries;
@@ -46,7 +47,7 @@ public class FindAllCategoriesQueryTests : TestBase
     public async Task ShouldFetchAllSubCategoriesForCategory()
     {
         // Arrange
-        var category = Database.Factory<CategoryFactory>().Create();
+        var category = Database.Factory<CategoryFactory>().Create(Guid.NewGuid());
         var subCategories = Database.Factory<SubCategoryFactory>().CreateMany(category, 4);
 
         await Database.Save();

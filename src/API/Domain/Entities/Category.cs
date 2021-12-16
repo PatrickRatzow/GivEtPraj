@@ -12,7 +12,7 @@ public class Category : BaseEntity
     public IList<BaseCase> Cases { get; private set; } = new List<BaseCase>();
     public IList<SubCategory> SubCategories { get; private set; } = new List<SubCategory>();
 
-    private Category()
+    private Category(Guid id)
     {
 
     }
@@ -36,6 +36,7 @@ public class CategoryValidator : AbstractValidator<Category>
         RuleFor(x => x.Id).NotEmpty();
         RuleFor(x => x.Name).NotEmpty();
         RuleFor(x => x.Icon).NotEmpty();
+        RuleFor(x => x.Cases).NotNull();
         RuleFor(x => x.SubCategories).NotNull();
     }
 }

@@ -4,10 +4,11 @@ public class BaseCaseConfiguration : IEntityTypeConfiguration<BaseCase>
 {
     public void Configure(EntityTypeBuilder<BaseCase> builder)
     {
-        builder.HasIndex(c => c.DeviceId);
-
         builder.HasMany(c => c.Images)
             .WithOne();
+
+        builder.HasOne(c => c.Category)
+            .WithMany(c => c.Cases);
 
         builder.Property(c => c.DeviceId)
             .IsRequired();
@@ -21,7 +22,8 @@ public class BaseCaseConfiguration : IEntityTypeConfiguration<BaseCase>
             .ValueGeneratedOnUpdate();
 
         builder.HasMany(c => c.CaseUpdates)
-            .WithOne(cu => cu.BaseCase);
+            .WithOne(cu => cu.BaseCase)
+            .HasForeignKey(cu => cu.Id);
     }
 }
 

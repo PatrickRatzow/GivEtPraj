@@ -23,10 +23,10 @@ public class CategoryTests
         //Arrange
         LocalizedString localString = LocalizedString.From("Hul i vejen", "Hole in ground");
         List<SubCategory> subCategories = new List<SubCategory>();
-        SubCategory subCategory = new SubCategory(1, localString, null, null);
+        SubCategory subCategory = new SubCategory(Guid.NewGuid(), localString, null, null);
         subCategories.Add(subCategory);
         //Act
-        Category category = new Category(1, localString, "Icon", false, null, subCategories);
+        Category category = new Category(Guid.NewGuid(), localString, "Icon", false, null, subCategories);
 
         //Assert
 

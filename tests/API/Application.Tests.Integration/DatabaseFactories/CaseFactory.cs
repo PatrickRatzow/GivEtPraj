@@ -51,12 +51,7 @@ public class CaseFactory : DatabaseFactory
         location ??= GeographicLocation.From(0, 0);
         deviceId ??= Guid.NewGuid();
 
-        return Add(new Case
-        {
-            Comment = description,
-            Category = category,
-            GeographicLocation = location,
-            DeviceId = deviceId.Value
-        });
+        return Add(new Case(Guid.NewGuid(), deviceId.Value, category, new List<CaseImage> { new CaseImage(Guid.NewGuid()) }, 
+            location, new(), new(), description));
     }
 }
