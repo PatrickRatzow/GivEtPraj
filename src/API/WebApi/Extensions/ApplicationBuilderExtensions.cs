@@ -40,6 +40,13 @@ public static class ApplicationBuilderExtensions
     {
         app.Use(async (context, next) =>
         {
+            if (!context.Request.IsRegularMethod())
+            {
+                await next();
+
+                return;
+            }
+
             var deviceService = context.RequestServices.GetRequiredService<IDeviceService>();
             var deviceId = context.Request.Headers["X-DeviceId"];
             if (Guid.TryParse(deviceId, out var guid))
