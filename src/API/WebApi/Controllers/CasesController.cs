@@ -15,9 +15,11 @@ public class CasesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCase([FromBody] CreateCaseCommand command,
+    public async Task<IActionResult> CreateCase([FromBody] CreateCasesRequest request,
         CancellationToken cancellationToken)
     {
+        var id = Guid.NewGuid();
+        var command = new CreateCaseCommand(id, request.Cases);
         var result = await _mediator.Send(command, cancellationToken);
 
         return result.MatchResponse();

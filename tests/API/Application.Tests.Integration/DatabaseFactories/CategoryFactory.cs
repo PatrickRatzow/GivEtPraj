@@ -21,7 +21,7 @@ public class CategoryFactory : DatabaseFactory
         set => _created = value;
     }
 
-    public Category Create(Guid id, string? name = null, string? icon = null, bool miscellaneous = false)
+    public Category Create(Guid? id = null, string? name = null, string? icon = null, bool miscellaneous = false)
     {
         lock (CreationLock)
         {
@@ -39,13 +39,23 @@ public class CategoryFactory : DatabaseFactory
         }
     }
 
-    private Category CreateCategory(Guid id, string? name = "Category", string? icon = null, bool miscellaneous = false)
+    private Category CreateCategory(Guid? id = null, string? name = null, string? icon = null, bool miscellaneous = false)
     {
         Created++;
 
+        id ??= Guid.NewGuid();
         name ??= $"Category #{Created}";
         icon ??= "fas fa-road";
 
-        return Add(new Category(id, LocalizedString.From(name, name), icon, miscellaneous, new List<BaseCase>(), new List<SubCategory>()));
+        return Add(
+            new Category(
+                id.Value, 
+                LocalizedString.From(name, name), 
+                icon, 
+                miscellaneous, 
+                new List<BaseCase>(), 
+                new List<SubCategory>()
+            )
+        );
     }
 }

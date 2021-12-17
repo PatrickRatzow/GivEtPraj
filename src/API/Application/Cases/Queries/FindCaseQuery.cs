@@ -18,18 +18,15 @@ public class FindCaseQueryHandler : IRequestHandler<FindCaseQuery, OneOf<CaseDto
     public async Task<OneOf<CaseDto, CaseNotFound>> Handle(FindCaseQuery request,
         CancellationToken cancellationToken)
     {
-
         var @case = await _db.Cases
             .Include(c => c.Images)
             .Include(c => c.Category)
             .Where(c => c.Id == request.Id)
             .FirstOrDefaultAsync(cancellationToken);
 
-        List<Category> dto = _db.Categories.ToList();
         if (@case is null) return new CaseNotFound(request.Id);
 
-        var temp = _mapper.Map<BaseCase, CaseDto>(@case);
-        return temp;
+        return _mapper.Map<BaseCase, CaseDto>(@case);
     }
 }
 

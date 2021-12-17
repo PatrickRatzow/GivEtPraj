@@ -12,7 +12,7 @@ public class FindCaseQueryTests : TestBase
     public async Task ShouldFindCase()
     {
         // Arrange
-        var category = Database.Factory<CategoryFactory>().Create(Guid.NewGuid());
+        var category = Database.Factory<CategoryFactory>().Create();
         var @case = Database.Factory<CaseFactory>().Create(category);
 
         await Database.Save();
@@ -23,8 +23,8 @@ public class FindCaseQueryTests : TestBase
         var result = await Send(query);
 
         // Assert
-        result.Value.Should().BeOfType<CaseDto>();
-        result.Value.Should().NotBeNull();
+        result.Value.Should().BeOfType<CaseDto>()
+            .And.NotBeNull();
     }
 
     [Test]

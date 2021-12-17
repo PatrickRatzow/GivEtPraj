@@ -10,12 +10,14 @@ namespace Commentor.GivEtPraj.Application.Cases.Commands;
 [ReCaptcha(AllowQueue = true)]
 public class CreateCaseCommand : IRequest<OneOf<Unit, InvalidCategory, InvalidSubCategories>>
 {
-    public CreateCaseCommand(List<CaseCreationDto> cases)
+    public Guid Id { get; }
+    public List<CaseCreationDto> Cases { get; }
+    
+    public CreateCaseCommand(Guid id, List<CaseCreationDto> cases)
     {
+        Id = id;
         Cases = cases;
     }
-
-    public List<CaseCreationDto> Cases { get; set; }
 }
 
 public class
@@ -47,13 +49,21 @@ public class
         {
             var images = await CreateImages(@case);
 
-            var newCase = @case switch
+            var newCase = @case.SubCategoryIds switch
             {
-                { SubCategoryIds: not null } =>
-                    CreateCase(@case, categories.Values.First(c => c.Id == @case.CategoryId), categories.Values.First(c => c.Id == @case.CategoryId).SubCategories.ToList(), images),
-                { SubCategoryIds: null } =>
-                    CreateMiscellaneousCase(@case, categories.Values.First(c => c.Id == @case.CategoryId), images),
-                _ => throw new ArgumentOutOfRangeException()
+                not null => CreateCase(
+                    request.Id, 
+                    @case, 
+                    categories.Values.First(c => c.Id == @case.CategoryId), 
+                    categories.Values.First(c => c.Id == @case.CategoryId).SubCategories.ToList(), 
+                    images
+                ),
+                null => CreateMiscellaneousCase(
+                    request.Id,
+                    @case, 
+                    categories.Values.First(c => c.Id == @case.CategoryId), 
+                    images
+                )
             };
 
             _db.Cases.Add(newCase);
@@ -70,13 +80,15 @@ public class
 
         foreach (var @case in request.Cases)
         {
-            var isMiscellaneous = categories.GetValueOrDefault(@case.CategoryId)?.Miscellaneous == true;
-            if (!isMiscellaneous) continue;
-
+            var category = categories.GetValueOrDefault(@case.CategoryId);
+            var isMiscellaneous = category?.Miscellaneous == true;
+            
+            if (isMiscellaneous && @case.SubCategoryIds is null or { Length: > 0 })
+                return true;
+            
             var subCategoriesCount = @case.SubCategoryIds?.Length;
-            if (subCategoriesCount > 0) continue;
-
-            return false;
+            if (subCategoriesCount is null || subCategoriesCount > category?.SubCategories.Count)
+                return false;
         }
 
         return true;
@@ -89,7 +101,6 @@ public class
             {
                 var isMiscellaneous = categories.GetValueOrDefault(c.CategoryId)?.Miscellaneous == true;
                 if (isMiscellaneous) return false;
-                if (c.SubCategoryIds?.Length == 0) return false;
 
                 // Check that the category in database has all the sub categories in the request
                 return categories.Values
@@ -108,7 +119,7 @@ public class
             var streamImage = new MemoryStream(Convert.FromBase64String(image));
             var guid = Guid.NewGuid();
             list.Add((streamImage, guid));
-            images.Add(new CaseImage(guid));
+            images.Add(new(guid));
         }
 
         await UploadImages(list);
@@ -125,16 +136,32 @@ public class
         await Task.WhenAll(imageUploads);
     }
 
-    private BaseCase CreateCase(CaseCreationDto @case, Category category, List<SubCategory> subCategories, List<CaseImage> images)
+    private BaseCase CreateCase(Guid id, CaseCreationDto @case, Category category, List<SubCategory> subCategories, 
+        List<CaseImage> images)
     {
-        return new Case(Guid.NewGuid(), Guid.NewGuid(), category, images, GeographicLocation.From(@case.Latitude, @case.Longitude),
-            new List<CaseUpdate>(), subCategories, @case.Comment!);
+        return new Case(
+            id,
+            _deviceService.DeviceIdentifier,
+            category, 
+            images, 
+            GeographicLocation.From(@case.Latitude, @case.Longitude),
+            new(), 
+            subCategories, 
+            @case.Comment!
+        );
     }
 
-    private BaseCase CreateMiscellaneousCase(CaseCreationDto @case, Category category, List<CaseImage> images)
+    private BaseCase CreateMiscellaneousCase(Guid id, CaseCreationDto @case, Category category, List<CaseImage> images)
     {
-        return new MiscellaneousCase(Guid.NewGuid(), Guid.NewGuid(), category, images, GeographicLocation.From(@case.Latitude, @case.Longitude),
-            new List<CaseUpdate>(), @case.Description!);
+        return new MiscellaneousCase(
+            id,
+            _deviceService.DeviceIdentifier,
+            category, 
+            images, 
+            GeographicLocation.From(@case.Latitude, @case.Longitude),
+            new(),
+            @case.Description!
+        );
     }
 }
 
@@ -142,6 +169,7 @@ public class CreateCaseCommandValidator : AbstractValidator<CreateCaseCommand>
 {
     public CreateCaseCommandValidator()
     {
+        RuleFor(c => c.Id).NotEmpty();
         RuleForEach(c => c.Cases).ChildRules(@case =>
         {
             @case.RuleFor(x => x.Longitude)

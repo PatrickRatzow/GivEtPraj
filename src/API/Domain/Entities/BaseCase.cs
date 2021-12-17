@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
 using Commentor.GivEtPraj.Domain.ValueObjects;
 using FluentValidation;
 
 namespace Commentor.GivEtPraj.Domain.Entities;
 
+[SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Local")]
 public abstract class BaseCase : BaseEntity
 {
     public Guid Id { get; private set; }
@@ -17,7 +19,8 @@ public abstract class BaseCase : BaseEntity
     public DateTimeOffset? UpdatedAt { get; private set; }
 
     protected BaseCase()
-    {}
+    {
+    }
 
     protected BaseCase(Guid id, Guid deviceId, Category category, List<CaseImage> images, GeographicLocation geographicLocation, List<CaseUpdate> caseUpdates)
     {
@@ -37,6 +40,7 @@ public abstract class BaseCase : BaseEntity
         Validate();
     }
 }
+
 public class BaseCaseValidator : AbstractValidator<BaseCase>
 {
     public BaseCaseValidator()

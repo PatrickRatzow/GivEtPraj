@@ -1,20 +1,22 @@
-﻿using Commentor.GivEtPraj.Domain.ValueObjects;
+﻿using System.Diagnostics.CodeAnalysis;
+using Commentor.GivEtPraj.Domain.ValueObjects;
 using FluentValidation;
 
 namespace Commentor.GivEtPraj.Domain.Entities;
 
+[SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Local")]
 public class Category : BaseEntity
 {
     public Guid Id { get; private set; }
     public LocalizedString Name { get; private set; } = null!;
     public string Icon { get; private set; } = null!;
-    public bool Miscellaneous { get; private set; } = false;
+    public bool Miscellaneous { get; private set; }
     public IList<BaseCase> Cases { get; private set; } = new List<BaseCase>();
     public IList<SubCategory> SubCategories { get; private set; } = new List<SubCategory>();
 
-    private Category(Guid id)
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
+    private Category()
     {
-
     }
 
     public Category(Guid id, LocalizedString name, string icon, bool miscellaneous, IList<BaseCase> cases, IList<SubCategory> subCategories)
@@ -25,6 +27,7 @@ public class Category : BaseEntity
         Miscellaneous = miscellaneous;
         Cases = cases;
         SubCategories = subCategories;
+        
         Validate();
     }
 }
