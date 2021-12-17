@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Tests.Unit", "t
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Contracts", "src\API\WebApi.Contracts\WebApi.Contracts.csproj", "{62225AF3-4F78-49FF-8F6D-C05F94A45438}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Tests.Unit", "Domain.Tests.Unit\Domain.Tests.Unit.csproj", "{A9C55103-DBD4-47FA-B00A-E710D0368F32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Tests.Unit", "tests\API\Domain.Tests.Unit\Domain.Tests.Unit.csproj", "{A9C55103-DBD4-47FA-B00A-E710D0368F32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
