@@ -17,21 +17,13 @@ public static class ApplicationBuilderExtensions
         {
             var languageService = context.RequestServices.GetRequiredService<ILanguageService>();
             var language = context.Request.Headers["X-Language"];
-            if (string.IsNullOrEmpty(language))
-            {
-                languageService.Language = Language.DK;
-
-                await next();
-
-                return;
-            }
-
             languageService.Language = language.ToString() switch
             {
                 "da" => Language.DK,
                 "en" => Language.EN,
                 _ => Language.DK
             };
+            
             await next();
         });
     }
