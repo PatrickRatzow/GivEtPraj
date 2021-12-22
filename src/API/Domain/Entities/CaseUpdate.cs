@@ -36,7 +36,9 @@ public class CaseUpdateValidator : AbstractValidator<CaseUpdate>
     {
         RuleFor(x => x.Id).NotEmpty();
         RuleFor(x => x.BaseCase).NotEmpty();
-        RuleFor(x => x.CreatedAt).NotEmpty();
+        RuleFor(x => x.CreatedAt)
+            .NotEmpty()
+            .LessThanOrEqualTo(_ => DateTime.UtcNow);
         RuleFor(x => x.Status).IsInEnum();
     }
 }

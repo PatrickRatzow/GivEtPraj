@@ -11,15 +11,16 @@ public class Category : BaseEntity
     public LocalizedString Name { get; private set; } = null!;
     public string Icon { get; private set; } = null!;
     public bool Miscellaneous { get; private set; }
-    public IList<BaseCase> Cases { get; private set; } = new List<BaseCase>();
-    public IList<SubCategory> SubCategories { get; private set; } = new List<SubCategory>();
+    public List<BaseCase> Cases { get; private set; } = new();
+    public List<SubCategory> SubCategories { get; private set; } = new();
 
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private Category()
     {
     }
 
-    public Category(Guid id, LocalizedString name, string icon, bool miscellaneous, IList<BaseCase> cases, IList<SubCategory> subCategories)
+    public Category(Guid id, LocalizedString name, string icon, bool miscellaneous, List<BaseCase> cases, 
+        List<SubCategory> subCategories)
     {
         Id = id;
         Name = name;

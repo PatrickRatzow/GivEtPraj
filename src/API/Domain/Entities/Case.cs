@@ -31,5 +31,13 @@ public class CaseValidator : AbstractValidator<Case>
     public CaseValidator()
     {
         RuleFor(x => x.SubCategories).NotNull();
+
+        When(x => x.Comment is not null, () =>
+        {
+            RuleFor(x => x.Comment)
+                .NotEmpty()
+                .MinimumLength(0)
+                .MaximumLength(200);
+        });
     }
 }

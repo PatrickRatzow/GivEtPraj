@@ -28,6 +28,9 @@ public class MiscellaneousCaseValidator : AbstractValidator<MiscellaneousCase>
 {
     public MiscellaneousCaseValidator()
     {
-        RuleFor(x => x.Description).NotEmpty();
+        RuleFor(x => x.Description)
+            .NotEmpty()
+            .MinimumLength(4)
+            .MaximumLength(4096);
     }
 }

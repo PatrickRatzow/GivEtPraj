@@ -2,6 +2,7 @@
 
 namespace Commentor.GivEtPraj.Domain.ValueObjects;
 
+// Code from https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/implement-value-objects
 public abstract class ValueObject
 {
     public static bool operator ==(ValueObject? left, ValueObject? right)

@@ -28,6 +28,8 @@ public class ReCaptchaAuthorizationValidator : AbstractValidator<ReCaptchaAuthor
     public ReCaptchaAuthorizationValidator()
     {
         RuleFor(x => x.DeviceId).NotEmpty();
-        RuleFor(x => x.ExpiresAt).NotEmpty();
+        RuleFor(x => x.ExpiresAt)
+            .NotEmpty()
+            .GreaterThanOrEqualTo(_ => DateTimeOffset.UtcNow);
     }
 }

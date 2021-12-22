@@ -6,17 +6,17 @@ using FluentValidation;
 
 namespace Commentor.GivEtPraj.Domain.Entities;
 
-[SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Local")]
+[SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
 public abstract class BaseCase : BaseEntity
 {
-    public Guid Id { get; private set; }
-    public Guid DeviceId { get; private set; }
-    public Category Category { get; private set; } = null!;
-    public List<CaseImage> Images { get; private set; } = new();
-    public GeographicLocation GeographicLocation { get; private set; } = null!;
-    public DateTimeOffset CreatedAt { get; private set; }
-    public List<CaseUpdate> CaseUpdates { get; private set; } = null!;
-    public DateTimeOffset? UpdatedAt { get; private set; }
+    public Guid Id { get; protected set; }
+    public Guid DeviceId { get; protected set; }
+    public Category Category { get; protected set; } = null!;
+    public List<CaseImage> Images { get; protected set; } = new();
+    public GeographicLocation GeographicLocation { get; protected set; } = null!;
+    public DateTimeOffset CreatedAt { get; protected set; }
+    public List<CaseUpdate> CaseUpdates { get; protected set; } = null!;
+    public DateTimeOffset? UpdatedAt { get; protected set; }
 
     protected BaseCase()
     {
@@ -49,10 +49,14 @@ public class BaseCaseValidator : AbstractValidator<BaseCase>
         RuleFor(x => x.DeviceId).NotEmpty();
         RuleFor(x => x.Category).NotEmpty();
         RuleFor(x => x.Images).NotEmpty();
-        RuleForEach(x => x.Images).SetValidator(new CaseImageValidator());
         RuleFor(x => x.GeographicLocation).NotEmpty();
-        RuleFor(x => x.CreatedAt).NotEmpty();
+        RuleFor(x => x.CreatedAt)
+            .NotEmpty()
+            .LessThanOrEqualTo(_ => DateTimeOffset.UtcNow);
         RuleFor(x => x.CaseUpdates).NotNull();
-        RuleForEach(x => x.CaseUpdates).SetValidator(new CaseUpdateValidator());
+        When(x => x.UpdatedAt is not null, () =>
+        {
+            RuleFor(x => x.UpdatedAt).LessThanOrEqualTo(_ => DateTimeOffset.UtcNow);
+        });
     }
 }

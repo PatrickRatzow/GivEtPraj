@@ -8,6 +8,9 @@ namespace Commentor.GivEtPraj.Domain.ValueObjects;
 [SuppressMessage("ReSharper", "UnusedMember.Local")]
 public class GeographicLocation : ValueObject
 {
+    public double Latitude { get; private set; }
+    public double Longitude { get; private set; }
+    
     private GeographicLocation()
     {
     }
@@ -17,9 +20,6 @@ public class GeographicLocation : ValueObject
         Latitude = latitude;
         Longitude = longitude;
     }
-
-    public double Latitude { get; private set; }
-    public double Longitude { get; private set; }
 
     public static GeographicLocation From(double latitude, double longitude)
     {
