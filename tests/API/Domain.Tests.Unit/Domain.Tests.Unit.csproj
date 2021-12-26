@@ -17,6 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\FluentTests.SourceGenerator\FluentTests.SourceGenerator.csproj"
+                      OutputItemType="Analyzer" 
+                      ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="..\..\..\FluentTests\FluentTests.csproj" />
     <ProjectReference Include="..\..\..\src\API\Domain\Domain.csproj" />
   </ItemGroup>
 
