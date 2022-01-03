@@ -36,7 +36,7 @@ public class CaseValidator : AbstractValidator<Case>
         {
             RuleFor(x => x.Comment)
                 .NotEmpty()
-                .MinimumLength(0)
+                .MinimumLength(4)
                 .MaximumLength(200);
         });
     }

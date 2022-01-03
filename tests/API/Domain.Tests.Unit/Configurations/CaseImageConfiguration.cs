@@ -1,5 +1,5 @@
 ﻿using Commentor.GivEtPraj.Domain.Entities;
-using FluentTests;
+using DomainFixture;
 
 namespace Commentor.GivEtPraj.Domain.Tests.Unit.Configurations;
 

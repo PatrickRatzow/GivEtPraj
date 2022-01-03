@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Commentor.GivEtPraj.Domain.Entities;
-using FluentTests;
+using DomainFixture;
 
 namespace Commentor.GivEtPraj.Domain.Tests.Unit.Configurations;
 
@@ -12,11 +13,9 @@ public class CaseConfiguration : AbstractClassConfiguration<Case>
             .Valid(new List<SubCategory>())
             .Invalid(_ => null!);
 
-        Property(x => x.Comment)
-            .Valid(_ => null!)
-            .Valid(new string('a', 4))
-            .Valid(new string('a', 200))
-            .Invalid(new string(' ', 3))
-            .Invalid(new string(' ', 201));
+        Property(x => x.Comment!)
+            .Length(4, 200).IsValid()
+            .Empty().IsInvalid()
+            .Valid(_ => null!);
     }
 }

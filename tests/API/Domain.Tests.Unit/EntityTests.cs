@@ -1,13 +1,12 @@
 ﻿using Commentor.GivEtPraj.Domain.Entities;
-using Commentor.GivEtPraj.Domain.Tests.Unit.Configurations;
-using FluentTests;
+using DomainFixture;
+using DomainFixture.SourceGenerator;
 using NUnit.Framework;
 
 namespace Commentor.GivEtPraj.Domain.Tests.Unit;
 
 public partial class EntityTests
 {
-    /*
     [TestCaseSource(
         typeof(EntityTestSource), 
         nameof(EntityTestSource.Test), 
@@ -21,7 +20,6 @@ public partial class EntityTests
         new object[] { typeof(CaseImage), new [] { typeof(BaseEntity) } }
     )]
     public void CaseImageTests(IEntityTester tester, string propertyName, string value) => tester.Run();
-    */
     
     [TestCaseSource(
         typeof(EntityTestSource), 
@@ -30,7 +28,6 @@ public partial class EntityTests
     )]
     public void CaseUpdateTests(IEntityTester tester, string propertyName, string value) => tester.Run();
     
-    /*
     [TestCaseSource(
         typeof(EntityTestSource), 
         nameof(EntityTestSource.Test), 
@@ -58,5 +55,4 @@ public partial class EntityTests
         new object[] { typeof(ReCaptchaAuthorization), new [] { typeof(BaseEntity) } }
     )]
     public void ReCaptchaAuthorizationTests(IEntityTester tester, string propertyName, string value) => tester.Run();
-    */
 }

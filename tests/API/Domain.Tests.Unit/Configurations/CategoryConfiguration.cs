@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Commentor.GivEtPraj.Domain.Entities;
 using Commentor.GivEtPraj.Domain.ValueObjects;
-using FluentTests;
+using DomainFixture;
 
 namespace Commentor.GivEtPraj.Domain.Tests.Unit.Configurations;
 
@@ -14,9 +14,8 @@ public class CategoryConfiguration : AbstractClassConfiguration<Category>
             .Invalid(_ => null!);
 
         Property(x => x.Icon)
-            .Valid("fas fa-road")
-            .Invalid("")
-            .Invalid(_ => null!);
+            .Empty().IsInvalid()
+            .Valid("fas fa-road");
 
         Property(x => x.Cases)
             .Valid(new List<BaseCase>())

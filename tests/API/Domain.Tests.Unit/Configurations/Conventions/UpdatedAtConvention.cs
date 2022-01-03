@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using FluentTests;
+using DomainFixture;
 
 namespace Commentor.GivEtPraj.Domain.Tests.Unit.Configurations.Conventions;
 

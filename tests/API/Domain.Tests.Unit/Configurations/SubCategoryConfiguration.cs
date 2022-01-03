@@ -1,6 +1,6 @@
 ﻿using Commentor.GivEtPraj.Domain.Entities;
 using Commentor.GivEtPraj.Domain.ValueObjects;
-using FluentTests;
+using DomainFixture;
 
 namespace Commentor.GivEtPraj.Domain.Tests.Unit.Configurations;
 

@@ -31,9 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Contracts", "src\API
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Tests.Unit", "tests\API\Domain.Tests.Unit\Domain.Tests.Unit.csproj", "{A9C55103-DBD4-47FA-B00A-E710D0368F32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentTests", "FluentTests\FluentTests.csproj", "{B2196828-0F53-49E3-92AF-7A91AE2943C4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainFixture", "DomainFixture\DomainFixture.csproj", "{B2196828-0F53-49E3-92AF-7A91AE2943C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentTests.SourceGenerator", "FluentTests.SourceGenerator\FluentTests.SourceGenerator.csproj", "{3EDDAD4C-61F9-49CE-81E0-43EE962BA015}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainFixture.SourceGenerator", "DomainFixture.SourceGenerator\DomainFixture.SourceGenerator.csproj", "{3EDDAD4C-61F9-49CE-81E0-43EE962BA015}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

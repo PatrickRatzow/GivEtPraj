@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Commentor.GivEtPraj.Domain.Entities;
 using Commentor.GivEtPraj.Domain.ValueObjects;
-using FluentTests;
+using DomainFixture;
+using DomainFixture.Conventions;
 
 namespace Commentor.GivEtPraj.Domain.Tests.Unit.Configurations;
 
