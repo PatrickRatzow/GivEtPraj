@@ -24,7 +24,7 @@ watch(() => route.params.id, fetchCase);
 fetchCase(route.params.id);
 
 const lastUpdatedAt = (): string => {
-  if (currentCase.value?.updatedAt != undefined) return currentCase.value.updatedAt.toLocaleString();
+  if (currentCase.value?.updatedAt) return currentCase.value.updatedAt.toLocaleString();
 
   return currentCase.value?.createdAt.toLocaleString() as string;
 };

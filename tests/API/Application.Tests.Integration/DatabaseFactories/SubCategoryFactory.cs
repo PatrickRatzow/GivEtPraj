@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Commentor.GivEtPraj.Domain.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,11 +21,11 @@ public class SubCategoryFactory : DatabaseFactory
         set => _created = value;
     }
 
-    public SubCategory Create(Category category, string? name = null)
+    public SubCategory Create(Guid id, Category category, string? name = null)
     {
         lock (CreationLock)
         {
-            return CreateSubcategory(category, name);
+            return CreateSubcategory(id, category, name);
         }
     }
 
@@ -33,21 +34,18 @@ public class SubCategoryFactory : DatabaseFactory
         lock (CreationLock)
         {
             return Enumerable.Range(0, amount)
-                .Select(x => CreateSubcategory(category))
+                .Select(x => CreateSubcategory(Guid.NewGuid(), category))
                 .ToList();
         }
     }
 
-    private SubCategory CreateSubcategory(Category category, string? name = null)
+    private SubCategory CreateSubcategory(Guid id, Category category, string? name = null)
     {
         Created++;
 
-        name ??= $"SubCategory #{Created}";
+        string str = $"SubCategory #{Created}";
+        LocalizedString subName = LocalizedString.From(str, str);
 
-        return Add(new SubCategory
-        {
-            Name = LocalizedString.From(name, name),
-            Category = category
-        });
+        return Add(new SubCategory(id, subName, category, new List<Case>()));
     }
 }

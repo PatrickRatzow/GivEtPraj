@@ -11,14 +11,31 @@ main.fetchCategories();
 
 const searchQuery = ref("");
 const categories = computed(() =>
-  main.categories.filter(
-    (c) => searchQuery.value.length == 0 || c.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
+  main.categories
+    .filter((c) => searchQuery.value.length == 0 || c.name.toLowerCase().includes(searchQuery.value.toLowerCase()))
+    .sort((a) => (a.miscellaneous ? 1 : -1))
 );
 
 const selectCategory = (category: Category) => {
   createCase.category = category;
   createCase.subCategories = [];
+  selectionIsValid();
+};
+
+const isValid = ref(false);
+
+// TODO: Rewrite
+const selectionIsValid = () =>
+  (isValid.value =
+    (createCase.category &&
+      ((createCase.category.miscellaneous && createCase.description && createCase.description.length > 4) ||
+        !createCase.category.miscellaneous)) ||
+    false);
+
+const setDescription = (description: string) => {
+  createCase.description = description;
+
+  selectionIsValid();
 };
 </script>
 
@@ -30,7 +47,7 @@ const selectCategory = (category: Category) => {
       </ion-buttons>
       <ion-title>{{ t("create-case.category.title") }}</ion-title>
     </ion-toolbar>
-    <ion-content>
+    <ion-content class="ion-padding">
       <div class="flex flex-col justify-between h-full">
         <div>
           <ion-searchbar
@@ -47,13 +64,23 @@ const selectCategory = (category: Category) => {
                   <ion-label>{{ cat.name }}</ion-label>
                   <ion-radio slot="end" color="success" :value="cat.name"> </ion-radio>
                 </ion-item>
-
-                <sub-categories v-if="createCase.category == cat"></sub-categories>
+                <template v-if="createCase.category == cat">
+                  <sub-categories></sub-categories>
+                </template>
               </template>
+              <ion-item v-if="createCase.category?.miscellaneous">
+                <ion-textarea
+                  :placeholder="t('create-case.category.description-placeholder')"
+                  autogrow="true"
+                  maxlength="200"
+                  class="border px-2"
+                  @IonChange="setDescription($event.target.textContent)"
+                ></ion-textarea>
+              </ion-item>
             </ion-radio-group>
           </ion-list>
         </div>
-        <ion-button class="flex flex-row my-6 mx-12 float-bottom" @click="router.push('/create-praj/pictures')">
+        <ion-button :disabled="!isValid" class="flex-row float-bottom" @click="router.push('/create-praj/pictures')">
           {{ t("navigation.next") }}
         </ion-button>
       </div>

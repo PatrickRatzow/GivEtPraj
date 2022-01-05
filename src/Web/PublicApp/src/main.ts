@@ -8,8 +8,13 @@ app.use(router);
 
 /* Load all modules */
 const modules = Object.values(import.meta.globEager("./modules/*.ts")).map((i) => i.install?.({ app, router }));
-await Promise.all(modules);
+Promise.all(modules).then(async () => {
+	await router.isReady();
+	const compositions = Object.values(import.meta.globEager("./compositions/*.ts"));
 
-router.isReady().then(() => {
+	await Promise.all(compositions.map((i) => i.beforeAppMount?.({ app, router } as ModuleOptions)));
+
 	app.mount("#app");
+
+	await Promise.all(compositions.map((i) => i.afterAppMount?.({ app, router } as ModuleOptions)));
 });

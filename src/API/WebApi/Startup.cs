@@ -41,35 +41,11 @@ public class Startup
                 Title = "GivEtPraj.API",
                 Version = "v1"
             });
-            c.AddSecurityDefinition("Bearer", new()
-            {
-                Description =
-                    "JWT Authorization header using the Bearer scheme (Example: 'Bearer 12345abcdef')",
-                Name = "Authorization",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = "Bearer"
-            });
-
-            c.AddSecurityRequirement(new()
-            {
-                {
-                    new()
-                    {
-                        Reference = new()
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    Array.Empty<string>()
-                }
-            });
+            
+            c.OperationFilter<AddRequiredHeaderParameter>();
         });
 
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
-        services.AddFluentValidation();
-        services.AddValidatorsFromAssembly(typeof(CreateCaseRequest).Assembly);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -98,6 +74,7 @@ public class Startup
         app.UseRouting();
 
         app.UseLanguageService();
+        app.UseDeviceService();
 
         app.UseAuthentication();
         app.UseAuthorization();

@@ -2,7 +2,7 @@
 
 public enum Status
 {
-    Recieved,
+    Received,
     InProgress,
     Done
 }

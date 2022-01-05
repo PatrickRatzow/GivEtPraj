@@ -2,7 +2,7 @@
 
 namespace Commentor.GivEtPraj.Application.Cases.Queries;
 
-public record FindCaseQuery(int Id) : IRequest<OneOf<CaseDto, CaseNotFound>>;
+public record FindCaseQuery(Guid Id) : IRequest<OneOf<CaseDto, CaseNotFound>>;
 
 public class FindCaseQueryHandler : IRequestHandler<FindCaseQuery, OneOf<CaseDto, CaseNotFound>>
 {

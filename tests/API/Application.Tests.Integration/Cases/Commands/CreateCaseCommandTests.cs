@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Commentor.GivEtPraj.Application.Cases.Commands;
 using Commentor.GivEtPraj.Domain.Enums;
+using MediatR;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration.Cases.Commands;
 
@@ -13,6 +13,8 @@ using static Testing;
 
 public class CreateCaseCommandTests : TestBase
 {
+    private const string TestImage = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAMSURBVBhXY/D09AQAAboA3DKaDXMAAAAASUVORK5CYII=";
+    
     [Test]
     public async Task ShouldCreateCase()
     {
@@ -22,70 +24,104 @@ public class CreateCaseCommandTests : TestBase
 
         await Database.Save();
 
-        var deviceId = Guid.NewGuid();
-        var comment = "An example Comment";
-        var subCategories = subCats.Select(s => s.Name.English).ToArray();
-        var images = new List<Stream>();
+        var id = Guid.NewGuid();
+        var comment = "An example comment";
+        var subCategories = subCats.Select(s => s.Id).ToArray();
+        var images = new List<string> { TestImage };
         var longitude = 0;
         var latitude = 0;
-        var priority = Priority.Low;
-        var ipAddress = IPAddress.Parse("127.0.0.1");
 
-        var command = new CreateCaseCommand(deviceId, images, category.Name.English,
-            longitude, latitude, priority, ipAddress, "", comment, subCategories);
+        var cases = new List<CaseCreationDto>
+        {
+            new(images, category.Id, longitude, latitude, subCategories, null, comment)
+        };
+        var command = new CreateCaseCommand(id, cases);
 
         // Act
-        var result = await Send(command);
+       await Send(command);
 
         // Assert
-        result.Value.Should().BeOfType<int>();
-        var dbResult = await Find<BaseCase>(result.Value.As<int>());
-        dbResult.Should().NotBeNull();
+        var dbResult = await Search<BaseCase>(c => c.Category.Id == category.Id);
+        dbResult.Should().HaveCount(1)
+            .And.AllBeOfType<Case>();
     }
 
     [Test]
     public async Task ShouldCreateMiscellaneousCase()
     {
         // Arrange
-        var category = Database.Factory<CategoryFactory>().Create();
+        var category = Database.Factory<CategoryFactory>().Create(miscellaneous: true);
 
         await Database.Save();
 
-        var deviceId = Guid.NewGuid();
+        var id = Guid.NewGuid();
         var description = "An example Description";
-        var images = new List<Stream>();
+        var images = new List<string> { TestImage };
         var longitude = 0;
         var latitude = 0;
-        var priority = Priority.Low;
-        var ipAddress = IPAddress.Parse("127.0.0.1");
 
-        var command = new CreateCaseCommand(deviceId, images, category.Name.English,
-            longitude, latitude, priority, ipAddress, description);
+        var cases = new List<CaseCreationDto>
+        {
+            new(images, category.Id, longitude, latitude, null, description)
+        };
+        var command = new CreateCaseCommand(id, cases);
 
         // Act
         var result = await Send(command);
 
         // Assert
-        result.Value.Should().BeOfType<int>();
-        var dbResult = await Find<BaseCase>(result.Value.As<int>());
-        dbResult.Should().NotBeNull();
+        result.Value.Should().BeOfType<Unit>();
+        var dbResult = await Search<BaseCase>(c => c.Category.Id == category.Id);
+        dbResult.Should().HaveCount(1)
+            .And.AllBeOfType<MiscellaneousCase>();
+    }
+    
+    [Test]
+    public async Task ShouldNotCreateMiscellaneousCaseIfGivenCategoryIsNotMiscellaneous()
+    {
+        // Arrange
+        var category = Database.Factory<CategoryFactory>().Create(miscellaneous: false);
+
+        await Database.Save();
+
+        var id = Guid.NewGuid();
+        var description = "An example Description";
+        var images = new List<string> { TestImage };
+        var longitude = 0;
+        var latitude = 0;
+
+        var cases = new List<CaseCreationDto>
+        {
+            new(images, category.Id, longitude, latitude, null, description)
+        };
+        var command = new CreateCaseCommand(id, cases);
+
+        // Act
+        var result = await Send(command);
+
+        // Assert
+        result.Value.Should().BeOfType<InvalidCategory>();
+        var dbCount = await Count<BaseCase>();
+        dbCount.Should().Be(0);
     }
 
     [Test]
     public async Task ShouldNotCreateCaseIfCategoryDoesNotExist()
     {
         // Arrange
-        var deviceId = Guid.Empty;
-        var description = "An example description";
-        var images = new List<Stream>();
-        var categoryName = "Some category";
+        var id = Guid.NewGuid();
+        var comment = "An example comment";
+        var categoryId = Guid.NewGuid();
+        var subCategories = Array.Empty<Guid>();
+        var images = new List<string> { TestImage };
         var longitude = 0;
         var latitude = 0;
-        var priority = Priority.Low;
-        var ipAddress = IPAddress.Parse("127.0.0.1");
 
-        var command = new CreateCaseCommand(deviceId, images, categoryName, longitude, latitude, priority, ipAddress,
-            description);
+        var cases = new List<CaseCreationDto>
+        {
+            new(images, categoryId, longitude, latitude, comment: comment, subCategories: subCategories)
+        };
+        var command = new CreateCaseCommand(id, cases);
 
         // Act
         var result = await Send(command);

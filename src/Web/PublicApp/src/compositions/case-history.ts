@@ -1,39 +1,26 @@
 import { useMainStore } from "@/stores/main";
-import { Device } from "@capacitor/device";
-import axios from "@/utils/axios";
-import { useNetwork } from "@/compositions/network";
-import { Storage } from "@capacitor/storage";
+import http from "@/utils/axios";
 
 export function useCaseHistory() {
 	const main = useMainStore();
-	const network = useNetwork();
 
-	async function syncWithAPI(disableCache = false): Promise<void> {
-		if (!disableCache) {
-			const { value } = await Storage.get({ key: "case-history" });
-			if (value !== null) {
-				const cacheCases = JSON.parse(value) as Case[];
-				main.cases = cacheCases;
-
-				return;
-			}
-		}
-
-		if (network.status.value?.connected !== true) return;
-
-		const deviceId = await Device.getId();
-
-		const resp = await axios.get<Case[]>(`cases/${deviceId.uuid}`);
+	async function syncWithAPI(): Promise<void> {
+		const resp = await http.get<Case[]>("cases/mine");
 		if (resp.status != 200) return;
 
-		main.cases = resp.data;
-		await Storage.set({
-			key: "case-history",
-			value: JSON.stringify(main.cases),
+		main.cases = resp.data.map((c) => {
+			return {
+				...c,
+				// TODO: Change this, it's a hack
+				status: {
+					color: "#ffffff",
+					name: "Under behandling",
+				} as Status,
+			};
 		});
 	}
 
 	syncWithAPI();
 
-	return { cases: main.cases, syncWithAPI };
+	return { syncWithAPI };
 }

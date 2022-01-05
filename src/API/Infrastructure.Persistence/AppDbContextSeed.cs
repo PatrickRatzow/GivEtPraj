@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -14,20 +15,22 @@ public static class AppDbContextSeed
         SeedCategories(context);
         await context.SaveChangesAsync();
 
-        SeedCases(context);
+        SeedSubCategories(context);
         await context.SaveChangesAsync();
+
+        SeedCases(context);
+        await context.SaveChangesAsync();       
     }
-    
+
     private static void SeedCategories(AppDbContext context)
     {
         var hasAny = context.Categories.Any();
         if (hasAny) return;
 
-        context.Categories.Add(new()
-        {
-            Name = LocalizedString.From("Vejskade", "Road damage"),
-            Icon = "fas fa-road"
-        });
+        context.Categories.AddRange(new Category(Guid.NewGuid(), LocalizedString.From("Vejskade", "Road damage"), "fas fa-road", false, new List<BaseCase>(), new List<SubCategory>()),
+           new Category(Guid.NewGuid(), LocalizedString.From("Vejskiltning", "Road signs"), "fas fa-road", false, new List<BaseCase>(), new List<SubCategory>()),
+           new Category(Guid.NewGuid(), LocalizedString.From("Andet", "Other"), "fas fa-comment-alt", true, new List<BaseCase>(), new List<SubCategory>()),
+           new Category(Guid.NewGuid(), LocalizedString.From("Toilet", "Toilet"), "fas fa-toilet", false, new List<BaseCase>(), new List<SubCategory>()));
     }
 
     private static void SeedSubCategories(AppDbContext context)
@@ -35,13 +38,9 @@ public static class AppDbContextSeed
         var hasAny = context.SubCategories.Any();
         if (hasAny) return;
 
-        context.SubCategories.AddRange(new()
-        {
-            Name = LocalizedString.From("Toilet", "Toilet")
-        }, new()
-        {
-            Name = LocalizedString.From("Vejskade", "Road damage")
-        });
+        var category = context.Categories.First();
+        context.SubCategories.AddRange(new SubCategory(Guid.NewGuid(), LocalizedString.From("Hul", "Hole"), category, new List<Case>()),
+            new SubCategory(Guid.NewGuid(), LocalizedString.From("Manglende markering", "Missing marking"), category, new List<Case>()));
     }
 
     private static void SeedCases(AppDbContext context)
@@ -50,31 +49,35 @@ public static class AppDbContextSeed
         if (hasAny) return;
 
         var category = context.Categories.First();
-        context.Cases.AddRange(new Case
-        {
-            Comment = "Der er et stor hul i vejen på arbejde",
-            Category = category,
-            GeographicLocation = GeographicLocation.From(54, 54),
-            IpAddress = IPAddress.Parse("127.0.0.1"),
-            Priority = Priority.Low
-        }, new Case
-        {
-            Comment = "Hul vejen",
-            Category = category,
-            GeographicLocation = GeographicLocation.From(53, 53.5),
-            IpAddress = IPAddress.Parse("127.0.0.1"),
-            Priority = Priority.Low,
-            Images = new()
-            {
-                new()
-                {
-                    Id = Guid.NewGuid()
+        var subCategory = context.SubCategories.First();
+
+        context.Cases.AddRange(
+            new Case(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                category,
+                new List<CaseImage> {
+                    new CaseImage(Guid.NewGuid()),
+                    new CaseImage(Guid.NewGuid())
                 },
-                new()
-                {
-                    Id = Guid.NewGuid()
-                }
-            }
-        });
+                GeographicLocation.From(54, 54),
+                new List<CaseUpdate>(),
+                new List<SubCategory> { subCategory },
+                "Der er et stor hul i vejen på arbejde"
+            ),
+            new Case(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                category,
+                new List<CaseImage> {
+                    new CaseImage(Guid.NewGuid()),
+                    new CaseImage(Guid.NewGuid())
+                },
+                GeographicLocation.From(53, 53.5),
+                new List<CaseUpdate>(),
+                new List<SubCategory> { subCategory },
+                "Hul vejen"
+            )
+        );
     }
 }

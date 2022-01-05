@@ -6,6 +6,8 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Commentor.GivEtPraj.Application.Common.Behaviors;
+using Commentor.GivEtPraj.Application.Common.Interfaces;
+using Commentor.GivEtPraj.Infrastructure;
 using Commentor.GivEtPraj.WebApi;
 using Infrastructure.Persistence;
 using MediatR;
@@ -17,12 +19,24 @@ using Respawn;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration;
 
+public class TestDeviceService : IDeviceService
+{
+    private Guid? _deviceIdentifier;
+
+    public Guid DeviceIdentifier
+    {
+        get => _deviceIdentifier ?? Guid.NewGuid(); 
+        set => _deviceIdentifier = value;
+    }
+}
+
 [SetUpFixture]
 public class Testing
 {
     private static IConfigurationRoot _configuration;
     private static IServiceScopeFactory _scopeFactory;
     private static Checkpoint _checkpoint;
+    private static IDeviceService? _deviceService;
 
     [OneTimeSetUp]
     public void RunBeforeAnyTests()
@@ -52,6 +66,10 @@ public class Testing
         services.Remove(reCaptchaBehavior);
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TestReCaptchaBehavior<,>));
 
+        var deviceService = services.First(sp => sp.ImplementationType == typeof(DeviceService));
+        services.Remove(deviceService);
+        services.AddSingleton<IDeviceService>(_ => _deviceService ??= new TestDeviceService());
+        
         _scopeFactory = services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
 
         _checkpoint = new()
@@ -106,6 +124,16 @@ public class Testing
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         return await context.FindAsync<TEntity>(keyValues);
+    }
+
+    public static Guid SetRandomDeviceId()
+    {
+        var guid = Guid.NewGuid();
+        _deviceService ??= new TestDeviceService();
+        
+        _deviceService.DeviceIdentifier = guid;
+
+        return guid;
     }
 
     public static DatabaseSetup SetupDatabase()

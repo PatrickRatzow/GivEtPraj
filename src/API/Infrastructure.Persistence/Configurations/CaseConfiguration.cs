@@ -4,23 +4,26 @@ public class BaseCaseConfiguration : IEntityTypeConfiguration<BaseCase>
 {
     public void Configure(EntityTypeBuilder<BaseCase> builder)
     {
-        builder.HasIndex(c => c.DeviceId);
-
         builder.HasMany(c => c.Images)
-            .WithOne(cp => cp.Case)
-            .HasForeignKey(cp => cp.CaseId);
+            .WithOne();
+
+        builder.HasOne(c => c.Category)
+            .WithMany(c => c.Cases);
 
         builder.Property(c => c.DeviceId)
             .IsRequired();
 
-        builder.Property(c => c.Priority);
-
-        builder.Property(c => c.IpAddress);
         builder.OwnsOne(c => c.GeographicLocation);
+
+        builder.Property(c => c.CreatedAt)
+            .ValueGeneratedOnAdd();
+
+        builder.Property(c => c.UpdatedAt)
+            .ValueGeneratedOnUpdate();
 
         builder.HasMany(c => c.CaseUpdates)
             .WithOne(cu => cu.BaseCase)
-            .HasForeignKey(cu => cu.CaseId);
+            .HasForeignKey(cu => cu.Id);
     }
 }
 

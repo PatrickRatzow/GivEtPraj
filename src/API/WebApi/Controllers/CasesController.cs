@@ -7,47 +7,26 @@ namespace Commentor.GivEtPraj.WebApi.Controllers;
 [Route("v1/cases")]
 public class CasesController : ControllerBase
 {
-    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
-    public CasesController(IMediator mediator, IMapper mapper)
+    public CasesController(IMediator mediator)
     {
         _mediator = mediator;
-        _mapper = mapper;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCase([FromBody] CreateCaseRequest request,
+    public async Task<IActionResult> CreateCase([FromBody] CreateCasesRequest request,
         CancellationToken cancellationToken)
     {
-        var command = _mapper.Map<CreateCaseRequest, CreateCaseCommand>(request);
-        var ipAddress = HttpContext.Connection.RemoteIpAddress;
-        if (ipAddress is null) throw new("IP Address is null??");
-
-        command.IpAddress = ipAddress;
-
+        var id = Guid.NewGuid();
+        var command = new CreateCaseCommand(id, request.Cases);
         var result = await _mediator.Send(command, cancellationToken);
 
-        return result.MatchResponse(
-            caseId => CreatedAtAction(nameof(FindCase),
-                new
-                {
-                    Id = caseId
-                }, null)
-        );
+        return result.MatchResponse();
     }
 
-    [HttpGet]
-    public async Task<IActionResult> FindAllCases(CancellationToken cancellationToken)
-    {
-        var query = new FindAllCasesQuery();
-        var result = await _mediator.Send(query, cancellationToken);
-
-        return Ok(result);
-    }
-
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> FindCase(int id, CancellationToken cancellationToken)
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> FindCase(Guid id, CancellationToken cancellationToken)
     {
         var query = new FindCaseQuery(id);
         var result = await _mediator.Send(query, cancellationToken);
@@ -55,10 +34,11 @@ public class CasesController : ControllerBase
         return result.MatchResponse();
     }
 
-    [HttpGet("{deviceId:Guid}")]
-    public async Task<IActionResult> FindCasesByDeviceId(Guid deviceId, CancellationToken cancellationToken)
+    // The device ID is handled via middleware, it does not need to be included as a parameter here
+    [HttpGet("mine")]
+    public async Task<IActionResult> FindCasesByDeviceId(CancellationToken cancellationToken)
     {
-        var query = new FindCasesByDeviceIdQuery(deviceId);
+        var query = new FindCasesByCurrentDeviceIdQuery();
         var result = await _mediator.Send(query, cancellationToken);
 
         return result.MatchResponse();

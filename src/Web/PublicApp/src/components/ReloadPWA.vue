@@ -1,3 +1,14 @@
+<script setup lang="ts">
+import { useRegisterSW } from "virtual:pwa-register/vue";
+
+const { updateServiceWorker, offlineReady, needRefresh } = useRegisterSW();
+
+const close = async () => {
+  offlineReady.value = false;
+  needRefresh.value = false;
+};
+</script>
+
 <template>
   <div
     v-if="offlineReady || needRefresh"
@@ -56,12 +67,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useRegisterSW } from "virtual:pwa-register/vue";
-const { updateServiceWorker, offlineReady, needRefresh } = useRegisterSW();
-const close = async () => {
-  offlineReady.value = false;
-  needRefresh.value = false;
-};
-</script>

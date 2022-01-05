@@ -4,17 +4,15 @@ namespace Infrastructure.Persistence;
 
 public class AppDbContext : DbContext, IAppDbContext
 {
-
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
 
-    public DbSet<BaseCase> Cases { get; set; }
-    public DbSet<CaseImage> Images { get; set; }
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<SubCategory> SubCategories { get; set; }
-    public DbSet<Employee> Employees { get; set; }
-    public DbSet<QueueKey> QueueKeys { get; set; }
+    public DbSet<BaseCase> Cases { get; set; } = null!;
+    public DbSet<CaseImage> Images { get; set; } = null!;
+    public DbSet<Category> Categories { get; set; } = null!;
+    public DbSet<SubCategory> SubCategories { get; set; } = null!;
+    public DbSet<ReCaptchaAuthorization> PreAuthorizations { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -1,6 +1,7 @@
 tabs:
   create-case: "Create Praj"
   my-cases: "My Prajs"
+  settings: "Settings"
 create-case:
   map:
     title: "Choose Location"
@@ -21,8 +22,11 @@ create-case:
   category:
     title: "Choose Category"
     search-placeholder: "Search"
+    description-placeholder: "Type your concern here"
   pictures:
     title: "Choose Pictures"
+    modal:
+      title: "Camera"
   overview:
     title: "Overview"
     category: "Category"
@@ -31,7 +35,20 @@ create-case:
     comment:
       title: "Comment"
       placeholder: "Type here"
-    finish: "Send"
+    description:
+      title: "Description"
+      placeholder: "Type your concern here"
+    send: 
+      button:
+        send: "Send"
+        sending: "Sending"
+      success: "Your Praj has been sent"
+      offline-popup: 
+        header: "You are offline"
+        message: |
+          Your device is offline, therefore the case has been saved as a draft.
+          Next time you have an internet connection, the case will be sent. 
+        button: "Ok"
 navigation:
   back: "Back"
   delete: "Delete"
@@ -40,8 +57,30 @@ not-found:
   text: "Ain't nothing here"
 my-cases:
   title: "Your Prajs"
+  no-cases: "You haven't made any Prajs"
+  cached:
+    title: "Draft Prajs"
+    delete-alert: 
+      header: "Are you sure?"
+      delete: "Delete"
+      cancel: "Cancel"
+  not-cached:
+    title: "Sent Prajs"
+  unable-to-fetch-closest-city-name: "Unable to fetch closest city name"
 case:
   title: "Praj"
   last-updated-at: "Last updated {time}"
 settings:
   title: "Settings"
+  general:
+    header: 'General Settings'
+    english-language: 'English'
+    dark-mode: 'Dark mode'
+  misc:
+    header: 'About'
+    view-tutorial: 'View tutorial'
+    view-privacy-policy: 'Privacy policy'
+privacy-policy:
+  header: "Privacy Policy"
+  content: "Legal team jargon"
+  

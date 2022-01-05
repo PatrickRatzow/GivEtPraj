@@ -1,5 +1,83 @@
-title-bar:
+tabs:
+  create-case: "Opret Praj"
+  my-cases: "Mine Prajs"
+  settings: "Indstillinger"
+create-case:
+  map:
+    title: "Vælg lokation"
+    layers:
+      street: "Veje"
+      satellite: "Satellit"
+    confirm-button:
+      valid: "Accepter Lokation"
+      invalid: "Vælg Lokation"
+    confirm-button-offline: 
+      valid: "Send nuværende lokation"
+    internet-error:
+      no-internet: "Intet internet"
+      internet-msg: "Tag et billede af din Praj sag, og upload den på et senere tidspunkt"
+      no-internet-explanation: |
+        Der er ingen internet forbindelse, så kortet kan ikke indlæses. Du kan indsende din nuværende position.
+        Vær sikker på at din nuværende position er det samme sted som fejlen du rapportere.
+  category:
+    title: "Vælg Kategori"
+    search-placeholder: "Søg"
+    description-placeholder: "Indtast hvad Prajet omhandler"
+  pictures:
+    title: "Vælg Billeder"
+    modal:
+      title: "Kamera"
+  overview:
+    title: "Overblik"
+    category: "Kategori"
+    sub-categories: "Underkategorier"
+    pictures: "Billeder"
+    comment:
+      title: "Kommentar"
+      placeholder: "Skriv Her"
+    description:
+      title: "Beskrivelse"
+      placeholder: "Indtast hvad Prajet omhandler"
+    send: 
+      button:
+        send: "Send"
+        sending: "Sender"
+      success: "Dit Praj er blevet indsendt"
+      offline-popup: 
+        header: "Du er offline"
+        message: |
+          Din enhed er offline, og derfor er din sag blevet gemt.
+          Næste gang du har internet forbindelse, vil din sag blive indsendt
+        button: "Ok"
+navigation:
   back: "Tilbage"
   delete: "Slet"
-error-message:
-  no-internet: ""
+  next: "Næste"
+not-found:
+  text: "Intet at se her"
+my-cases:
+  title: "Dine Prajs"
+  no-cases: "Du har ikke lavet nogle praj"
+  cached:
+    title: "Klader"
+    delete-alert: 
+      header: "Er du sikker?"
+      delete: "Slet"
+      cancel: "Fortryd"
+  unable-to-fetch-closest-city-name: "Kunne ikke finde nærmeste by"
+case:
+  title: "Praj"
+  last-updated-at: "Senest opdateret {time}"
+settings:
+  title: "Indstillinger"
+  general:
+    header: 'Generelle indstillinger'
+    english-language: 'Engelsk'
+    dark-mode: 'Mørkt tema'
+  misc:
+    header: 'Om'
+    view-tutorial: 'Vis tutorial'
+    view-privacy-policy: 'Privat politik'
+privacy-policy:
+  header: "Privat Politik"
+  content: "Advokat snak"

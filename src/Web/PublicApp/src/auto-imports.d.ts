@@ -39,6 +39,7 @@ declare global {
   const unref: typeof import('vue')['unref']
   const useAttrs: typeof import('vue')['useAttrs']
   const useCssModule: typeof import('vue')['useCssModule']
+  const useHead: typeof import('@vueuse/head')['useHead']
   const useI18n: typeof import('vue-i18n')['useI18n']
   const useRoute: typeof import('vue-router')['useRoute']
   const useRouter: typeof import('vue-router')['useRouter']

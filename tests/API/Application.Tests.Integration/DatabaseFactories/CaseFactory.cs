@@ -23,12 +23,12 @@ public class CaseFactory : DatabaseFactory
         set => _created = value;
     }
 
-    public BaseCase Create(Category category, string? description = null, Priority? priority = null,
-        IPAddress? ipAddress = null, GeographicLocation? location = null, Guid? deviceId = null)
+    public BaseCase Create(Category category, Guid? id = null, string? description = null, GeographicLocation? location = null, 
+        Guid? deviceId = null)
     {
         lock (CreationLock)
         {
-            return CreateCase(category, description, priority, ipAddress, location, deviceId);
+            return CreateCase(category, id, description, location, deviceId);
         }
     }
 
@@ -42,25 +42,27 @@ public class CaseFactory : DatabaseFactory
         }
     }
 
-    private BaseCase CreateCase(Category category, string? description = null, Priority? priority = null,
-        IPAddress? ipAddress = null, GeographicLocation? location = null, Guid? deviceId = null)
+    private BaseCase CreateCase(Category category, Guid? id = null, string? description = null, GeographicLocation? location = null, 
+        Guid? deviceId = null)
     {
         Created++;
 
+        id ??= Guid.NewGuid();
         description ??= $"Description #{Created}";
-        ipAddress ??= IPAddress.Parse("127.0.0.1");
-        priority ??= Priority.Low;
         location ??= GeographicLocation.From(0, 0);
         deviceId ??= Guid.NewGuid();
 
-        return Add(new Case
-        {
-            Comment = description,
-            Category = category,
-            Priority = (Priority)priority,
-            IpAddress = ipAddress,
-            GeographicLocation = location,
-            DeviceId = deviceId.Value
-        });
+        return Add(
+            new Case(
+                id.Value, 
+                deviceId.Value, 
+                category, 
+                new() { new(Guid.NewGuid()) }, 
+                location, 
+                new(), 
+                new(),
+                description
+            )
+        );
     }
 }
