@@ -5,7 +5,7 @@ import { Device } from "@capacitor/device";
 import { useMainStore } from "@/stores/main";
 
 const network = useNetwork();
-const baseURL = "https://givetprajdemo.azurewebsites.net/v1/";
+const baseURL = "https://localhost:5001/v1/";
 
 interface HttpResponse<T> {
 	data: T;

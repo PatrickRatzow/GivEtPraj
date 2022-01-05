@@ -7,8 +7,6 @@ declare module 'vue' {
     BackButton: typeof import('./components/BackButton.vue')['default']
     CameraModal: typeof import('./components/CameraModal.vue')['default']
     CategoryRow: typeof import('./components/CategoryRow.vue')['default']
-    Comment: typeof import('./components/Comment.vue')['default']
-    HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     IonApp: typeof import('@ionic/vue')['IonApp']
     IonBackButton: typeof import('@ionic/vue')['IonBackButton']
     IonButton: typeof import('@ionic/vue')['IonButton']
@@ -17,7 +15,6 @@ declare module 'vue' {
     IonContent: typeof import('@ionic/vue')['IonContent']
     IonHeader: typeof import('@ionic/vue')['IonHeader']
     IonIcon: typeof import('@ionic/vue')['IonIcon']
-    IonImg: typeof import('@ionic/vue')['IonImg']
     IonItem: typeof import('@ionic/vue')['IonItem']
     IonLabel: typeof import('@ionic/vue')['IonLabel']
     IonList: typeof import('@ionic/vue')['IonList']
@@ -34,16 +31,10 @@ declare module 'vue' {
     IonTabs: typeof import('@ionic/vue')['IonTabs']
     IonTextarea: typeof import('@ionic/vue')['IonTextarea']
     IonTitle: typeof import('@ionic/vue')['IonTitle']
-    IonToggle: typeof import('@ionic/vue')['IonToggle']
     IonToolbar: typeof import('@ionic/vue')['IonToolbar']
-    ItemRow: typeof import('./components/ItemRow.vue')['default']
-    Offline: typeof import('./components/Offline.vue')['default']
-    Pictures: typeof import('./components/Pictures.vue')['default']
     ReloadPWA: typeof import('./components/ReloadPWA.vue')['default']
     StatusIndicator: typeof import('./components/StatusIndicator.vue')['default']
     SubCategories: typeof import('./components/SubCategories.vue')['default']
-    Tabs: typeof import('./components/Tabs.vue')['default']
-    TextField: typeof import('./components/TextField.vue')['default']
   }
 }
 
