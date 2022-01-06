@@ -16,7 +16,7 @@ public class FindCasesByCurrentDeviceIdQueryTests : TestBase
         // Arrange
         var deviceId = SetRandomDeviceId();
 
-        var category = Database.Factory<CategoryFactory>().Create(Guid.NewGuid());
+        var category = Database.Factory<CategoryFactory>().Create();
         var casesWithDeviceId = Database.Factory<CaseFactory>().CreateMany(category, 2, deviceId);
         var cases = Database.Factory<CaseFactory>().CreateMany(category, 10);
 
@@ -40,8 +40,8 @@ public class FindCasesByCurrentDeviceIdQueryTests : TestBase
         // Arrange
         SetRandomDeviceId();
 
-        var category = Database.Factory<CategoryFactory>().Create(Guid.NewGuid());
-        Database.Factory<CaseFactory>().CreateMany(category, 10, Guid.NewGuid());
+        var category = Database.Factory<CategoryFactory>().Create();
+        Database.Factory<CaseFactory>().CreateMany(category, 10);
 
         await Database.Save();
 
