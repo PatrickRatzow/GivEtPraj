@@ -19,7 +19,7 @@ using Respawn;
 
 namespace Commentor.GivEtPraj.Application.Tests.Integration;
 
-public class TestDerviceService : IDeviceService
+public class TestDeviceService : IDeviceService
 {
     private Guid? _deviceIdentifier;
 
@@ -36,6 +36,7 @@ public class Testing
     private static IConfigurationRoot _configuration;
     private static IServiceScopeFactory _scopeFactory;
     private static Checkpoint _checkpoint;
+    private static IDeviceService? _deviceService;
 
     [OneTimeSetUp]
     public void RunBeforeAnyTests()
@@ -67,7 +68,7 @@ public class Testing
 
         var deviceService = services.First(sp => sp.ImplementationType == typeof(DeviceService));
         services.Remove(deviceService);
-        services.AddScoped<IDeviceService, TestDerviceService>();
+        services.AddSingleton<IDeviceService>(_ => _deviceService ??= new TestDeviceService());
         
         _scopeFactory = services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
 
@@ -123,6 +124,16 @@ public class Testing
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         return await context.FindAsync<TEntity>(keyValues);
+    }
+
+    public static Guid SetRandomDeviceId()
+    {
+        var guid = Guid.NewGuid();
+        _deviceService ??= new TestDeviceService();
+        
+        _deviceService.DeviceIdentifier = guid;
+
+        return guid;
     }
 
     public static DatabaseSetup SetupDatabase()

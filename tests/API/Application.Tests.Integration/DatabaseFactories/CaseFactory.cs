@@ -23,12 +23,12 @@ public class CaseFactory : DatabaseFactory
         set => _created = value;
     }
 
-    public BaseCase Create(Category category, string? description = null, GeographicLocation? location = null, 
+    public BaseCase Create(Category category, Guid? id = null, string? description = null, GeographicLocation? location = null, 
         Guid? deviceId = null)
     {
         lock (CreationLock)
         {
-            return CreateCase(category, description, location, deviceId);
+            return CreateCase(category, id, description, location, deviceId);
         }
     }
 
@@ -42,21 +42,27 @@ public class CaseFactory : DatabaseFactory
         }
     }
 
-    private BaseCase CreateCase(Category category, string? description = null, GeographicLocation? location = null, 
+    private BaseCase CreateCase(Category category, Guid? id = null, string? description = null, GeographicLocation? location = null, 
         Guid? deviceId = null)
     {
         Created++;
 
+        id ??= Guid.NewGuid();
         description ??= $"Description #{Created}";
         location ??= GeographicLocation.From(0, 0);
         deviceId ??= Guid.NewGuid();
 
-        return Add(new Case
-        {
-            Comment = description,
-            Category = category,
-            GeographicLocation = location,
-            DeviceId = deviceId.Value
-        });
+        return Add(
+            new Case(
+                id.Value, 
+                deviceId.Value, 
+                category, 
+                new() { new(Guid.NewGuid()) }, 
+                location, 
+                new(), 
+                new(),
+                description
+            )
+        );
     }
 }

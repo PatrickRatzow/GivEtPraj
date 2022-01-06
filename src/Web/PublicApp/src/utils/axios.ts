@@ -1,10 +1,10 @@
-import { useLocale } from "@/compositions/locale";
 import { Storage } from "@capacitor/storage";
 import axios, { AxiosRequestConfig } from "axios";
 import { useNetwork } from "@/compositions/network";
+import { Device } from "@capacitor/device";
+import { useMainStore } from "@/stores/main";
 
 const network = useNetwork();
-const locale = useLocale();
 const baseURL = "https://localhost:5001/v1/";
 
 interface HttpResponse<T> {
@@ -18,10 +18,14 @@ class HttpClient {
 
 	constructor() {
 		this.conn.interceptors.request.use(async (config) => {
-			const languageCode = locale.language.value ?? "en";
+			const main = useMainStore();
+
+			const languageCode = main.language;
+			const deviceId = await Device.getId();
 
 			config.headers ??= {};
 			config.headers["X-Language"] = languageCode;
+			config.headers["X-DeviceId"] = deviceId.uuid;
 
 			return config;
 		});
@@ -47,8 +51,12 @@ class HttpClient {
 		return httpResponse;
 	}
 
-	public async post<T = unknown>(url: string, config?: AxiosRequestConfig<T>): Promise<HttpResponse<T>> {
-		const response = await axios.post<T>(url, config);
+	public async post<T = unknown>(
+		url: string,
+		data?: unknown,
+		config?: AxiosRequestConfig<T>
+	): Promise<HttpResponse<T>> {
+		const response = await this.conn.post<T>(url, data, config);
 		const httpResponse: HttpResponse<T> = {
 			data: response.data,
 			status: response.status,
@@ -56,6 +64,10 @@ class HttpClient {
 		};
 
 		return httpResponse;
+	}
+
+	public isAxiosError(err: unknown): boolean {
+		return axios.isAxiosError(err);
 	}
 
 	private async saveResponseToCache<T, D>(url: string, httpResponse: HttpResponse<T>, config?: AxiosRequestConfig<D>) {

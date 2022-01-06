@@ -8,10 +8,7 @@ internal class CaseUpdateConfiguration : IEntityTypeConfiguration<CaseUpdate>
         builder.Property(c => c.CreatedAt)
             .IsRequired();
 
-        builder.Property(c => c.CurrentStatus);
-
-        builder.HasOne(c => c.Employee)
-            .WithMany();
+        builder.Property(c => c.Status);
 
         builder.Property(c => c.SendToReporter);
 

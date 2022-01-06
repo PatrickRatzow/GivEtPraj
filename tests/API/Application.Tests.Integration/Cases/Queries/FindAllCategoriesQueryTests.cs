@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Commentor.GivEtPraj.Application.Categories.Queries;
 
@@ -22,8 +24,9 @@ public class FindAllCategoriesQueryTests : TestBase
         var result = await Send(query);
 
         // Assert
-        result.Should().AllBeOfType<CategoryDto>();
-        result.Should().HaveCount(categories.Count);
+        var value = result.Value.As<IEnumerable<CategoryDto>>();
+        value.Should().AllBeOfType<CategoryDto>()
+            .And.HaveCount(categories.Count);
     }
 
     [Test]
@@ -36,14 +39,15 @@ public class FindAllCategoriesQueryTests : TestBase
         var result = await Send(query);
 
         // Assert
-        result.Should().BeEmpty();
+        var value = result.Value.As<IEnumerable<CategoryDto>>();
+        value.Should().BeEmpty();
     }
 
     [Test]
     public async Task ShouldFetchAllSubCategoriesForCategory()
     {
         // Arrange
-        var category = Database.Factory<CategoryFactory>().Create();
+        var category = Database.Factory<CategoryFactory>().Create(Guid.NewGuid());
         var subCategories = Database.Factory<SubCategoryFactory>().CreateMany(category, 4);
 
         await Database.Save();
@@ -54,6 +58,7 @@ public class FindAllCategoriesQueryTests : TestBase
         var result = await Send(query);
 
         // Assert
-        result.First().SubCategories.Should().HaveCount(subCategories.Count);
+        var value = result.Value.As<IEnumerable<CategoryDto>>();
+        value.First().SubCategories.Should().HaveCount(subCategories.Count);
     }
 }

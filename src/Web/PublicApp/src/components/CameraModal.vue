@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useCreateCaseStore } from "@/stores/create-case";
 import { useImages } from "@/compositions/images";
 
 defineProps<{ index: number }>();
+
 const emits = defineEmits(["pictureTaken"]);
 const images = useImages();
 const video = ref<HTMLVideoElement | null>(null);
@@ -49,6 +49,7 @@ const takeImg = (index: number) => {
 
 function switchCamera() {
   video.value?.pause();
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   video.value!.srcObject = null;
   isUsingEnviromentCamera = !isUsingEnviromentCamera;
   startCamera();
@@ -59,20 +60,20 @@ async function accessFileSystem() {
 }
 
 const fileChosen = (index: number) => {
-  var file = input.value!.files![0];
-  if (file != null) {
-    var reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      images.addPicture(index - 1, {
-        base64String: reader.result?.toString().replaceAll("data:image/jpeg;base64,", ""),
-        format: "jpeg",
-        saved: true,
-      });
-    };
+  var file = input.value?.files?.[0];
+  if (file == null) return;
 
-    emits("pictureTaken");
-  }
+  var reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => {
+    images.addPicture(index - 1, {
+      base64String: reader.result?.toString().replaceAll("data:image/jpeg;base64,", ""),
+      format: "jpeg",
+      saved: true,
+    });
+  };
+
+  emits("pictureTaken");
 };
 </script>
 

@@ -13,6 +13,8 @@ using static Testing;
 
 public class CreateCaseCommandTests : TestBase
 {
+    private const string TestImage = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAMSURBVBhXY/D09AQAAboA3DKaDXMAAAAASUVORK5CYII=";
+    
     [Test]
     public async Task ShouldCreateCase()
     {
@@ -22,23 +24,24 @@ public class CreateCaseCommandTests : TestBase
 
         await Database.Save();
 
-        var comment = "An example Comment";
+        var id = Guid.NewGuid();
+        var comment = "An example comment";
         var subCategories = subCats.Select(s => s.Id).ToArray();
-        var images = new List<string>();
+        var images = new List<string> { TestImage };
         var longitude = 0;
         var latitude = 0;
 
         var cases = new List<CaseCreationDto>
         {
-            new(images, category.Id, longitude, latitude, comment: comment, subCategories: subCategories)
+            new(images, category.Id, longitude, latitude, subCategories, null, comment)
         };
-        var command = new CreateCaseCommand(cases);
+        var command = new CreateCaseCommand(id, cases);
 
         // Act
        await Send(command);
 
         // Assert
-        var dbResult = await Search<BaseCase>(c => c.CategoryId == category.Id);
+        var dbResult = await Search<BaseCase>(c => c.Category.Id == category.Id);
         dbResult.Should().HaveCount(1)
             .And.AllBeOfType<Case>();
     }
@@ -51,23 +54,24 @@ public class CreateCaseCommandTests : TestBase
 
         await Database.Save();
 
+        var id = Guid.NewGuid();
         var description = "An example Description";
-        var images = new List<string>();
+        var images = new List<string> { TestImage };
         var longitude = 0;
         var latitude = 0;
 
         var cases = new List<CaseCreationDto>
         {
-            new(images, category.Id, longitude, latitude, description)
+            new(images, category.Id, longitude, latitude, null, description)
         };
-        var command = new CreateCaseCommand(cases);
+        var command = new CreateCaseCommand(id, cases);
 
         // Act
         var result = await Send(command);
 
         // Assert
         result.Value.Should().BeOfType<Unit>();
-        var dbResult = await Search<BaseCase>(c => c.CategoryId == category.Id);
+        var dbResult = await Search<BaseCase>(c => c.Category.Id == category.Id);
         dbResult.Should().HaveCount(1)
             .And.AllBeOfType<MiscellaneousCase>();
     }
@@ -80,16 +84,17 @@ public class CreateCaseCommandTests : TestBase
 
         await Database.Save();
 
+        var id = Guid.NewGuid();
         var description = "An example Description";
-        var images = new List<string>();
+        var images = new List<string> { TestImage };
         var longitude = 0;
         var latitude = 0;
 
         var cases = new List<CaseCreationDto>
         {
-            new(images, category.Id, longitude, latitude, description)
+            new(images, category.Id, longitude, latitude, null, description)
         };
-        var command = new CreateCaseCommand(cases);
+        var command = new CreateCaseCommand(id, cases);
 
         // Act
         var result = await Send(command);
@@ -104,10 +109,11 @@ public class CreateCaseCommandTests : TestBase
     public async Task ShouldNotCreateCaseIfCategoryDoesNotExist()
     {
         // Arrange
+        var id = Guid.NewGuid();
         var comment = "An example comment";
-        var categoryId = int.MaxValue;
-        var subCategories = Array.Empty<int>();
-        var images = new List<string>();
+        var categoryId = Guid.NewGuid();
+        var subCategories = Array.Empty<Guid>();
+        var images = new List<string> { TestImage };
         var longitude = 0;
         var latitude = 0;
 
@@ -115,7 +121,7 @@ public class CreateCaseCommandTests : TestBase
         {
             new(images, categoryId, longitude, latitude, comment: comment, subCategories: subCategories)
         };
-        var command = new CreateCaseCommand(cases);
+        var command = new CreateCaseCommand(id, cases);
 
         // Act
         var result = await Send(command);

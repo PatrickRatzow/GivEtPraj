@@ -25,6 +25,8 @@ create-case:
     description-placeholder: "Type your concern here"
   pictures:
     title: "Choose Pictures"
+    modal:
+      title: "Camera"
   overview:
     title: "Overview"
     category: "Category"
@@ -44,7 +46,7 @@ create-case:
       offline-popup: 
         header: "You are offline"
         message: |
-          Your device is offline, therefore the case has been saved.
+          Your device is offline, therefore the case has been saved as a draft.
           Next time you have an internet connection, the case will be sent. 
         button: "Ok"
 navigation:
@@ -55,14 +57,16 @@ not-found:
   text: "Ain't nothing here"
 my-cases:
   title: "Your Prajs"
+  no-cases: "You haven't made any Prajs"
   cached:
-    title: "Cached cases"
+    title: "Draft Prajs"
     delete-alert: 
       header: "Are you sure?"
       delete: "Delete"
       cancel: "Cancel"
+  not-cached:
+    title: "Sent Prajs"
   unable-to-fetch-closest-city-name: "Unable to fetch closest city name"
-
 case:
   title: "Praj"
   last-updated-at: "Last updated {time}"
@@ -78,4 +82,5 @@ settings:
     view-privacy-policy: 'Privacy policy'
 privacy-policy:
   header: "Privacy Policy"
-  content: "legal type here"
+  content: "Legal team jargon"
+  

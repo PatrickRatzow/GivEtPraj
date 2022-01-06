@@ -19,6 +19,6 @@ public class CategoriesController : ControllerBase
         var query = new FindAllCategoriesQuery();
         var result = await _mediator.Send(query, cancellationToken);
 
-        return Ok(result);
+        return result.MatchResponse();
     }
 }

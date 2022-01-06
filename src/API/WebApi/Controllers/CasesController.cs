@@ -15,25 +15,18 @@ public class CasesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCase([FromBody] CreateCaseCommand command,
+    public async Task<IActionResult> CreateCase([FromBody] CreateCasesRequest request,
         CancellationToken cancellationToken)
     {
+        var id = Guid.NewGuid();
+        var command = new CreateCaseCommand(id, request.Cases);
         var result = await _mediator.Send(command, cancellationToken);
 
         return result.MatchResponse();
     }
 
-    [HttpGet]
-    public async Task<IActionResult> FindAllCases(CancellationToken cancellationToken)
-    {
-        var query = new FindAllCasesQuery();
-        var result = await _mediator.Send(query, cancellationToken);
-
-        return Ok(result);
-    }
-
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> FindCase(int id, CancellationToken cancellationToken)
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> FindCase(Guid id, CancellationToken cancellationToken)
     {
         var query = new FindCaseQuery(id);
         var result = await _mediator.Send(query, cancellationToken);
@@ -41,10 +34,11 @@ public class CasesController : ControllerBase
         return result.MatchResponse();
     }
 
-    [HttpGet("{deviceId:Guid}")]
-    public async Task<IActionResult> FindCasesByDeviceId(Guid deviceId, CancellationToken cancellationToken)
+    // The device ID is handled via middleware, it does not need to be included as a parameter here
+    [HttpGet("mine")]
+    public async Task<IActionResult> FindCasesByDeviceId(CancellationToken cancellationToken)
     {
-        var query = new FindCasesByDeviceIdQuery(deviceId);
+        var query = new FindCasesByCurrentDeviceIdQuery();
         var result = await _mediator.Send(query, cancellationToken);
 
         return result.MatchResponse();

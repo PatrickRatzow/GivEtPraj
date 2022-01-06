@@ -1,31 +1,34 @@
 <script setup lang="ts">
 import { create, fileTrayFull, settings } from "ionicons/icons";
-import { useQueueKeys } from "@/compositions/queue-keys";
-import { useMainStore } from "@/stores/main";
+import { useAuth } from "@/compositions/auth";
 import { useTutorial } from "@/compositions/tutorial";
+import { useThemes } from "@/compositions/themes";
+import { useMainStore } from "./stores/main";
 
 const main = useMainStore();
+const themes = useThemes();
 const tutorial = useTutorial();
 const { t } = useI18n();
-const { hasKey, createKey } = useQueueKeys();
+const { authorize } = useAuth();
 
 onBeforeMount(async () => {
   await tutorial.loadCache();
 });
 
 onMounted(() => {
-  setTimeout(createKey, 10000);
+  setTimeout(authorize, 10000);
 });
 </script>
 
 <template>
-  <main :class="{ dark: main.activeTheme }">
-    <div class="hidden absolute w-full h-screen md:flex flex-col justify-between">
-      <div class="toolbar"></div>
-      <div class="bg-container"></div>
-      <div class="tab-bar"></div>
+  <main :class="{ dark: themes.activeTheme.value }">
+    <div class="hidden absolute w-screen h-screen md:flex flex-col justify-between">
+      <div class="w-screen toolbar z-10"></div>
+      <div class="w-screen bg-cover z-0"></div>
+      <div class="absolute h-full w-[774px] bg-cover-border left-1/2 transform -translate-x-1/2 z-20"></div>
+      <div class="w-screen tab-bar z-10"></div>
     </div>
-    <ion-app class="max-w-screen-md ml-[50%] w-full transform -translate-x-1/2">
+    <ion-app class="max-w-screen-md ml-[50%] w-full transform -translate-x-1/2 z-20">
       <ion-page>
         <ion-content v-if="!main.hasSeenTutorial">
           <ion-button @click="tutorial.setTutorialSeen(true)">skip tutorial</ion-button>
@@ -52,6 +55,7 @@ onMounted(() => {
         </ion-tabs>
       </ion-page>
     </ion-app>
+    <ReloadPWA />
   </main>
 </template>
 
@@ -68,6 +72,7 @@ onMounted(() => {
 main {
   background: #fff;
   min-height: 100vh;
+  min-width: 100vw;
 }
 
 main.dark {
@@ -84,35 +89,38 @@ main.dark {
 </style>
 
 <style scoped>
-:root {
-  --toolbar-height: 56px;
-  --toolbar-background: var(--ion-toolbar-background, #fff);
-  --tab-bar: 56px;
-  --tab-bar-background: var(--ion-tab-bar-background, var(--ion-background-color, #fff));
-}
 .ios main .toolbar {
   --toolbar-height: 44px;
-  --toolbar-background: var(--ion-toolbar-background, var(--ion-color-step-50, #f7f7f7));
 }
 .ios main .tab-bar {
   --tab-bar: 50px;
-  --tab-bar-background: var(--ion-tab-bar-background, var(--ion-color-step-50, #f7f7f7));
 }
 
 .toolbar {
-  min-height: var(--toolbar-height);
-  background: var(--toolbar-background);
+  min-height: var(--toolbar-height, 56px);
+  background: var(--ion-toolbar-background, var(--ion-color-step-50, #f7f7f7));
 }
 
 .tab-bar {
-  min-height: var(--tab-bar);
-  background: var(--tab-bar-background);
+  min-height: var(--tab-bar, 56px);
+  background: var(--ion-tab-bar-background, var(--ion-color-step-50, #f7f7f7));
 }
 
-.bg-container {
+html.md main:not(.dark) .toolbar,
+html.md main:not(.dark) .tab-bar {
+  background: white;
+}
+
+.bg-cover {
   height: 100%;
-  background: red;
-  margin-left: 50%;
-  @apply max-w-screen-md transform -translate-x-1/2;
+  background: var(--ion-background-color, #fff);
+}
+
+.bg-cover-border {
+  background: linear-gradient(
+    0deg,
+    var(--ion-toolbar-background, var(--ion-color-step-50, #f7f7f7)),
+    var(--ion-tab-bar-background, var(--ion-color-step-50, #f7f7f7))
+  );
 }
 </style>

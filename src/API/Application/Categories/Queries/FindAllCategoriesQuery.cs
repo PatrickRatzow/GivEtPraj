@@ -2,9 +2,9 @@
 
 namespace Commentor.GivEtPraj.Application.Categories.Queries;
 
-public record FindAllCategoriesQuery : IRequest<List<CategoryDto>>;
+public record FindAllCategoriesQuery : IRequest<OneOf<List<CategoryDto>>>;
 
-public class FindAllCategoriesQueryHandler : IRequestHandler<FindAllCategoriesQuery, List<CategoryDto>>
+public class FindAllCategoriesQueryHandler : IRequestHandler<FindAllCategoriesQuery, OneOf<List<CategoryDto>>>
 {
     private readonly IAppDbContext _db;
     private readonly IMapper _mapper;
@@ -15,7 +15,7 @@ public class FindAllCategoriesQueryHandler : IRequestHandler<FindAllCategoriesQu
         _mapper = mapper;
     }
 
-    public async Task<List<CategoryDto>> Handle(FindAllCategoriesQuery request,
+    public async Task<OneOf<List<CategoryDto>>> Handle(FindAllCategoriesQuery request,
         CancellationToken cancellationToken)
     {
         var categories = await _db.Categories

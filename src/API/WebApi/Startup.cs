@@ -41,30 +41,8 @@ public class Startup
                 Title = "GivEtPraj.API",
                 Version = "v1"
             });
-            c.AddSecurityDefinition("Bearer", new()
-            {
-                Description =
-                    "JWT Authorization header using the Bearer scheme (Example: 'Bearer 12345abcdef')",
-                Name = "Authorization",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = "Bearer"
-            });
-
-            c.AddSecurityRequirement(new()
-            {
-                {
-                    new()
-                    {
-                        Reference = new()
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    Array.Empty<string>()
-                }
-            });
+            
+            c.OperationFilter<AddRequiredHeaderParameter>();
         });
 
         services.AddAutoMapper(Assembly.GetExecutingAssembly());

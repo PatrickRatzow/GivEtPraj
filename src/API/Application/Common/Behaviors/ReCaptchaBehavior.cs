@@ -102,11 +102,11 @@ public class ReCaptchaBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
         try
         {
             var guid = _deviceService.DeviceIdentifier;
-            var queueKey = await _context.QueueKeys
+            var queueKey = await _context.PreAuthorizations
                 .FirstOrDefaultAsync(qk => qk.DeviceId == guid && qk.ExpiresAt > DateTimeOffset.UtcNow);
             if (queueKey is null) return false;
 
-            _context.QueueKeys.Remove(queueKey);
+            _context.PreAuthorizations.Remove(queueKey);
             await _context.SaveChangesAsync();
 
             return true;

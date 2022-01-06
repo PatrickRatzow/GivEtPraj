@@ -1,6 +1,10 @@
-﻿using Commentor.GivEtPraj.Application.Common.Interfaces;
+﻿using System.Net;
+using System.Text;
+using System.Text.Json;
+using Commentor.GivEtPraj.Application.Common.Interfaces;
 using Commentor.GivEtPraj.Application.Contracts;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Commentor.GivEtPraj.WebApi.Extensions;
@@ -13,21 +17,13 @@ public static class ApplicationBuilderExtensions
         {
             var languageService = context.RequestServices.GetRequiredService<ILanguageService>();
             var language = context.Request.Headers["X-Language"];
-            if (string.IsNullOrEmpty(language))
-            {
-                languageService.Language = Language.DK;
-
-                await next();
-
-                return;
-            }
-
             languageService.Language = language.ToString() switch
             {
                 "da" => Language.DK,
                 "en" => Language.EN,
-                _ => Language.DK
+                _ => Language.EN
             };
+            
             await next();
         });
     }
@@ -36,14 +32,34 @@ public static class ApplicationBuilderExtensions
     {
         app.Use(async (context, next) =>
         {
+            if (!context.Request.IsRegularMethod())
+            {
+                await next();
+
+                return;
+            }
+
             var deviceService = context.RequestServices.GetRequiredService<IDeviceService>();
             var deviceId = context.Request.Headers["X-DeviceId"];
             if (Guid.TryParse(deviceId, out var guid))
             {
                 deviceService.DeviceIdentifier = guid;
+
+                await next();
+
+                return;
             }
-            
-            await next();
+
+            var errorText = JsonSerializer.Serialize(new
+            {
+                Errors = new object[]
+                {
+                    new { ErrorMessage = "Invalid/missing GUID in the X-DeviceId header" }
+                }
+            });
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync(errorText, Encoding.UTF8);
         });
     }
 }
