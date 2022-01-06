@@ -8,31 +8,33 @@ public static class OneOfExtensions
     private static IActionResult MatchErrorResponse<TResponse>(TResponse response) =>
         response switch
         {
-            INotFoundError notFound => 
-                GetResult(typeof(NotFoundResult), typeof(NotFoundObjectResult), notFound),
-            IValidationError validationError => 
-                GetResult(typeof(BadRequestResult), typeof(BadRequestObjectResult), validationError),
-            IAlreadyExistsError alreadyExists => 
-                GetResult(typeof(ConflictResult), typeof(ConflictObjectResult), alreadyExists),
-            IError error => 
+            INotFoundError notFound =>
+                GetResult<NotFoundResult, NotFoundObjectResult>(notFound),
+            IValidationError validationError =>
+                GetResult<BadRequestResult, BadRequestObjectResult>(validationError),
+            IAlreadyExistsError alreadyExists =>
+                GetResult<ConflictResult, ConflictObjectResult>(alreadyExists),
+            IError error =>
                 throw new ArgumentException($"Unable to find an error handler for {error.GetType().Name}"),
-            Unit => 
+            Unit =>
                 new NoContentResult(),
-            var data => 
-                GetResult(typeof(OkResult), typeof(OkObjectResult), data)
+            var data =>
+                GetResult<OkResult, OkObjectResult>(data)
         };
 
-    private static IActionResult GetResult<TData>(Type status, Type @object, TData data)
+    private static IActionResult GetResult<TCodeResult, TObjectResult>(object? data) 
+        where TCodeResult : StatusCodeResult 
+        where TObjectResult : ObjectResult
     {
-        object? msg = data;
+        var msg = data;
         if (data is IError err)
             msg = err.ErrorMessage is not null
                 ? new { Error = err.ErrorMessage }
                 : err.ErrorMessage;
 
         var result = msg is null
-            ? Activator.CreateInstance(status) as IActionResult
-            : Activator.CreateInstance(@object, msg) as IActionResult;
+            ? Activator.CreateInstance(typeof(TCodeResult)) as IActionResult
+            : Activator.CreateInstance(typeof(TObjectResult), msg) as IActionResult;
 
         return result!;
     }
