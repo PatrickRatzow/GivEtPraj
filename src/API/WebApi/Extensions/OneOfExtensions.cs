@@ -8,18 +8,12 @@ public static class OneOfExtensions
     private static IActionResult MatchErrorResponse<TResponse>(TResponse response) =>
         response switch
         {
-            INotFoundError notFound =>
-                GetResult<NotFoundResult, NotFoundObjectResult>(notFound),
-            IValidationError validationError =>
-                GetResult<BadRequestResult, BadRequestObjectResult>(validationError),
-            IAlreadyExistsError alreadyExists =>
-                GetResult<ConflictResult, ConflictObjectResult>(alreadyExists),
-            IError error =>
-                throw new ArgumentException($"Unable to find an error handler for {error.GetType().Name}"),
-            Unit =>
-                new NoContentResult(),
-            var data =>
-                GetResult<OkResult, OkObjectResult>(data)
+            INotFoundError => GetResult<NotFoundResult, NotFoundObjectResult>(response),
+            IValidationError => GetResult<BadRequestResult, BadRequestObjectResult>(response),
+            IAlreadyExistsError => GetResult<ConflictResult, ConflictObjectResult>(response),
+            IError => throw new ArgumentException($"Unable to find an error handler for {response.GetType().Name}"),
+            Unit => new NoContentResult(),
+            _ => GetResult<OkResult, OkObjectResult>(response)
         };
 
     private static IActionResult GetResult<TCodeResult, TObjectResult>(object? data) 
