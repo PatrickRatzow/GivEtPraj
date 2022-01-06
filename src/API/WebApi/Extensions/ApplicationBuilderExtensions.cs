@@ -21,7 +21,7 @@ public static class ApplicationBuilderExtensions
             {
                 "da" => Language.DK,
                 "en" => Language.EN,
-                _ => Language.DK
+                _ => Language.EN
             };
             
             await next();
