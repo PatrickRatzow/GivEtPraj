@@ -47,4 +47,18 @@ public class GeographicLocationTests
         // Assert
         action.Should().ThrowExactly<InvalidLongitudeException>();
     }
+
+    [Test]
+    public void ShouldUseStructuralEquality()
+    {
+        // Arrange
+        var location1 = GeographicLocation.From(45, 45);
+        var location2 = GeographicLocation.From(45, 45);
+        
+        // Act
+        var isEqual = location1 == location2;
+        
+        // Assert
+        isEqual.Should().BeTrue();
+    }
 }
