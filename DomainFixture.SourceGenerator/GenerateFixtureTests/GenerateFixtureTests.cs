@@ -2,6 +2,7 @@
 
 namespace DomainFixture.SourceGenerator;
 
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public class GenerateFixtureTests : Attribute
 {
     private readonly Type _type;

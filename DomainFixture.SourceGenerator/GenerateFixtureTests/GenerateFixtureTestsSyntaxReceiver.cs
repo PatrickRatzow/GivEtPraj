@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace DomainFixture.SourceGenerator;
 
-public class FluentTestSyntaxReceiver : ISyntaxReceiver
+public class GenerateFixtureTestsSyntaxReceiver : ISyntaxReceiver
 {
     public List<ClassDeclarationSyntax> Candidates { get; } = new();
 

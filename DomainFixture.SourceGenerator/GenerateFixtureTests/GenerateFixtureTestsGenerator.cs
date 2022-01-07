@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.Text;
 namespace DomainFixture.SourceGenerator;
 
 [Generator]
-public class FluentTestGenerator : ISourceGenerator
+public class GenerateFixtureTestsGenerator : ISourceGenerator
 {
     private string _code;
     private GeneratorExecutionContext _context;
@@ -15,32 +15,33 @@ public class FluentTestGenerator : ISourceGenerator
     public void Initialize(GeneratorInitializationContext context)
     {
         // Register a syntax receiver that will be created for each generation pass
-        context.RegisterForSyntaxNotifications(() => new FluentTestSyntaxReceiver());
+        context.RegisterForSyntaxNotifications(() => new GenerateFixtureTestsSyntaxReceiver());
     }
     
     public void Execute(GeneratorExecutionContext context)
     {
-        if (context.SyntaxReceiver is not FluentTestSyntaxReceiver receiver) return;
+        if (context.SyntaxReceiver is not GenerateFixtureTestsSyntaxReceiver receiver) return;
         _context = context;
 
-        var classSymbols = GetClassSymbolsWithTheRightAttribute(receiver);
-        foreach (var classSymbol in classSymbols)
+        var classSymbols = GetSymbolsWithTheRightAttribute(receiver);
+        foreach (var (classSymbol, attributeSymbol) in classSymbols)
         {
             var namespaceName = classSymbol.ContainingNamespace.ToDisplayString();
-            var className = $"I{classSymbol.Name}";
-            var sourceBuilder = new FluentTestBuilder(_context, classSymbol, namespaceName, className);
+            var className = $"{classSymbol.Name}";
+            var sourceBuilder = new GenerateFixtureTestsBuilder(_context, classSymbol, namespaceName, className, 
+                attributeSymbol);
 
             AddSource(sourceBuilder, className);
         }
     }
 
-    private List<INamedTypeSymbol> GetClassSymbolsWithTheRightAttribute(FluentTestSyntaxReceiver receiver)
+    private List<(INamedTypeSymbol ClassSymbol, INamedTypeSymbol AttributeSymbol)> GetSymbolsWithTheRightAttribute(GenerateFixtureTestsSyntaxReceiver receiver)
     {
         var compilation = _context.Compilation;
         var attributeSymbol =
             compilation.GetTypeByMetadataName(typeof(GenerateFixtureTests).Namespace + "." + nameof(GenerateFixtureTests));
         
-        var classSymbols = new List<INamedTypeSymbol>();
+        var classSymbols = new List<(INamedTypeSymbol ClassSymbol, INamedTypeSymbol AttributeSymbol)>();
         foreach (var cls in receiver.Candidates)
         {
             var model = compilation.GetSemanticModel(cls.SyntaxTree);
@@ -49,15 +50,15 @@ public class FluentTestGenerator : ISourceGenerator
                 .Any(ad => ad.AttributeClass!.Name == attributeSymbol!.Name);
             if (!hasFluentTestAttribute) continue;
 
-            classSymbols.Add((INamedTypeSymbol) classSymbol);
+            classSymbols.Add(((INamedTypeSymbol)classSymbol, attributeSymbol)!);
         }
 
         return classSymbols;
     }
     
-    private void AddSource(FluentTestBuilder builder, string className)
+    private void AddSource(GenerateFixtureTestsBuilder builder, string className)
     {
-        var descriptor = new DiagnosticDescriptor(nameof(FluentTestGenerator), "Result", 
+        var descriptor = new DiagnosticDescriptor(nameof(GenerateFixtureTestsGenerator), "Result", 
             $"Finished compilation for {className}", "Compilation", DiagnosticSeverity.Info, true);
         _context.ReportDiagnostic(Diagnostic.Create(descriptor, null));
 

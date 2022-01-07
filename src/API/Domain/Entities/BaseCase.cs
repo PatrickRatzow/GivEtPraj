@@ -54,6 +54,7 @@ public class BaseCaseValidator : AbstractValidator<BaseCase>
             .NotEmpty()
             .LessThanOrEqualTo(_ => DateTimeOffset.UtcNow);
         RuleFor(x => x.CaseUpdates).NotNull();
+        
         When(x => x.UpdatedAt is not null, () =>
         {
             RuleFor(x => x.UpdatedAt).LessThanOrEqualTo(_ => DateTimeOffset.UtcNow);
