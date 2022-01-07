@@ -31,7 +31,6 @@ public sealed class GenerateFixtureTestsBuilder : CodeBuilder
         _fixtures = _classSymbol.GetAttributes()
             .Where(ad => ad.AttributeClass!.Name == _attributeSymbol.Name)
             .SelectMany(x => x.ConstructorArguments)
-            .Cast<TypedConstant>()
             .ToImmutableArray();
 
         Use("NUnit.Framework");
