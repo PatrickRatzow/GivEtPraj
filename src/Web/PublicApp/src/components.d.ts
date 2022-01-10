@@ -31,6 +31,7 @@ declare module 'vue' {
     IonTabs: typeof import('@ionic/vue')['IonTabs']
     IonTextarea: typeof import('@ionic/vue')['IonTextarea']
     IonTitle: typeof import('@ionic/vue')['IonTitle']
+    IonToggle: typeof import('@ionic/vue')['IonToggle']
     IonToolbar: typeof import('@ionic/vue')['IonToolbar']
     ReloadPWA: typeof import('./components/ReloadPWA.vue')['default']
     StatusIndicator: typeof import('./components/StatusIndicator.vue')['default']

@@ -28,36 +28,36 @@ export function useCases() {
 		};
 
 		main.caseQueue = [...main.caseQueue, newCase];
-		
+
 		saveCases();
 	}
 
 	function removeCaseFromQueue(index: number) {
 		main.caseQueue = main.caseQueue.filter((c, idx) => idx != index);
-		
+
 		saveCases();
 	}
 
 	function emptyCaseQueue() {
 		main.caseQueue = [];
-		
+
 		saveCases();
 	}
 
 	async function saveCases() {
 		await Storage.set({
 			key: "case_queue",
-			value: JSON.stringify(main.caseQueue)
-		});	
+			value: JSON.stringify(main.caseQueue),
+		});
 	}
 
 	async function loadCases() {
 		const { value } = await Storage.get({ key: "case_queue" });
 		if (value == null) return;
-		
+
 		main.caseQueue = JSON.parse(value);
 	}
-	
+
 	interface CreateCaseRequestDto {
 		cases: {
 			description?: string;
@@ -103,7 +103,7 @@ export function useCases() {
 			return false;
 		}
 	}
-	
+
 	watch(network.status, sendCases);
 
 	return { addCurrentCaseToQueue, sendCases, removeCaseFromQueue, loadCases };
@@ -113,15 +113,12 @@ export const afterAppMount: BeforeAppMount = () => {
 	const cases = useCases();
 
 	// Don't await due to result not being critical to our app at startup
-	new Promise<void>(async (resolve, reject) => {
-		try {
-			await cases.loadCases();
-			await cases.sendCases();
-			
-			resolve();
-		} catch {
-			resolve();
-		}
+	new Promise<void>((resolve) => {
+		cases
+			.loadCases()
+			.then(cases.sendCases)
+			.then(() => resolve())
+			.catch(() => resolve());
 	});
 
 	return Promise.resolve();
